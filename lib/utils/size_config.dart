@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 /// 1. SizeConfig().init(context);  in your build() method.
 /// 2. SizeConfig.screenWidth       etc. where needed.
 ///
-/// Based on : https://medium.com/flutter-community/flutter-effectively-scale-ui-according-to-different-screen-sizes-2cb7c115ea0a
+/// Based on : https://medium.com/flutter-community/flutter-effectively-scale-ui-according-to-different-screen-sizes-2cb7c115ea0a (last visited 02.04.2021).
 class SizeConfig {
   static MediaQueryData? _mediaQueryData;
 

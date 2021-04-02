@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Defines the dark and light color themes for the app.
 class AppColorTheme {
 
-  // TODO : Adjust light theme.
+  // TODO : Adjust light theme if wanted.
   static final ColorScheme lightTheme = ColorScheme(
     primary: Color(0xff1173D4),
     primaryVariant: Color(0xff2E47B2),

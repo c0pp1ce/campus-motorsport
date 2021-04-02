@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Simple [TextButton] with a gradient background.
 ///
-/// Code from https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_button.dart .
+/// Code based https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_button.dart (last visited: 02.04.2021).
 class GradientTextButton extends StatelessWidget {
   final Widget child;
   final void Function()? onPressed;

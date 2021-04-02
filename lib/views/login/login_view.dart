@@ -20,7 +20,7 @@ class _LoginViewState extends State<LoginView> {
   /// Key for the login form.
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  /// Opacity of the screen content.
+  /// Opacity of the screen content (except background gradient).
   double _opacity = 0.0;
 
   /// The background image of the view.
