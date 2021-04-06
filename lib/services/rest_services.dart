@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 /// Service class for communicating with the REST backend.
 class RestServices {
-  static const apiEndpoint = 'http://127.0.0.1:8000/api';
+  static const apiEndpoint = 'http://10.0.2.2:8000/api';
 
   /// Returns a map {'statusCode' : int, 'decodedJson' : Map}.
   ///
@@ -19,23 +19,23 @@ class RestServices {
     try {
       response = await http
           .post(
-        Uri.parse(apiEndpoint + route),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(data),
-      )
+            Uri.parse(apiEndpoint + route),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(data),
+          )
           .timeout(
-        Duration(seconds: 10),
-      );
+            Duration(seconds: 10),
+          );
 
       decodedJson = jsonDecode(response.body);
     } on TimeoutException {
-      decodedJson['message'] = 'Request Timeout.';
+      decodedJson['detail'] = 'Request Timeout.';
     } on FormatException {
-      decodedJson['message'] = 'Unerwartete Antwort.';
+      decodedJson['detail'] = 'Unerwartete Antwort.';
     } on SocketException {
-      decodedJson['message'] = 'Verbindungsfehler.';
+      decodedJson['detail'] = 'Verbindungsfehler.';
     }
 
     return {

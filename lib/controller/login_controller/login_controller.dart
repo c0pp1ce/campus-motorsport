@@ -75,7 +75,7 @@ class LoginController extends ChangeNotifier {
 
     /// On failure set status accordingly.
     if (response['statusCode'] != 200) {
-      _errorMessage = response['decodedJson']['message'];
+      _errorMessage = response['decodedJson']['detail'];
       _loading = false;
       notifyListeners();
       return;
