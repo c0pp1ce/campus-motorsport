@@ -1,6 +1,7 @@
 import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
+import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ import 'package:campus_motorsport/views/login/widgets/form_fields.dart';
 import 'package:campus_motorsport/views/login/widgets/logo.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/views/login/widgets/custom_divider.dart';
-import 'package:campus_motorsport/widgets/buttons/gradient_text_button.dart';
+import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
 import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
@@ -80,16 +81,15 @@ class _LoginViewState extends State<LoginView> {
             child: Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
-              alignment: Alignment.topCenter,
+              alignment: Alignment.center,
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 50.0, horizontal: 30.0),
+                  padding: const EdgeInsets.all(30.0),
                   child: Column(
                     children: <Widget>[
                       Logo(),
-                      SizedBox(height: 80),
+                      SizedBox(height: 50),
                       Form(
                         key: _formKey,
                         child: ChangeNotifierProvider.value(
@@ -97,8 +97,8 @@ class _LoginViewState extends State<LoginView> {
                           child: FormFields(),
                         ),
                       ),
-                      SizedBox(height: 80),
-                      GradientTextButton(
+                      SizedBox(height: 50),
+                      CMTextButton(
                         child: Text('LOGIN'),
                         loading: _loginController.loading,
                         onPressed: () {
@@ -114,9 +114,12 @@ class _LoginViewState extends State<LoginView> {
                         },
                       ),
                       CustomDivider(),
-                      GradientTextButton(
+                      CMTextButton(
                         child: Text('ACCOUNT ERSTELLEN'),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, registerRoute);
+                        },
                         primary: ColorServices.darken(
                             Theme.of(context).colorScheme.onSurface, 10),
                         gradient: LinearGradient(

@@ -33,7 +33,8 @@ class FormFields extends StatelessWidget {
           textInputAction: TextInputAction.done,
           toggleObscure: true,
           fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.4),
-          validate: (value) => ValidationServices().validatePassword(value),
+          validate: (value) =>
+              ValidationServices().validateNotEmpty(value, 'Passwort'),
           onSaved: (value) {
             Provider.of<LoginController>(context, listen: false)
                 .add(SavePassword(value));

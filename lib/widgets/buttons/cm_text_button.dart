@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
 
-/// Simple [TextButton] with a gradient background.
+/// Simple [TextButton] which can have gradient background.
 ///
-/// Code based https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_button.dart (last visited: 02.04.2021).
-class GradientTextButton extends StatelessWidget {
+/// Code based on https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_button.dart (last visited: 02.04.2021).
+class CMTextButton extends StatelessWidget {
   final Widget child;
   final void Function()? onPressed;
   final Gradient? gradient;
   final double? width;
   final double? height;
   final Color? primary;
+  final Color? backgroundColor;
   final bool? loading;
+
+  /// Set to true, if no [gradient] is given and the standard gradient should not be drawn.
+  ///
+  /// Has no effect when a [gradient] is given.
+  final bool? noGradient;
 
   final BorderRadius _borderRadius = BorderRadius.circular(10.0);
 
-  GradientTextButton({
+  CMTextButton({
     required this.child,
     this.onPressed,
     this.gradient,
     this.width,
     this.height,
     this.primary,
+    this.backgroundColor,
     this.loading,
+    this.noGradient,
     Key? key,
   }) : super(key: key);
 
@@ -42,6 +50,7 @@ class GradientTextButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: _borderRadius,
           gradient: gradient ?? _gradient(context),
+          color: backgroundColor ?? null,
         ),
         child: Container(
           alignment: Alignment.center,
@@ -77,7 +86,10 @@ class GradientTextButton extends StatelessWidget {
     ];
   }
 
-  LinearGradient _gradient(BuildContext context) {
+  LinearGradient? _gradient(BuildContext context) {
+    if ((noGradient ?? false)) {
+      return null;
+    }
     return LinearGradient(
       colors: <Color>[
         Theme.of(context).colorScheme.primary,

@@ -8,7 +8,7 @@ class CustomDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
+      padding: EdgeInsets.symmetric(vertical: 20.0),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -18,7 +18,7 @@ class CustomDivider extends StatelessWidget {
           Text(
             'oder',
             style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
             ),
           ),
           _verticalSpacing(),

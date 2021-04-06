@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/views/login/login_view.dart';
+import 'package:campus_motorsport/views/registration/registration_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/routes/routes.dart';
@@ -19,7 +20,7 @@ class CustomRouter {
 
       case registerRoute:
         return MaterialPageRoute(
-          builder: (_) => placeholder(settings.name ?? 'NO ROUTE NAME'),
+          builder: (_) => RegistrationView(),
         );
 
       default:

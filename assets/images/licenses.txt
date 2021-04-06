@@ -1,4 +1,4 @@
-designer.jpg, designer_edited.jpg --> https://unsplash.com/photos/RnCPiXixooY
+designer_edited.jpg --> https://unsplash.com/photos/RnCPiXixooY
 	
 	Unsplash grants you an irrevocable, nonexclusive, worldwide copyright license 
 	to download, copy, modify, distribute, perform, and use photos from Unsplash for free, 

@@ -83,7 +83,6 @@ class _BasicTextFieldState extends State<BasicTextField> {
   String? _validate(String? value) {
     if (widget.validate != null) {
       String? result = widget.validate!(value);
-      print(result);
       if (result != null) {
         setState(() {
           _errorShown = true;
