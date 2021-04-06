@@ -1,6 +1,7 @@
 import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
+import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/utils/size_config.dart';
@@ -38,7 +39,19 @@ class _LoginViewState extends State<LoginView> {
 
     /// Rebuild UI if _loginController notifies about changes.
     _loginController.addListener(() {
-      setState(() {});
+      setState(() {
+        /// Show controller errors as snackbars.
+        if (_loginController.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            ErrorSnackBar(
+              _loginController.errorMessage!,
+              'OK',
+            ).buildSnackbar(context),
+          );
+        } else {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        }
+      });
     });
   }
 

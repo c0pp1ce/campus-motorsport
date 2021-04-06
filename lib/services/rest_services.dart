@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -30,9 +31,11 @@ class RestServices {
 
       decodedJson = jsonDecode(response.body);
     } on TimeoutException {
-      decodedJson['message'] = 'Request timeout.';
+      decodedJson['message'] = 'Request Timeout.';
     } on FormatException {
-      decodedJson['message'] = 'Unexpected response format.';
+      decodedJson['message'] = 'Unerwartete Antwort.';
+    } on SocketException {
+      decodedJson['message'] = 'Verbindungsfehler.';
     }
 
     return {
