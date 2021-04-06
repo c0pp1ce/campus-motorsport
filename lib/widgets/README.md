@@ -1,1 +1,1 @@
-This folder contains widgets, that are in multiple views.
+This folder contains widgets, that are used in multiple views.
