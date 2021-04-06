@@ -1,6 +1,3 @@
-import 'package:campus_motorsport/utils/color_services.dart';
-import 'package:campus_motorsport/views/login/widgets/custom_divider.dart';
-import 'package:campus_motorsport/widgets/buttons/gradient_text_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/utils/size_config.dart';
@@ -8,6 +5,9 @@ import 'package:campus_motorsport/views/login/widgets/background_gradient.dart';
 import 'package:campus_motorsport/views/login/widgets/background_image.dart';
 import 'package:campus_motorsport/views/login/widgets/form_fields.dart';
 import 'package:campus_motorsport/views/login/widgets/logo.dart';
+import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/views/login/widgets/custom_divider.dart';
+import 'package:campus_motorsport/widgets/buttons/gradient_text_button.dart';
 
 class LoginView extends StatefulWidget {
   LoginView({Key? key}) : super(key: key);
@@ -24,8 +24,7 @@ class _LoginViewState extends State<LoginView> {
   double _opacity = 0.0;
 
   /// The background image of the view.
-  final ImageProvider _image =
-      AssetImage('assets/images/designer_edited.jpg');
+  final ImageProvider _image = AssetImage('assets/images/designer_edited.jpg');
 
   @override
   void didChangeDependencies() {
@@ -56,7 +55,8 @@ class _LoginViewState extends State<LoginView> {
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 50.0, horizontal: 30.0),
                   child: Column(
                     children: <Widget>[
                       Logo(),
@@ -77,11 +77,20 @@ class _LoginViewState extends State<LoginView> {
                       GradientTextButton(
                         child: Text('ACCOUNT ERSTELLEN'),
                         onPressed: () {},
-                        primary: ColorServices.darken(Theme.of(context).colorScheme.onSurface, 10),
+                        primary: ColorServices.darken(
+                            Theme.of(context).colorScheme.onSurface, 10),
                         gradient: LinearGradient(
                           colors: <Color>[
-                            ColorServices.brighten(Theme.of(context).colorScheme.surface.withOpacity(0.7), 25),
-                            Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                            ColorServices.brighten(
+                                Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withOpacity(0.7),
+                                25),
+                            Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.9),
                           ],
                         ),
                       ),

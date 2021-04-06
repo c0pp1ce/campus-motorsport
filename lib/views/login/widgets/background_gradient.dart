@@ -1,6 +1,7 @@
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:flutter/material.dart';
 
-import 'package:campus_motorsport/utils/color_services.dart';
+
 
 /// Gradient background, should be the same gradient as used for the splash screen.
 class BackgroundGradient extends StatelessWidget {
