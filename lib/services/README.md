@@ -1,0 +1,1 @@
+This folder contains services which are used throughout the app.

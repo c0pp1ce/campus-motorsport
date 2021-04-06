@@ -1,0 +1,1 @@
+This folder contains the route names and the router, which maps the route names to the views.

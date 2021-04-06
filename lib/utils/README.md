@@ -1,0 +1,1 @@
+This folder contains helpful classes used throughout the app.

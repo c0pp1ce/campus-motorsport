@@ -15,15 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO : Insert blocs when needed everywhere.
-    /*return MultiBlocProvider(
-      providers: [
-        BlocProvider<ThemeBloc>(
-          create: (BuildContext context) => ThemeBloc(),
-        ),
-      ],
-      child: MyMaterialApp(),
-    );*/
+
     return MyMaterialApp();
   }
 }

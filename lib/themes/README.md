@@ -1,0 +1,1 @@
+This folder contains the themes of the app (colors, typography etc.).

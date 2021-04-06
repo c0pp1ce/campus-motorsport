@@ -1,0 +1,1 @@
+This folder contains the controllers (providers) which handle the app's state.
