@@ -75,13 +75,22 @@ class LoginController extends ChangeNotifier {
 
     /// On failure set status accordingly.
     if (response['statusCode'] != 200) {
-      _errorMessage = response['decodedJson']['detail'];
+      if (response["decodedJson"] == null) {
+        /// Failure and no response body.
+        _errorMessage = "Keine Server Antwort.";
+      } else if (response["statusCode"] == 422) {
+        /// Validation errors.
+        _errorMessage = _handleValidationError(response);
+      } else {
+        /// Other errors.
+        _errorMessage = response['decodedJson']['detail'];
+      }
       _loading = false;
       notifyListeners();
       return;
     } else {
       /// On success hand over token to TokenProvider. Set status accordingly.
-      String? token = response['decodedJson']['token'];
+      String? token = response['decodedJson']?['token'];
       if (token != null) {
         _tokenController!.add(SetToken(token));
         _success = true;
@@ -97,6 +106,20 @@ class LoginController extends ChangeNotifier {
         return;
       }
     }
+  }
+
+  /// Format the error string if validation error occurred.
+  String? _handleValidationError(Map<String, dynamic> response) {
+    var errorList = response["decodedJson"]["detail"] as List<dynamic>;
+    String? error;
+
+    /// Multiple errors possible.
+    for (int i = 0; i < errorList.length; i++) {
+      error =
+          (error ?? '') + errorList[i]["loc"][1] + ' ' + errorList[i]["msg"];
+      if (i != errorList.length - 1) error = error + "\n";
+    }
+    return error;
   }
 
   /// Resets the controller.

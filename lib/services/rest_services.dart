@@ -13,7 +13,7 @@ class RestServices {
   /// [route] will be added to the [apiEndpoint].
   static Future<Map<String, dynamic>> postJson(
       String route, Map<String, dynamic> data) async {
-    Map<String, dynamic> decodedJson = new Map();
+    Map<String, dynamic>? decodedJson = new Map();
     http.Response? response;
 
     try {
@@ -31,11 +31,11 @@ class RestServices {
 
       decodedJson = jsonDecode(response.body);
     } on TimeoutException {
-      decodedJson['detail'] = 'Request Timeout.';
+      decodedJson!['detail'] = 'Request Timeout.';
     } on FormatException {
-      decodedJson['detail'] = 'Unerwartete Antwort.';
+      decodedJson!['detail'] = 'Unerwartete Antwort.';
     } on SocketException {
-      decodedJson['detail'] = 'Verbindungsfehler.';
+      decodedJson!['detail'] = 'Verbindungsfehler.';
     }
 
     return {
