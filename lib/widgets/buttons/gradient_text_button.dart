@@ -7,11 +7,10 @@ class GradientTextButton extends StatelessWidget {
   final Widget child;
   final void Function()? onPressed;
   final Gradient? gradient;
-
   final double? width;
   final double? height;
-
   final Color? primary;
+  final bool? loading;
 
   final BorderRadius _borderRadius = BorderRadius.circular(10.0);
 
@@ -22,6 +21,7 @@ class GradientTextButton extends StatelessWidget {
     this.width,
     this.height,
     this.primary,
+    this.loading,
     Key? key,
   }) : super(key: key);
 
@@ -31,27 +31,50 @@ class GradientTextButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         elevation: 0,
-        minimumSize: Size(100,35),
+        minimumSize: Size(100, 35),
         shape: RoundedRectangleBorder(
           borderRadius: _borderRadius,
         ),
         padding: const EdgeInsets.all(0.0),
-        primary: primary?? Theme.of(context).colorScheme.onPrimary,
+        primary: primary ?? Theme.of(context).colorScheme.onPrimary,
       ),
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: _borderRadius,
-          gradient: gradient?? _gradient(context),
+          gradient: gradient ?? _gradient(context),
         ),
         child: Container(
           alignment: Alignment.center,
           constraints: BoxConstraints(minWidth: 100, minHeight: 36),
           width: width,
           height: height,
-          child: child,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              child,
+              if (loading ?? false) ..._loadingIndicator(context),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  List<Widget> _loadingIndicator(BuildContext context) {
+    return [
+      SizedBox(
+        width: 5.0,
+      ),
+      SizedBox(
+        width: 14,
+        height: 14,
+        child: CircularProgressIndicator(
+          strokeWidth: 1.0,
+          valueColor: AlwaysStoppedAnimation<Color>(
+              primary ?? Theme.of(context).colorScheme.onPrimary),
+        ),
+      ),
+    ];
   }
 
   LinearGradient _gradient(BuildContext context) {

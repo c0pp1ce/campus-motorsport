@@ -1,6 +1,10 @@
+import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
+import 'package:campus_motorsport/controller/login_controller/login_event.dart';
+import 'package:campus_motorsport/services/validation_services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/widgets/forms/basic_text_field.dart';
+import 'package:provider/provider.dart';
 
 /// The text fields of the login form.
 class FormFields extends StatelessWidget {
@@ -14,12 +18,11 @@ class FormFields extends StatelessWidget {
           textInputType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
           fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.4),
-          validate: (value) {
-            if (value?.isEmpty ?? true) return 'Bitte gib deine E-Mail ein.';
-            return null;
+          validate: (value) => ValidationServices().validateEmail(value),
+          onSaved: (value) {
+            Provider.of<LoginController>(context, listen: false)
+                .add(SaveEmail(value));
           },
-          // TODO : Implement onSaved
-          onSaved: (_) {},
         ),
         SizedBox(
           height: 20,
@@ -30,12 +33,11 @@ class FormFields extends StatelessWidget {
           textInputAction: TextInputAction.done,
           toggleObscure: true,
           fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.4),
-          validate: (value) {
-            if (value?.isEmpty ?? true) return 'Bitte gib dein Passwort ein.';
-            return null;
+          validate: (value) => ValidationServices().validatePassword(value),
+          onSaved: (value) {
+            Provider.of<LoginController>(context, listen: false)
+                .add(SavePassword(value));
           },
-          // TODO : Implement onSaved
-          onSaved: (_) {},
         ),
       ],
     );

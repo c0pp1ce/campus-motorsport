@@ -1,3 +1,6 @@
+import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
+import 'package:campus_motorsport/controller/login_controller/login_event.dart';
+import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/utils/size_config.dart';
@@ -8,6 +11,7 @@ import 'package:campus_motorsport/views/login/widgets/logo.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/views/login/widgets/custom_divider.dart';
 import 'package:campus_motorsport/widgets/buttons/gradient_text_button.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   LoginView({Key? key}) : super(key: key);
@@ -17,6 +21,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  LoginController _loginController = LoginController();
+
   /// Key for the login form.
   final GlobalKey<FormState> _formKey = GlobalKey();
 
@@ -25,6 +31,16 @@ class _LoginViewState extends State<LoginView> {
 
   /// The background image of the view.
   final ImageProvider _image = AssetImage('assets/images/designer_edited.jpg');
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// Rebuild UI if _loginController notifies about changes.
+    _loginController.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -63,14 +79,25 @@ class _LoginViewState extends State<LoginView> {
                       SizedBox(height: 80),
                       Form(
                         key: _formKey,
-                        child: FormFields(),
+                        child: ChangeNotifierProvider.value(
+                          value: _loginController,
+                          child: FormFields(),
+                        ),
                       ),
                       SizedBox(height: 80),
                       GradientTextButton(
                         child: Text('LOGIN'),
+                        loading: _loginController.loading,
                         onPressed: () {
-                          _formKey.currentState?.validate();
-                          _formKey.currentState?.save();
+                          if (_formKey.currentState?.validate() ?? false) {
+                            /// Save inputs and perform http request.
+                            _formKey.currentState?.save();
+                            _loginController
+                                .add(RequestLogin(Provider.of<TokenController>(
+                              context,
+                              listen: false,
+                            )));
+                          }
                         },
                       ),
                       CustomDivider(),

@@ -52,7 +52,7 @@ class LoginController extends ChangeNotifier {
 
     /// Avoid request with incomplete data.
     if (_email == null || _password == null) {
-      _errorMessage = 'Incomplete login data..';
+      _errorMessage = 'Login Daten unvollständig.';
       _success = false;
       notifyListeners();
       return;
@@ -68,7 +68,7 @@ class LoginController extends ChangeNotifier {
     Map<String, String> data = new Map();
     data['email'] = _email!;
     data['password'] = _password!;
-    data['appid'] = 'Here should be the app id';
+    //data['appid'] = 'Here should be the app id';
 
     /// Perform request.
     Map<String, dynamic> response = await RestServices.postJson('/login', data);
@@ -91,7 +91,7 @@ class LoginController extends ChangeNotifier {
         return;
       } else {
         /// If no token in response.
-        _errorMessage = 'No token in response.';
+        _errorMessage = 'Login fehlgeschlagen.';
         _loading = false;
         notifyListeners();
         return;
