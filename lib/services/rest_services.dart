@@ -93,7 +93,8 @@ class RestServices {
 
     /// Multiple errors possible.
     for (int i = 0; i < errorList.length; i++) {
-      error = error + errorList[i]["loc"][1] + ' ' + errorList[i]["msg"];
+      List<dynamic> location = errorList[i]["loc"];
+      error = error + location.last + ' ' + errorList[i]["msg"];
       if (i != errorList.length - 1) error = error + "\n";
     }
 
