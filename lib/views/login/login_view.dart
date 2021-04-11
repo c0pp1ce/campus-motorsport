@@ -49,8 +49,17 @@ class _LoginViewState extends State<LoginView> {
               'OK',
             ).buildSnackbar(context),
           );
+
+          /// Hide error message if error is resolved (aka errorMessage == null)
         } else {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        }
+
+        /// Schedule navigation to home screen on successful login.
+        if (_loginController.success) {
+          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+            Navigator.of(context).pushReplacementNamed(homeRoute);
+          });
         }
       });
     });

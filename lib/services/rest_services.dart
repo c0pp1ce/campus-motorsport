@@ -25,7 +25,7 @@ class RestServices {
 
     try {
       var response = await dio.post(route, data: data);
-      print(response);
+      print(response); // TODO : Remove print at some point.
       responseData = JsonResponseData(
           statusCode: response.statusCode ?? 900,
           data: response.data,
@@ -66,7 +66,7 @@ class RestServices {
               errorMessage: _handleValidationError(error.response?.data ??
                   {'detail': []})); // Empty list if no data in response.
 
-          /// Unhandled errors.
+          /// Other response errors.
         } else {
           // TODO : Extend for other error types if needed.
           print(error.response);

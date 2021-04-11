@@ -4,8 +4,9 @@ class User {
   String firstname;
   String lastname;
   Email accountEmail;
+  bool isSuperuser;
 
-  User(this.firstname, this.lastname, this.accountEmail);
+  User(this.firstname, this.lastname, this.accountEmail, this.isSuperuser);
 
   factory User.fromJson(Map<String, dynamic> decodedJson) {
     throw UnimplementedError();
