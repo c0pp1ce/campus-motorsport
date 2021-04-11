@@ -25,7 +25,7 @@ dependencies:
     sdk: flutter
 
   provider: ^5.0.0
-  http: ^0.13.0
+  dio: ^4.0.0
   email_validator: ^2.0.1
 
   google_fonts: ^2.0.0

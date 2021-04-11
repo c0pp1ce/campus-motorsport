@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/controller/token_controller/token_event.dart';
+import 'package:campus_motorsport/models/utility/response_data.dart';
 import 'package:campus_motorsport/services/rest_services.dart';
 import 'package:flutter/material.dart';
 
@@ -58,6 +59,13 @@ class LoginController extends ChangeNotifier {
       return;
     }
 
+    /// tokenController needed to store the token.
+    if(_tokenController == null) {
+      _errorMessage = 'TokenController nicht gefunden.';
+      _success = false;
+      notifyListeners();
+    }
+
     /// Set controller status.
     _success = false;
     _errorMessage = null;
@@ -71,26 +79,18 @@ class LoginController extends ChangeNotifier {
     //data['appid'] = 'Here should be the app id';
 
     /// Perform request.
-    Map<String, dynamic> response = await RestServices.postJson('/login', data);
+    JsonResponseData responseData = await RestServices().postJson('/login', data);
 
     /// On failure set status accordingly.
-    if (response['statusCode'] != 200) {
-      if (response["decodedJson"] == null) {
-        /// Failure and no response body.
-        _errorMessage = "Keine Server Antwort.";
-      } else if (response["statusCode"] == 422) {
-        /// Validation errors.
-        _errorMessage = _handleValidationError(response);
-      } else {
-        /// Other errors.
-        _errorMessage = response['decodedJson']['detail'];
-      }
+    if (responseData.statusCode != 200) {
+      _errorMessage = responseData.errorMessage;
       _loading = false;
+      _success = false;
       notifyListeners();
       return;
     } else {
       /// On success hand over token to TokenProvider. Set status accordingly.
-      String? token = response['decodedJson']?['token'];
+      String? token = responseData.data?['token'];
       if (token != null) {
         _tokenController!.add(SetToken(token));
         _success = true;
@@ -106,20 +106,6 @@ class LoginController extends ChangeNotifier {
         return;
       }
     }
-  }
-
-  /// Format the error string if validation error occurred.
-  String? _handleValidationError(Map<String, dynamic> response) {
-    var errorList = response["decodedJson"]["detail"] as List<dynamic>;
-    String? error;
-
-    /// Multiple errors possible.
-    for (int i = 0; i < errorList.length; i++) {
-      error =
-          (error ?? '') + errorList[i]["loc"][1] + ' ' + errorList[i]["msg"];
-      if (i != errorList.length - 1) error = error + "\n";
-    }
-    return error;
   }
 
   /// Resets the controller.
