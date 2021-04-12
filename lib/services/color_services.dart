@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Manipulate colors as needed.
 ///
-/// Mainly used to adjust surface color based on elevation.
-///
 /// Taken from: https://stackoverflow.com/questions/58360989/programmatically-lighten-or-darken-a-hex-color-in-dart (last visited 02.04.2021).
 /// Author: https://stackoverflow.com/users/2083587/mr-mmmmore
 class ColorServices {

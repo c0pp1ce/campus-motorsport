@@ -5,10 +5,18 @@ import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/themes/color_themes.dart';
 import 'package:campus_motorsport/themes/text_theme.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
+  /// Remark : Might not work on some iOS devices.
+  /// For possible fix see: https://stackoverflow.com/questions/49418332/flutter-how-to-prevent-device-orientation-changes-and-force-portrait
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MyApp());
 }
 
@@ -37,6 +45,7 @@ class MyMaterialApp extends StatelessWidget {
         colorScheme: AppColorTheme.darkTheme,
         textTheme: AppTextTheme.theme,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        applyElevationOverlayColor: true,
       ),
       onGenerateRoute: CustomRouter.generateRoute,
       initialRoute: loginRoute,
