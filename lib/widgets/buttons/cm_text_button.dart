@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Simple [TextButton] which can have gradient background.
+/// Simple [TextButton] which can have gradient background and a loading indicator.
 ///
 /// Code based on https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_button.dart (last visited: 02.04.2021).
 class CMTextButton extends StatelessWidget {
@@ -54,7 +54,7 @@ class CMTextButton extends StatelessWidget {
         ),
         child: Container(
           alignment: Alignment.center,
-          constraints: BoxConstraints(minWidth: 100, minHeight: 36),
+          constraints: const BoxConstraints(minWidth: 100, minHeight: 36),
           width: width,
           height: height,
           child: Row(
@@ -71,14 +71,14 @@ class CMTextButton extends StatelessWidget {
 
   List<Widget> _loadingIndicator(BuildContext context) {
     return [
-      SizedBox(
+      const SizedBox(
         width: 5.0,
       ),
       SizedBox(
-        width: 14,
-        height: 14,
+        width: 15,
+        height: 15,
         child: CircularProgressIndicator(
-          strokeWidth: 1.0,
+          strokeWidth: 1.2,
           valueColor: AlwaysStoppedAnimation<Color>(
               primary ?? Theme.of(context).colorScheme.onPrimary),
         ),
