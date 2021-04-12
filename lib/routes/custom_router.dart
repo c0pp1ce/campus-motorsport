@@ -22,7 +22,7 @@ class CustomRouter {
                 arguments: settings.arguments as LoginArguments,
               ),
             );
-          } on Error catch (e) {
+          } on Exception catch (e) {
             print(e);
             return MaterialPageRoute(
               builder: (_) => LoginView(),

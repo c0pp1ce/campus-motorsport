@@ -22,8 +22,8 @@ class User {
         json["is_superuser"],
         id: json["id"],
       );
-    } on Error catch (error) {
-      print(error);
+    } on Exception catch (e) {
+      print(e);
       return User('ERROR', 'ERROR', Email('ERROR'), false);
     }
   }
