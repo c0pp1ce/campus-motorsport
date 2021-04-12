@@ -118,7 +118,7 @@ class _BackdropState extends State<Backdrop>
 
   Widget _buildBackdrop(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 5.0),
+      padding: const EdgeInsets.only(top: 8.0),
       key: _backdropChildKey,
       child: widget.backdropChild,
     );
@@ -130,22 +130,35 @@ class _BackdropState extends State<Backdrop>
       onVerticalDragUpdate: _isPanelVisible ? null : _onPanelDragUpdate,
       onVerticalDragEnd: _isPanelVisible ? null : _onPanelDragEnd,
       onTap: _isPanelVisible ? null : _onPanelTap,
-      child: Material(
-        color: Theme.of(context).colorScheme.surface,
-        elevation: Backdrop.panelElevation,
-        borderRadius: Backdrop.panelBorderRadius,
-        child: Column(
-          children: <Widget>[
-            if (widget.panelHeader != null)
-              Container(
-                height: _panelHeaderHeight,
-                child: widget.panelHeader,
+      child: Stack(
+        children: <Widget>[
+          Material(
+            color: Theme.of(context).colorScheme.surface,
+            elevation: Backdrop.panelElevation,
+            borderRadius: Backdrop.panelBorderRadius,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              child: Column(
+                children: <Widget>[
+                  if (widget.panelHeader != null)
+                    Container(
+                      height: _panelHeaderHeight,
+                      child: widget.panelHeader,
+                    ),
+                  Expanded(
+                    child: widget.panelChild,
+                  ),
+                ],
               ),
-            Expanded(
-              child: widget.panelChild,
             ),
-          ],
-        ),
+          ),
+          if(!_isPanelVisible) Container(
+            decoration: BoxDecoration(
+              borderRadius: Backdrop.panelBorderRadius,
+              color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -202,8 +215,8 @@ class _BackdropState extends State<Backdrop>
   void _onPanelDragUpdate(DragUpdateDetails details) {
     double? delta = details.primaryDelta;
 
-    /// (_maxSlide! / 2) for faster slide feeling.
-    _panelController!.value -= (delta ?? 0) / (_maxSlide! / 2);
+    /// (_maxSlide! / 1.5) for faster slide feeling.
+    _panelController!.value -= (delta ?? 0) / (_maxSlide! / 1.5);
   }
 
   /// Open the panel on tap.
