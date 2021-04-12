@@ -48,9 +48,9 @@ class MyMaterialApp extends StatelessWidget {
         applyElevationOverlayColor: true,
       ),
       onGenerateRoute: CustomRouter.generateRoute,
-      initialRoute: startScreenRoute,
+      initialRoute: loginRoute,
       debugShowCheckedModeBanner: false,
-      checkerboardRasterCacheImages: true,
+      //checkerboardRasterCacheImages: true,
       //checkerboardOffscreenLayers: true,
     );
   }

@@ -8,7 +8,7 @@ class CustomDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -40,7 +40,7 @@ class CustomDivider extends StatelessWidget {
   }
 
   SizedBox _verticalSpacing() {
-    return SizedBox(
+    return const SizedBox(
       width: 8.0,
     );
   }

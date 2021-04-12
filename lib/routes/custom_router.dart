@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/models/route_arguments/login_arguments.dart';
 import 'package:campus_motorsport/views/login/login_view.dart';
 import 'package:campus_motorsport/views/registration/registration_view.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,24 @@ class CustomRouter {
         );
 
       case loginRoute:
-        return MaterialPageRoute(
-          builder: (_) => LoginView(),
-        );
+        if (settings.arguments != null) {
+          try {
+            return MaterialPageRoute(
+              builder: (_) => LoginView(
+                arguments: settings.arguments as LoginArguments,
+              ),
+            );
+          } on Error catch (e) {
+            print(e);
+            return MaterialPageRoute(
+              builder: (_) => LoginView(),
+            );
+          }
+        } else {
+          return MaterialPageRoute(
+            builder: (_) => LoginView(),
+          );
+        }
 
       case registerRoute:
         return MaterialPageRoute(

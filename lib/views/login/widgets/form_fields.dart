@@ -24,7 +24,7 @@ class FormFields extends StatelessWidget {
                 .add(SaveEmail(value));
           },
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         BasicTextField(

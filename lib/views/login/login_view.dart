@@ -1,22 +1,25 @@
+import 'package:campus_motorsport/models/route_arguments/login_arguments.dart';
+import 'package:campus_motorsport/widgets/layout/background_image.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
-import 'package:flutter/material.dart';
-
 import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:campus_motorsport/views/login/widgets/background_gradient.dart';
-import 'package:campus_motorsport/views/login/widgets/background_image.dart';
 import 'package:campus_motorsport/views/login/widgets/form_fields.dart';
 import 'package:campus_motorsport/views/login/widgets/logo.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/views/login/widgets/custom_divider.dart';
 import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
-import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
-  LoginView({Key? key}) : super(key: key);
+  final LoginArguments arguments;
+  LoginView({this.arguments = const LoginArguments(fadeIn: true), Key? key})
+      : super(key: key);
 
   @override
   _LoginViewState createState() => _LoginViewState();
@@ -33,6 +36,7 @@ class _LoginViewState extends State<LoginView> {
 
   /// The background image of the view.
   final ImageProvider _image = AssetImage('assets/images/designer_edited.jpg');
+  bool? _precached;
 
   @override
   void initState() {
@@ -63,18 +67,30 @@ class _LoginViewState extends State<LoginView> {
         }
       });
     });
+
+    /// Skip fade in.
+    if (!widget.arguments.fadeIn) {
+      _opacity = 1.0;
+      _precached = true;
+    } else {
+      _precached = false;
+    }
   }
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+
     /// Play fade in animation when bg image is precached.
     /// Cannot be done in the initState() as that can lead to an an error.
-    precacheImage(_image, context).then((_) {
-      setState(() {
-        _opacity = 1.0;
+    if (widget.arguments.fadeIn && !_precached!) {
+      precacheImage(_image, context).then((_) {
+        setState(() {
+          _opacity = 1.0;
+          _precached = true;
+        });
       });
-    });
-    super.didChangeDependencies();
+    }
   }
 
   @override
@@ -82,9 +98,10 @@ class _LoginViewState extends State<LoginView> {
     SizeConfig().init(context);
     return Scaffold(
       body: BackgroundGradient(
+        drawGradient: !_precached!,
         child: AnimatedOpacity(
           opacity: _opacity,
-          duration: Duration(milliseconds: 800),
+          duration: const Duration(milliseconds: 800),
           child: BackgroundImage(
             image: _image,
             child: Container(
@@ -92,13 +109,15 @@ class _LoginViewState extends State<LoginView> {
               height: SizeConfig.screenHeight,
               alignment: Alignment.center,
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
                   child: Column(
                     children: <Widget>[
-                      Logo(),
-                      SizedBox(height: 50),
+                      RepaintBoundary(
+                        child: Logo(),
+                      ),
+                      const SizedBox(height: 50),
                       Form(
                         key: _formKey,
                         child: ChangeNotifierProvider.value(
@@ -106,9 +125,9 @@ class _LoginViewState extends State<LoginView> {
                           child: FormFields(),
                         ),
                       ),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       CMTextButton(
-                        child: Text('LOGIN'),
+                        child: const Text('LOGIN'),
                         loading: _loginController.loading,
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
@@ -124,10 +143,9 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       CustomDivider(),
                       CMTextButton(
-                        child: Text('ACCOUNT ERSTELLEN'),
+                        child: const Text('ACCOUNT ERSTELLEN'),
                         onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, registerRoute);
+                          Navigator.pushNamed(context, registerRoute);
                         },
                         primary: ColorServices.darken(
                             Theme.of(context).colorScheme.onSurface, 10),
