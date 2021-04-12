@@ -183,6 +183,7 @@ class _BackdropState extends State<Backdrop>
     double height = constraints.biggest.height;
 
     /// Get position & height of the backdrop child.
+    /// Used to determine how far down the panel slides when it is closed.
     RenderObject? boxObject =
         _backdropChildKey.currentContext?.findRenderObject();
     RenderBox? box;
