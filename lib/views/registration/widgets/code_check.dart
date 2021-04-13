@@ -68,8 +68,8 @@ class _CodeCheckState extends State<CodeCheck> {
                     children: <TextSpan>[
                       TextSpan(
                         text:
-                            "Gib hier den Code und die Email-Adresse ein, an die der Code gesendet wurde.\n"
-                            "Diese Email-Adresse wird auch deine Login-Email sein.\n",
+                            "Gib hier den Code und die E-Mail ein, an die der Code gesendet wurde.\n"
+                            "Diese E-Mail wird auch deine Login-E-Mail sein.\n",
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ],
