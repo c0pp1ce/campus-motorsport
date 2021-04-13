@@ -11,6 +11,10 @@ class RequestLogin extends LoginEvent {
   RequestLogin(this.tokenController);
 }
 
+/// The request wont be cancelled directly (because it is async) but a flag will be set, so that
+/// the UI knows that it should not navigate to the home screen.
+class RequestCancelLogin extends LoginEvent {}
+
 /// Request the reset of the controller status.
 class RequestReset extends LoginEvent {}
 

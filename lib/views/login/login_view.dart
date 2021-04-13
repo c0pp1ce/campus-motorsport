@@ -44,28 +44,7 @@ class _LoginViewState extends State<LoginView> {
 
     /// Rebuild UI if _loginController notifies about changes.
     _loginController.addListener(() {
-      setState(() {
-        /// Show controller errors as snackbars.
-        if (_loginController.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            ErrorSnackBar(
-              _loginController.errorMessage!,
-              'OK',
-            ).buildSnackbar(context),
-          );
-
-          /// Hide error message if error is resolved (aka errorMessage == null)
-        } else {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        }
-
-        /// Schedule navigation to home screen on successful login.
-        if (_loginController.success) {
-          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-            Navigator.of(context).pushReplacementNamed(homeRoute);
-          });
-        }
-      });
+      this._listener();
     });
 
     /// Skip fade in.
@@ -91,6 +70,15 @@ class _LoginViewState extends State<LoginView> {
         });
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _loginController.removeListener(() {
+      this._listener();
+    });
+    _loginController.dispose();
   }
 
   @override
@@ -145,10 +133,12 @@ class _LoginViewState extends State<LoginView> {
                       CMTextButton(
                         child: const Text('ACCOUNT ERSTELLEN'),
                         onPressed: () {
+                          if(_loginController.loading) {
+                            _loginController.add(RequestCancelLogin());
+                          }
                           Navigator.pushNamed(context, registerRoute);
                         },
-                        primary: ColorServices.darken(
-                            Theme.of(context).colorScheme.onSurface, 10),
+                        primary: Theme.of(context).colorScheme.primary,
                         gradient: LinearGradient(
                           colors: <Color>[
                             ColorServices.brighten(
@@ -173,5 +163,33 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
+  }
+
+  /// Reacts to controller changes.
+  void _listener() {
+    if(!mounted) return;
+    setState(() {
+      /// Show controller errors as snackbars.
+      if (_loginController.errorMessage != null &&
+          !_loginController.cancelRequest) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          ErrorSnackBar(
+            _loginController.errorMessage!,
+            'OK',
+          ).buildSnackbar(context),
+        );
+
+        /// Hide error message if error is resolved (aka errorMessage == null)
+      } else {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      }
+
+      /// Schedule navigation to home screen on successful login.
+      if (_loginController.success && !_loginController.cancelRequest) {
+        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+          Navigator.of(context).pushReplacementNamed(homeRoute);
+        });
+      }
+    });
   }
 }

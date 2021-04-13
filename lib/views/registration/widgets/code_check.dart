@@ -35,14 +35,16 @@ class _CodeCheckState extends State<CodeCheck> {
 
     _controller = Provider.of<RegistrationController>(context, listen: false);
     _controller!.addListener(() {
-      /// Redraw UI on changes. Cannot use listen: true in initState as it might cause errors.
-      setState(() {
-        /// Switch to next form if code has been validated by the backend.
-        if (_controller!.validCode) {
-          widget.switchForm();
-        }
-      });
+      this._listener();
     });
+  }
+
+  @override
+  void dispose() {
+    _controller!.removeListener(() {
+      this._listener();
+    });
+    super.dispose();
   }
 
   @override
@@ -121,5 +123,17 @@ class _CodeCheckState extends State<CodeCheck> {
         ),
       ),
     );
+  }
+
+  /// Reacts to changes in the controller.
+  void _listener() {
+    if(!mounted) return;
+    /// Redraw UI on changes. Cannot use listen: true in initState as it might cause errors.
+    setState(() {
+      /// Switch to next form if code has been validated by the backend.
+      if (_controller!.validCode && !_controller!.cancelRequest) {
+        widget.switchForm();
+      }
+    });
   }
 }

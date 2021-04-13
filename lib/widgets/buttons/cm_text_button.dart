@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:flutter/material.dart';
 
 /// Simple [TextButton] which can have gradient background and a loading indicator.
@@ -11,6 +12,8 @@ class CMTextButton extends StatelessWidget {
   final double? height;
   final Color? primary;
   final Color? backgroundColor;
+
+  /// If loading, the button will be disabled.
   final bool? loading;
 
   /// Set to true, if no [gradient] is given and the standard gradient should not be drawn.
@@ -36,25 +39,20 @@ class CMTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        elevation: 0,
-        minimumSize: Size(100, 35),
-        shape: RoundedRectangleBorder(
-          borderRadius: _borderRadius,
-        ),
-        padding: const EdgeInsets.all(0.0),
-        primary: primary ?? Theme.of(context).colorScheme.onPrimary,
-      ),
+      onPressed: (loading ?? false) ? null : onPressed,
+      style: _style(context),
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: _borderRadius,
-          gradient: gradient ?? _gradient(context),
-          color: backgroundColor ?? null,
+          gradient: (loading ?? false) ? null : gradient ?? _gradient(context),
+          color: (loading ?? false)
+              ? ColorServices.brighten(
+                  Theme.of(context).colorScheme.surface, 35)
+              : backgroundColor ?? null,
         ),
         child: Container(
           alignment: Alignment.center,
-          constraints: const BoxConstraints(minWidth: 100, minHeight: 36),
+          constraints: const BoxConstraints(minWidth: 100, minHeight: 35),
           width: width,
           height: height,
           child: Row(
@@ -66,6 +64,22 @@ class CMTextButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  ButtonStyle _style(BuildContext context) {
+    return ButtonStyle(
+      elevation: MaterialStateProperty.all<double>(0),
+      minimumSize: MaterialStateProperty.all<Size>(const Size(100, 35)),
+      shape: MaterialStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(borderRadius: _borderRadius)),
+      foregroundColor: MaterialStateProperty.all<Color>(
+          primary ?? Theme.of(context).colorScheme.onPrimary),
+      overlayColor: MaterialStateProperty.all<Color>(
+          primary?.withOpacity(0.15) ??
+              Theme.of(context).colorScheme.onPrimary.withOpacity(0.15)),
+      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          const EdgeInsets.all(0.0)),
     );
   }
 

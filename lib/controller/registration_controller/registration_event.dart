@@ -12,6 +12,10 @@ class RequestRegistration extends RegistrationEvent {
   RequestRegistration(this.tokenController);
 }
 
+/// The request wont be cancelled directly (because it is async) but a flag will be set, so that
+/// the UI knows that it should not navigate to the home screen.
+class RequestCancelRequest extends RegistrationEvent {}
+
 /// Resets the controller.
 class RequestReset extends RegistrationEvent {}
 

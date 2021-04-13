@@ -10,10 +10,23 @@ abstract class BaseController extends ChangeNotifier {
   ///
   /// E.g. LoginController -> Successful login..
   bool success = false;
+  bool isDisposed = false;
 
   void reset() {
     loading = false;
     success = false;
     errorMessage = null;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    isDisposed = true;
+  }
+
+  /// Dont call [notifyListeners] if controller has been disposed.
+  void notify() {
+    if(isDisposed) return;
+    notifyListeners();
   }
 }

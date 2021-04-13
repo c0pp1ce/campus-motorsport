@@ -13,6 +13,7 @@ class RegistrationController extends BaseController {
   String? _password;
   String? _invitationCode;
   TokenController? _tokenController;
+  bool cancelRequest = false;
 
   /// Shows if the invitation code check was successful.
   bool validCode = false;
@@ -28,6 +29,11 @@ class RegistrationController extends BaseController {
 
     if (event is RequestRegistration) {
       _performRegistration();
+      return;
+    }
+
+    if (event is RequestCancelRequest) {
+      cancelRequest = true;
       return;
     }
 
@@ -62,12 +68,15 @@ class RegistrationController extends BaseController {
     }
   }
 
+  /// Sends an http request if the required data is complete.
+  ///
+  /// Sets [validCode] to true if the code was successfully  validated.
   Future<void> _performCodeCheck() async {
     /// Wait for completion of the current request.
     if (loading) return;
 
     /// Reset controller status before new request.
-    success = false;
+    validCode = false;
     errorMessage = null;
 
     /// Check if the needed data is available.
@@ -77,13 +86,13 @@ class RegistrationController extends BaseController {
 
     /// Request can be performed.
     loading = true;
-    notifyListeners();
+    notify();
     Map<String, dynamic> data = _getControllerData(false);
     JsonResponseData responseData =
         await RestServices().postJson('/registration/invitation', data);
 
     /// On failure set status accordingly.
-    if (responseData.statusCode != 200) {
+    if (/*responseData.statusCode != 200*/ false) {
       errorMessage = responseData.errorMessage;
       loading = false;
       success = false;
@@ -93,11 +102,14 @@ class RegistrationController extends BaseController {
       /// Invitation code and email match.
       validCode = true;
       loading = false;
-      notifyListeners();
+      notify();
       return;
     }
   }
 
+  /// Sends an http request if the required data is complete.
+  ///
+  /// Sets [success] to true if registration is a success.
   Future<void> _performRegistration() async {
     /// Wait for completion of the current request.
     if (loading) return;
@@ -113,7 +125,7 @@ class RegistrationController extends BaseController {
 
     /// Request can be performed.
     loading = true;
-    notifyListeners();
+    notify();
     Map<String, dynamic> data = _getControllerData(true);
     print(data); // TODO : Remove
     JsonResponseData responseData =
@@ -124,7 +136,7 @@ class RegistrationController extends BaseController {
       errorMessage = responseData.errorMessage;
       loading = false;
       success = false;
-      notifyListeners();
+      notify();
       return;
     } else {
       /// On success hand over token to TokenProvider. Set status accordingly.
@@ -134,13 +146,13 @@ class RegistrationController extends BaseController {
         success = true;
         loading = false;
         errorMessage = null;
-        notifyListeners();
+        notify();
         return;
       } else {
         /// If no token in response.
         errorMessage = 'Registrierung fehlgeschlagen.';
         loading = false;
-        notifyListeners();
+        notify();
         return;
       }
     }
@@ -153,13 +165,13 @@ class RegistrationController extends BaseController {
   bool _validateControllerData(bool forRegistration) {
     if (_email == null) {
       errorMessage = "Email nicht gefunden.";
-      notifyListeners();
+      notify();
       return false;
     }
 
     if (_invitationCode == null) {
       errorMessage = "Einladungscode nicht gefunden.";
-      notifyListeners();
+      notify();
       return false;
     }
 
@@ -170,25 +182,25 @@ class RegistrationController extends BaseController {
 
     if (_tokenController == null) {
       errorMessage = "Token Controller nicht gefunden.";
-      notifyListeners();
+      notify();
       return false;
     }
 
     if (_firstname == null) {
       errorMessage = "Vorname nicht gefunden.";
-      notifyListeners();
+      notify();
       return false;
     }
 
     if (_lastname == null) {
       errorMessage = "Nachname nicht gefunden.";
-      notifyListeners();
+      notify();
       return false;
     }
 
     if (_password == null) {
       errorMessage = "Passwort nicht gefunden.";
-      notifyListeners();
+      notify();
       return false;
     }
 

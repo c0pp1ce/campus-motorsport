@@ -10,8 +10,9 @@ import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 class LoginController extends BaseController {
   String? _email;
   String? _password;
-
   TokenController? _tokenController;
+  bool cancelRequest = false;
+
 
   LoginController() : super();
 
@@ -33,6 +34,11 @@ class LoginController extends BaseController {
       return;
     }
 
+    if(event is RequestCancelLogin) {
+      cancelRequest = true;
+      return;
+    }
+
     if (event is RequestReset) {
       reset();
       return;
@@ -48,7 +54,7 @@ class LoginController extends BaseController {
     if (_email == null || _password == null) {
       errorMessage = 'Login Daten unvollständig.';
       success = false;
-      notifyListeners();
+      notify();
       return;
     }
 
@@ -56,14 +62,15 @@ class LoginController extends BaseController {
     if(_tokenController == null) {
       errorMessage = 'TokenController nicht gefunden.';
       success = false;
-      notifyListeners();
+      notify();
     }
 
     /// Set controller status.
     success = false;
     errorMessage = null;
     loading = true;
-    notifyListeners();
+    cancelRequest = false;
+    notify();
 
     /// Create map for json encoding.
     Map<String, String> data = new Map();
@@ -79,7 +86,7 @@ class LoginController extends BaseController {
       errorMessage = responseData.errorMessage;
       loading = false;
       success = false;
-      notifyListeners();
+      notify();
       return;
     } else {
       /// On success hand over token to TokenProvider. Set status accordingly.
@@ -89,13 +96,13 @@ class LoginController extends BaseController {
         success = true;
         loading = false;
         errorMessage = null;
-        notifyListeners();
+        notify();
         return;
       } else {
         /// If no token in response.
         errorMessage = 'Login fehlgeschlagen.';
         loading = false;
-        notifyListeners();
+        notify();
         return;
       }
     }
