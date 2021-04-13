@@ -4,10 +4,10 @@ import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:campus_motorsport/views/registration/widgets/code_check.dart';
+import 'package:campus_motorsport/views/registration/widgets/user_data.dart';
 import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:flutter/material.dart';
 
-import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
 import 'package:provider/provider.dart';
 
 /// The root of the registration screen.
@@ -65,7 +65,7 @@ class _RegistrationViewState extends State<RegistrationView> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: WillPopScope(
               onWillPop: () async {
                 if (_controller!.loading) {
@@ -129,19 +129,7 @@ class _RegistrationViewState extends State<RegistrationView> {
 
   _switchFormWidget() {
     setState(() {
-      _currentFormWidget = Container(
-        child: Column(
-          children: [
-            const Text("My email"),
-            const Text("My Name"),
-            const Text("My password"),
-            CMTextButton(
-              onPressed: () {},
-              child: const Text("ACCOUNT ERSTELLEN"),
-            ),
-          ],
-        ),
-      );
+      _currentFormWidget = UserData();
     });
   }
 }

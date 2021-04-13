@@ -28,6 +28,7 @@ class RegistrationController extends BaseController {
     }
 
     if (event is RequestRegistration) {
+      _tokenController = event.tokenController;
       _performRegistration();
       return;
     }
@@ -92,7 +93,7 @@ class RegistrationController extends BaseController {
         await RestServices().postJson('/registration/invitation', data);
 
     /// On failure set status accordingly.
-    if (/*responseData.statusCode != 200*/ false) {
+    if (responseData.statusCode != 200) {
       errorMessage = responseData.errorMessage;
       loading = false;
       success = false;
@@ -127,7 +128,6 @@ class RegistrationController extends BaseController {
     loading = true;
     notify();
     Map<String, dynamic> data = _getControllerData(true);
-    print(data); // TODO : Remove
     JsonResponseData responseData =
         await RestServices().postJson('/registration', data);
 
@@ -239,4 +239,7 @@ class RegistrationController extends BaseController {
     _invitationCode = null;
     _tokenController = null;
   }
+
+  String? get email => _email;
+  String? get invitationCode => _invitationCode;
 }

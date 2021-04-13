@@ -6,6 +6,7 @@ import 'package:campus_motorsport/services/color_services.dart';
 class BasicTextField extends StatefulWidget {
   final String? hint;
   final String? label;
+  final String? initialValue;
 
   final String? Function(String?)? validate;
   final void Function(String?)? onSaved;
@@ -17,16 +18,19 @@ class BasicTextField extends StatefulWidget {
 
   /// If set to true, a suffix icon will be displayed which toggles obscureText.
   final bool toggleObscure;
+  final bool enabled;
 
   BasicTextField({
     this.hint,
     this.label,
+    this.initialValue,
     this.validate,
     this.onSaved,
     this.onChanged,
     this.textInputType,
     this.textInputAction,
     this.toggleObscure = false,
+    this.enabled = true,
     this.fillColor,
     Key? key,
   }) : super(key: key);
@@ -66,6 +70,8 @@ class _BasicTextFieldState extends State<BasicTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialValue,
+      enabled: widget.enabled,
       focusNode: _focusNode,
       onChanged: widget.onChanged,
       onSaved: widget.onSaved,
