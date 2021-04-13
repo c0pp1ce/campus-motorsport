@@ -21,7 +21,7 @@ class FormFields extends StatelessWidget {
           validate: (value) => ValidationServices().validateEmail(value),
           onSaved: (value) {
             Provider.of<LoginController>(context, listen: false)
-                .add(SaveEmail(value));
+                .add(ChangeEmail(value));
           },
         ),
         const SizedBox(
@@ -37,7 +37,7 @@ class FormFields extends StatelessWidget {
               ValidationServices().validateNotEmpty(value, 'Passwort'),
           onSaved: (value) {
             Provider.of<LoginController>(context, listen: false)
-                .add(SavePassword(value));
+                .add(ChangePassword(value));
           },
         ),
       ],

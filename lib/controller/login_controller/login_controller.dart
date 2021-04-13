@@ -1,35 +1,28 @@
+import 'package:campus_motorsport/controller/base_controller/base_controller.dart';
 import 'package:campus_motorsport/controller/token_controller/token_event.dart';
 import 'package:campus_motorsport/models/utility/response_data.dart';
 import 'package:campus_motorsport/services/rest_services.dart';
-import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 
 /// Responsible for handling the login process.
-///
-/// Event-based.
-/// [errorMessage] is != null, if an error in the http request occurred.
-class LoginController extends ChangeNotifier {
+class LoginController extends BaseController {
   String? _email;
   String? _password;
 
   TokenController? _tokenController;
 
-  String? _errorMessage;
-  bool _loading = false;
-  bool _success = false;
+  LoginController() : super();
 
-  LoginController();
-
-  /// Handles incoming events.
+  /// Entry point for calls from the UI.
   void add(LoginEvent event) {
-    if (event is SaveEmail) {
+    if (event is ChangeEmail) {
       _email = event.email?.trim().toLowerCase();
       return;
     }
 
-    if (event is SavePassword) {
+    if (event is ChangePassword) {
       _password = event.password;
       return;
     }
@@ -41,7 +34,7 @@ class LoginController extends ChangeNotifier {
     }
 
     if (event is RequestReset) {
-      _reset();
+      reset();
       return;
     }
   }
@@ -49,27 +42,27 @@ class LoginController extends ChangeNotifier {
   /// Performs the http request and processes the answer.
   Future<void> _login() async {
     /// Wait for the current request to finish before sending another.
-    if (_loading) return;
+    if (loading) return;
 
     /// Avoid request with incomplete data.
     if (_email == null || _password == null) {
-      _errorMessage = 'Login Daten unvollständig.';
-      _success = false;
+      errorMessage = 'Login Daten unvollständig.';
+      success = false;
       notifyListeners();
       return;
     }
 
     /// tokenController needed to store the token.
     if(_tokenController == null) {
-      _errorMessage = 'TokenController nicht gefunden.';
-      _success = false;
+      errorMessage = 'TokenController nicht gefunden.';
+      success = false;
       notifyListeners();
     }
 
     /// Set controller status.
-    _success = false;
-    _errorMessage = null;
-    _loading = true;
+    success = false;
+    errorMessage = null;
+    loading = true;
     notifyListeners();
 
     /// Create map for json encoding.
@@ -83,9 +76,9 @@ class LoginController extends ChangeNotifier {
 
     /// On failure set status accordingly.
     if (responseData.statusCode != 200) {
-      _errorMessage = responseData.errorMessage;
-      _loading = false;
-      _success = false;
+      errorMessage = responseData.errorMessage;
+      loading = false;
+      success = false;
       notifyListeners();
       return;
     } else {
@@ -93,15 +86,15 @@ class LoginController extends ChangeNotifier {
       String? token = responseData.data?['token'];
       if (token != null) {
         _tokenController!.add(SetToken(token));
-        _success = true;
-        _loading = false;
-        _errorMessage = null;
+        success = true;
+        loading = false;
+        errorMessage = null;
         notifyListeners();
         return;
       } else {
         /// If no token in response.
-        _errorMessage = 'Login fehlgeschlagen.';
-        _loading = false;
+        errorMessage = 'Login fehlgeschlagen.';
+        loading = false;
         notifyListeners();
         return;
       }
@@ -109,18 +102,10 @@ class LoginController extends ChangeNotifier {
   }
 
   /// Resets the controller.
-  void _reset() {
+  void reset() {
+    super.reset();
     _email = null;
     _password = null;
     _tokenController = null;
-    _loading = false;
-    _success = false;
-    _errorMessage = null;
   }
-
-  String? get errorMessage => _errorMessage;
-
-  bool get loading => _loading;
-
-  bool get success => _success;
 }
