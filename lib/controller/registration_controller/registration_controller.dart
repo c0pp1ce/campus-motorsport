@@ -57,7 +57,7 @@ class RegistrationController extends BaseController {
     }
 
     if (event is ChangeInvitationCode) {
-      _invitationCode = event.code;
+      _invitationCode = event.code?.trim().toUpperCase();
       return;
     }
   }
@@ -115,6 +115,7 @@ class RegistrationController extends BaseController {
     loading = true;
     notifyListeners();
     Map<String, dynamic> data = _getControllerData(true);
+    print(data); // TODO : Remove
     JsonResponseData responseData =
         await RestServices().postJson('/registration', data);
 

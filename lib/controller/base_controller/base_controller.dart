@@ -8,7 +8,7 @@ abstract class BaseController extends ChangeNotifier {
   bool loading = false;
   /// Used to determine íf the main objective of the controller was a success.
   ///
-  /// Login -> Successful login etc.
+  /// E.g. LoginController -> Successful login..
   bool success = false;
 
   void reset() {

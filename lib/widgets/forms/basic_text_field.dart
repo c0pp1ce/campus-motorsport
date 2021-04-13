@@ -75,6 +75,7 @@ class _BasicTextFieldState extends State<BasicTextField> {
       decoration: _style(context, widget.hint, widget.label),
       cursorColor: Theme.of(context).colorScheme.secondary,
       obscureText: _obscure,
+      keyboardAppearance: Theme.of(context).colorScheme.brightness,
     );
   }
 
@@ -110,7 +111,7 @@ class _BasicTextFieldState extends State<BasicTextField> {
             color: Theme.of(context).colorScheme.error,
           ),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
-      filled: true,
+      filled: widget.fillColor != null ? true : false,
       fillColor: widget.fillColor,
       enabledBorder: _enabledBorder(context),
       disabledBorder: _disabledBorder(context),
@@ -127,7 +128,7 @@ class _BasicTextFieldState extends State<BasicTextField> {
 
   /// Label color changes based on focus and error state.
   TextStyle? _labelStyle(BuildContext context) {
-    return Theme.of(context).textTheme.subtitle1?.copyWith(
+    return Theme.of(context).textTheme.subtitle2?.copyWith(
           color: _focusNode!.hasFocus
               ? _errorShown
                   ? Theme.of(context).colorScheme.error

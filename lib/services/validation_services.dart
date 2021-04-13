@@ -4,7 +4,8 @@ import 'package:email_validator/email_validator.dart';
 ///
 /// The validators return null if the validation passes, and a String if validation fails.
 class ValidationServices {
-  static final int passwordLength = 6;
+  static const int passwordLength = 6;
+  static const int invitationCodeLength = 6;
 
   /// Returns null if [value] is != null and not an empty String.
   ///
@@ -45,5 +46,34 @@ class ValidationServices {
     } else {
       return 'Passwort muss min. $passwordLength Zeichen lang sein.';
     }
+  }
+
+  /// Returns null if [value] is a valid invitation code.
+  String? validateInvitationCode(String? value) {
+    String? valueEmptyError = validateNotEmpty(value, 'Einladungscode');
+    if (valueEmptyError != null) {
+      return valueEmptyError;
+    }
+
+    if(value!.length < 6) {
+      return "Der Code ist zu kurz.";
+    }
+
+    if(value.length > 6) {
+      return "Der Code ist zu lang";
+    }
+
+    if(value.trim().isEmpty) {
+      return "Nur Leerzeichen enthalten.\nIns Feld tippen und Eingabe löschen.";
+    }
+
+    RegExp regExp = new RegExp(
+    r"^[a-zA-Z0-9]+$"
+    );
+    if(!regExp.hasMatch(value)) {
+      return "Code darf keine Sonderzeichen enthalten.";
+    }
+
+    return null;
   }
 }

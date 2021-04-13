@@ -1,11 +1,16 @@
+import 'package:campus_motorsport/controller/registration_controller/registration_controller.dart';
+import 'package:campus_motorsport/routes/routes.dart';
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
+import 'package:campus_motorsport/views/registration/widgets/code_check.dart';
+import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
+import 'package:provider/provider.dart';
 
 /// The root of the registration screen.
 class RegistrationView extends StatefulWidget {
-
   RegistrationView({Key? key}) : super(key: key);
 
   @override
@@ -13,26 +18,44 @@ class RegistrationView extends StatefulWidget {
 }
 
 class _RegistrationViewState extends State<RegistrationView> {
-  /// Key for the registration form.
-  //final GlobalKey<FormState> _formKey = GlobalKey();
+  RegistrationController? _controller;
 
   Widget? _currentFormWidget;
 
   @override
   void initState() {
     super.initState();
-    // TODO: implement error snackbars
-    _currentFormWidget = Column(
-      children: [
-        const Text("PIN Feld"),
-        const Text("Email Feld"),
-        CMTextButton(
-          onPressed: () {
-            _switchFormWidget(context);
-          },
-          child: const Text("Check"),
-        ),
-      ],
+
+    _controller = RegistrationController();
+    _controller!.addListener(() {
+      /// Rebuild UI on controller changes.
+      setState(() {
+        /// Show controller errors as snackbars.
+        if (_controller!.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            ErrorSnackBar(
+              _controller!.errorMessage!,
+              'OK',
+              backgroundColor: ColorServices.brighten(
+                  Theme.of(context).colorScheme.surface, 8),
+            ).buildSnackbar(context),
+          );
+        } else {
+          /// Hide error message if error is resolved (aka errorMessage == null)
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        }
+
+        /// Schedule navigation to home screen on successful registration.
+        if (_controller!.success) {
+          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+            Navigator.of(context).pushReplacementNamed(homeRoute);
+          });
+        }
+      });
+    });
+
+    _currentFormWidget = CodeCheck(
+      switchForm: _switchFormWidget,
     );
   }
 
@@ -40,10 +63,11 @@ class _RegistrationViewState extends State<RegistrationView> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        elevation: 10.0,
         title: const Text('Account erstellen'),
         automaticallyImplyLeading: true,
       ),
@@ -55,15 +79,18 @@ class _RegistrationViewState extends State<RegistrationView> {
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(30.0),
-            child: AnimatedSwitcher(
-              child: _currentFormWidget,
-              duration: const Duration(milliseconds: 300),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(
-                  child: child,
-                  scale: animation,
-                );
-              },
+            child: ChangeNotifierProvider.value(
+              value: _controller!,
+              child: AnimatedSwitcher(
+                child: _currentFormWidget,
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(
+                    child: child,
+                    scale: animation,
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -71,7 +98,7 @@ class _RegistrationViewState extends State<RegistrationView> {
     );
   }
 
-  _switchFormWidget(BuildContext context) {
+  _switchFormWidget() {
     setState(() {
       _currentFormWidget = Container(
         child: Column(
