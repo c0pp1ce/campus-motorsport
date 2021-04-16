@@ -20,7 +20,7 @@ void main() {
   runApp(MyApp());
 }
 
-/// Provider for blocs which need to be available globally.
+/// Provider for controllers which need to be available globally.
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class MyMaterialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TeamStage',
+      title: 'Campus Motorsport',
       theme: ThemeData(
         colorScheme: AppColorTheme.darkTheme,
         textTheme: AppTextTheme.theme,
