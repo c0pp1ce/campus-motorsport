@@ -1,6 +1,5 @@
 import 'package:campus_motorsport/controller/base_controller/base_controller.dart';
 import 'package:campus_motorsport/controller/registration_controller/registration_event.dart';
-import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/controller/token_controller/token_event.dart';
 import 'package:campus_motorsport/models/utility/response_data.dart';
 import 'package:campus_motorsport/services/rest_services.dart';
@@ -12,8 +11,6 @@ class RegistrationController extends BaseController {
   String? _email;
   String? _password;
   String? _invitationCode;
-  TokenController? _tokenController;
-  bool cancelRequest = false;
 
   /// Shows if the invitation code check was successful.
   bool validCode = false;
@@ -28,7 +25,7 @@ class RegistrationController extends BaseController {
     }
 
     if (event is RequestRegistration) {
-      _tokenController = event.tokenController;
+      tokenController = event.tokenController;
       _performRegistration();
       return;
     }
@@ -76,34 +73,25 @@ class RegistrationController extends BaseController {
     /// Wait for completion of the current request.
     if (loading) return;
 
-    /// Reset controller status before new request.
-    validCode = false;
-    errorMessage = null;
-
     /// Check if the needed data is available.
     if (!_validateControllerData(false)) {
       return;
     }
 
-    /// Request can be performed.
-    loading = true;
-    notify();
+    /// Reset controller status before new request.
+    validCode = false;
+    setStatusPreRequest();
+
     Map<String, dynamic> data = _getControllerData(false);
     JsonResponseData responseData =
         await RestServices().postJson('/registration/invitation', data);
 
     /// On failure set status accordingly.
     if (responseData.statusCode != 200) {
-      errorMessage = responseData.errorMessage;
-      loading = false;
-      success = false;
-      notify();
-      return;
+      requestFailure(responseData.errorMessage);
     } else {
-      /// Invitation code and email match.
       validCode = true;
-      loading = false;
-      notify();
+      requestSuccess(mainObjective: false);
       return;
     }
   }
@@ -115,45 +103,29 @@ class RegistrationController extends BaseController {
     /// Wait for completion of the current request.
     if (loading) return;
 
-    /// Reset controller status before new request.
-    success = false;
-    errorMessage = null;
-
     /// Check if the needed data is available.
     if (!_validateControllerData(true)) {
       return;
     }
 
-    /// Request can be performed.
-    loading = true;
-    notify();
+    setStatusPreRequest();
+
     Map<String, dynamic> data = _getControllerData(true);
     JsonResponseData responseData =
         await RestServices().postJson('/registration', data);
 
     /// On failure set status accordingly.
     if (responseData.statusCode != 201) {
-      errorMessage = responseData.errorMessage;
-      loading = false;
-      success = false;
-      notify();
-      return;
+      requestFailure(responseData.errorMessage);
     } else {
       /// On success hand over token to TokenProvider. Set status accordingly.
       String? token = responseData.data?['token'];
       if (token != null) {
-        _tokenController!.add(SetToken(token));
-        success = true;
-        loading = false;
-        errorMessage = null;
-        notify();
-        return;
+        tokenController!.add(SetToken(token));
+        requestSuccess();
       } else {
         /// If no token in response.
-        errorMessage = 'Registrierung fehlgeschlagen.';
-        loading = false;
-        notify();
-        return;
+        requestFailure("Kein Token in der Antwort.");
       }
     }
   }
@@ -180,7 +152,7 @@ class RegistrationController extends BaseController {
       return true;
     }
 
-    if (_tokenController == null) {
+    if (tokenController == null) {
       errorMessage = "Token Controller nicht gefunden.";
       notify();
       return false;
@@ -237,7 +209,6 @@ class RegistrationController extends BaseController {
     _email = null;
     _password = null;
     _invitationCode = null;
-    _tokenController = null;
   }
 
   String? get email => _email;

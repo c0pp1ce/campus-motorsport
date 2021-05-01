@@ -3,16 +3,12 @@ import 'package:campus_motorsport/controller/token_controller/token_event.dart';
 import 'package:campus_motorsport/models/utility/response_data.dart';
 import 'package:campus_motorsport/services/rest_services.dart';
 
-import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 
 /// Responsible for handling the login process.
 class LoginController extends BaseController {
   String? _email;
   String? _password;
-  TokenController? _tokenController;
-  bool cancelRequest = false;
-
 
   LoginController() : super();
 
@@ -29,12 +25,12 @@ class LoginController extends BaseController {
     }
 
     if (event is RequestLogin) {
-      _tokenController = event.tokenController;
+      tokenController = event.tokenController;
       _login();
       return;
     }
 
-    if(event is RequestCancelLogin) {
+    if (event is RequestCancelLogin) {
       cancelRequest = true;
       return;
     }
@@ -59,18 +55,13 @@ class LoginController extends BaseController {
     }
 
     /// tokenController needed to store the token.
-    if(_tokenController == null) {
+    if (tokenController == null) {
       errorMessage = 'TokenController nicht gefunden.';
       success = false;
       notify();
     }
 
-    /// Set controller status.
-    success = false;
-    errorMessage = null;
-    loading = true;
-    cancelRequest = false;
-    notify();
+    setStatusPreRequest();
 
     /// Create map for json encoding.
     Map<String, String> data = new Map();
@@ -79,31 +70,21 @@ class LoginController extends BaseController {
     //data['appid'] = 'Here should be the app id';
 
     /// Perform request.
-    JsonResponseData responseData = await RestServices().postJson('/login', data);
+    JsonResponseData responseData =
+        await RestServices().postJson('/login', data);
 
     /// On failure set status accordingly.
     if (responseData.statusCode != 200) {
-      errorMessage = responseData.errorMessage;
-      loading = false;
-      success = false;
-      notify();
-      return;
+      requestFailure(responseData.errorMessage);
     } else {
       /// On success hand over token to TokenProvider. Set status accordingly.
       String? token = responseData.data?['token'];
       if (token != null) {
-        _tokenController!.add(SetToken(token));
-        success = true;
-        loading = false;
-        errorMessage = null;
-        notify();
-        return;
+        tokenController!.add(SetToken(token));
+        requestSuccess();
       } else {
         /// If no token in response.
-        errorMessage = 'Login fehlgeschlagen.';
-        loading = false;
-        notify();
-        return;
+        requestFailure("Kein Token in der Antwort.");
       }
     }
   }
@@ -113,6 +94,5 @@ class LoginController extends BaseController {
     super.reset();
     _email = null;
     _password = null;
-    _tokenController = null;
   }
 }
