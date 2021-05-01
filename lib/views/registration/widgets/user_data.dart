@@ -3,6 +3,7 @@ import 'package:campus_motorsport/controller/registration_controller/registratio
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/validation_services.dart';
+import 'package:campus_motorsport/views/registration/widgets/cancel_registration.dart';
 import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/forms/basic_text_field.dart';
 import 'package:campus_motorsport/widgets/layout/simple_card.dart';
@@ -39,6 +40,9 @@ class _UserDataState extends State<UserData> {
   @override
   Widget build(BuildContext context) {
     return SimpleCard(
+      color:Colors.transparent,
+      shadowColor: Colors.transparent,
+      elevation: 0,
       child: Form(
         key: _formKey,
         child: Column(
@@ -115,6 +119,8 @@ class _UserDataState extends State<UserData> {
               child: const Text("ACCOUNT ERSTELLEN"),
               loading: _controller!.loading,
             ),
+            const SizedBox(height: 10,),
+            CancelRegistration(),
           ],
         ),
       ),

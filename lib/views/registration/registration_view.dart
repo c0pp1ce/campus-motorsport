@@ -5,6 +5,7 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:campus_motorsport/views/registration/widgets/code_check.dart';
 import 'package:campus_motorsport/views/registration/widgets/user_data.dart';
+import 'package:campus_motorsport/widgets/layout/background_image.dart';
 import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,9 @@ import 'package:provider/provider.dart';
 
 /// The root of the registration screen.
 class RegistrationView extends StatefulWidget {
-  RegistrationView({Key? key}) : super(key: key);
+  final ImageProvider backgroundImage;
+
+  RegistrationView(this.backgroundImage, {Key? key}) : super(key: key);
 
   @override
   _RegistrationViewState createState() => _RegistrationViewState();
@@ -51,40 +54,39 @@ class _RegistrationViewState extends State<RegistrationView> {
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      extendBodyBehindAppBar: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        elevation: 10.0,
-        title: const Text('Account erstellen'),
-        automaticallyImplyLeading: true,
-      ),
-      body: Container(
-        width: SizeConfig.screenWidth,
-        height: SizeConfig.screenHeight,
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: WillPopScope(
-              onWillPop: () async {
-                if (_controller!.loading) {
-                  _controller!.add(RequestCancelRequest());
-                }
-                return true;
-              },
-              child: ChangeNotifierProvider.value(
-                value: _controller!,
-                child: AnimatedSwitcher(
-                  child: _currentFormWidget,
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                    return ScaleTransition(
-                      child: child,
-                      scale: animation,
-                    );
+      extendBodyBehindAppBar: true,
+      body: BackgroundImage(
+        image: widget.backgroundImage,
+        child: Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
+          alignment: Alignment.center,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: WillPopScope(
+                  onWillPop: () async {
+                    if (_controller!.loading) {
+                      _controller!.add(RequestCancelRequest());
+                    }
+                    return true;
                   },
+                  child: ChangeNotifierProvider.value(
+                    value: _controller!,
+                    child: AnimatedSwitcher(
+                      child: _currentFormWidget,
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder:
+                          (Widget child, Animation<double> animation) {
+                        return ScaleTransition(
+                          child: child,
+                          scale: animation,
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),

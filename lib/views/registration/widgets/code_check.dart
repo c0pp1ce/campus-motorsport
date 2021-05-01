@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'cancel_registration.dart';
+
 /// The first registration form where the code & email are entered.
 class CodeCheck extends StatefulWidget {
   /// This function will be called when the code is correct and the next form
@@ -51,6 +53,9 @@ class _CodeCheckState extends State<CodeCheck> {
   @override
   Widget build(BuildContext context) {
     return SimpleCard(
+      color:Colors.transparent,
+      shadowColor: Colors.transparent,
+      elevation: 0,
       child: Form(
         key: _formKey,
         child: Column(
@@ -115,6 +120,8 @@ class _CodeCheckState extends State<CodeCheck> {
               child: const Text("EINLADUNG PRÜFEN"),
               loading: _controller!.loading,
             ),
+            const SizedBox(height: 10,),
+            CancelRegistration(),
           ],
         ),
       ),

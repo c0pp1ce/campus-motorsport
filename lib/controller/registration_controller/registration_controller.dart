@@ -97,7 +97,7 @@ class RegistrationController extends BaseController {
       errorMessage = responseData.errorMessage;
       loading = false;
       success = false;
-      notifyListeners();
+      notify();
       return;
     } else {
       /// Invitation code and email match.

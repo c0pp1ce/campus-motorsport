@@ -96,65 +96,68 @@ class _LoginViewState extends State<LoginView> {
               width: SizeConfig.screenWidth,
               height: SizeConfig.screenHeight,
               alignment: Alignment.center,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Column(
-                    children: <Widget>[
-                      RepaintBoundary(
-                        child: Logo(),
-                      ),
-                      const SizedBox(height: 50),
-                      Form(
-                        key: _formKey,
-                        child: ChangeNotifierProvider.value(
-                          value: _loginController,
-                          child: FormFields(),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Column(
+                      children: <Widget>[
+                        RepaintBoundary(
+                          child: Logo(),
                         ),
-                      ),
-                      const SizedBox(height: 50),
-                      CMTextButton(
-                        child: const Text('LOGIN'),
-                        loading: _loginController.loading,
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            /// Save inputs and perform http request.
-                            _formKey.currentState?.save();
-                            _loginController
-                                .add(RequestLogin(Provider.of<TokenController>(
-                              context,
-                              listen: false,
-                            )));
-                          }
-                        },
-                      ),
-                      CustomDivider(),
-                      CMTextButton(
-                        child: const Text('ACCOUNT ERSTELLEN'),
-                        onPressed: () {
-                          if (_loginController.loading) {
-                            _loginController.add(RequestCancelLogin());
-                          }
-                          Navigator.pushNamed(context, registerRoute);
-                        },
-                        primary: Theme.of(context).colorScheme.primary,
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            ColorServices.brighten(
-                                Theme.of(context)
-                                    .colorScheme
-                                    .surface
-                                    .withOpacity(0.7),
-                                25),
-                            Theme.of(context)
-                                .colorScheme
-                                .surface
-                                .withOpacity(0.9),
-                          ],
+                        const SizedBox(height: 50),
+                        Form(
+                          key: _formKey,
+                          child: ChangeNotifierProvider.value(
+                            value: _loginController,
+                            child: FormFields(),
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 50),
+                        CMTextButton(
+                          child: const Text('LOGIN'),
+                          loading: _loginController.loading,
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              /// Save inputs and perform http request.
+                              _formKey.currentState?.save();
+                              _loginController
+                                  .add(RequestLogin(Provider.of<TokenController>(
+                                context,
+                                listen: false,
+                              )));
+                            }
+                          },
+                        ),
+                        CustomDivider(),
+                        CMTextButton(
+                          child: const Text('ACCOUNT ERSTELLEN'),
+                          onPressed: () {
+                            if (_loginController.loading) {
+                              _loginController.add(RequestCancelLogin());
+                            }
+                            Navigator.pushNamed(context, registerRoute,
+                                arguments: _image);
+                          },
+                          primary: Theme.of(context).colorScheme.onSurface,
+                          gradient: LinearGradient(
+                            colors: <Color>[
+                              ColorServices.brighten(
+                                  Theme.of(context)
+                                      .colorScheme
+                                      .surface
+                                      .withOpacity(0.7),
+                                  25),
+                              Theme.of(context)
+                                  .colorScheme
+                                  .surface
+                                  .withOpacity(0.9),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
