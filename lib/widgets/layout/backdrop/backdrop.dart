@@ -16,7 +16,12 @@ class Backdrop extends StatefulWidget {
   /// The panel header, which is always visible.
   /// Has a fixed height of 40.0.
   final Widget? panelHeader;
+
+  /// Actions are displayed on the right side of the app bar.
   final List<Widget>? appBarActions;
+
+  /// Will be called whenever the backdrop gets closed.
+  final void Function()? afterClosingBackdrop;
 
   // Placed here so they can be seen from other widgets.
   static const double panelElevation = 12.0;
@@ -31,14 +36,15 @@ class Backdrop extends StatefulWidget {
       required this.title,
       this.panelHeader,
       this.appBarActions,
+      this.afterClosingBackdrop,
       Key? key})
       : super(key: key);
 
   @override
-  _BackdropState createState() => _BackdropState();
+  BackdropState createState() => BackdropState();
 }
 
-class _BackdropState extends State<Backdrop>
+class BackdropState extends State<Backdrop>
     with SingleTickerProviderStateMixin {
   /// Height of the foreground header which is always visible
   static const double _panelHeaderHeight = 40.0;
@@ -53,18 +59,38 @@ class _BackdropState extends State<Backdrop>
   /// Controller for animating the panel (foreground).
   AnimationController? _panelController;
 
+  /// Toggles the visibility of the backdrop layer.
+  void Function()? toggleBackdrop;
+  bool backdropOpen = false;
+
   @override
   void initState() {
     super.initState();
 
     _panelController = new AnimationController(
       duration: const Duration(milliseconds: 300),
-      value: 1.0, // initially closed.
+      value: 1,
+
+      /// Backdrop initially closed.
+      lowerBound: 0,
+      upperBound: 1,
       vsync: this,
     );
     _panelController!.addStatusListener((status) {
-      setState(() {});
+      setState(() {
+        if (widget.afterClosingBackdrop != null &&
+            status == AnimationStatus.completed) {
+          backdropOpen = false;
+          widget.afterClosingBackdrop!();
+        } else if (status == AnimationStatus.dismissed) {
+          backdropOpen = true;
+        }
+      });
     });
+
+    toggleBackdrop = () {
+      _executeAnimation();
+    };
   }
 
   @override
@@ -90,6 +116,9 @@ class _BackdropState extends State<Backdrop>
         title: widget.title,
         leading: _buildMenuButton(context),
         actions: widget.appBarActions,
+        flexibleSpace: GestureDetector(
+          onTap: _executeAnimation,
+        ),
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: LayoutBuilder(
@@ -126,10 +155,10 @@ class _BackdropState extends State<Backdrop>
 
   Widget _buildPanel(BuildContext context) {
     return GestureDetector(
-      onVerticalDragStart: _isPanelVisible ? null : _onPanelDragStart,
-      onVerticalDragUpdate: _isPanelVisible ? null : _onPanelDragUpdate,
-      onVerticalDragEnd: _isPanelVisible ? null : _onPanelDragEnd,
-      onTap: _isPanelVisible ? null : _onPanelTap,
+      onVerticalDragStart: !_isPanelVisible ? _onPanelDragStart : null,
+      onVerticalDragUpdate: _isPanelOpening ? _onPanelDragUpdate : null,
+      onVerticalDragEnd: _isPanelOpening ? _onPanelDragEndUp : null,
+      onTap: !_isPanelVisible ? _onPanelTap : null,
       child: Stack(
         children: <Widget>[
           Material(
@@ -152,12 +181,13 @@ class _BackdropState extends State<Backdrop>
               ),
             ),
           ),
-          if(!_isPanelVisible) Container(
-            decoration: BoxDecoration(
-              borderRadius: Backdrop.panelBorderRadius,
-              color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+          if (!_isPanelVisible)
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: Backdrop.panelBorderRadius,
+                color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -167,15 +197,19 @@ class _BackdropState extends State<Backdrop>
   Widget _buildMenuButton(BuildContext context) {
     return IconButton(
       onPressed: () {
-        /// Execute the animation.
-        _panelController!.fling(velocity: _isPanelVisible ? -1.0 : 1.0);
-        setState(() {});
+        _executeAnimation();
       },
       icon: AnimatedIcon(
         icon: AnimatedIcons.close_menu,
         progress: _panelController!.view,
       ),
     );
+  }
+
+  /// Runs the animation. Direction depending on [_isPanelVisible].
+  void _executeAnimation() {
+    _panelController!.fling(velocity: _isPanelVisible ? -1.0 : 1.0);
+    setState(() {});
   }
 
   /// The animation of the foreground (panel).
@@ -209,7 +243,7 @@ class _BackdropState extends State<Backdrop>
   }
 
   void _onPanelDragStart(DragStartDetails details) {
-    // print("Panel drag start");
+    _panelController!.reset();
   }
 
   /// Calculate drag length
@@ -217,7 +251,8 @@ class _BackdropState extends State<Backdrop>
     double? delta = details.primaryDelta;
 
     /// (_maxSlide! / 1.5) for faster slide feeling.
-    _panelController!.value -= (delta ?? 0) / (_maxSlide! / 1.5);
+    delta = (delta ?? 0) * -1;
+    _panelController!.value += delta / (_maxSlide! / 1.5);
   }
 
   /// Open the panel on tap.
@@ -225,8 +260,8 @@ class _BackdropState extends State<Backdrop>
     _panelController!.fling(velocity: 1.0);
   }
 
-  /// Snap panel to open/closed.
-  void _onPanelDragEnd(DragEndDetails details) {
+  /// Snap panel to open.
+  void _onPanelDragEndUp(DragEndDetails details) {
     /// Panel fully opened or closed.
     if (_panelController!.isCompleted || _panelController!.isDismissed) {
       return;
@@ -236,10 +271,17 @@ class _BackdropState extends State<Backdrop>
     );
   }
 
-  /// Determine if the foreground is visible.
+  /// Determine if the panel is completely visible.
   bool get _isPanelVisible {
     final AnimationStatus status = _panelController!.status;
-    return (status == AnimationStatus.completed ||
-        status == AnimationStatus.forward);
+    return (status == AnimationStatus.completed);
+  }
+
+  /// Determine if the panel is visible or in the process of being opened.
+  bool get _isPanelOpening {
+    final AnimationStatus status = _panelController!.status;
+    return (status == AnimationStatus.dismissed ||
+        status == AnimationStatus.forward ||
+        status == AnimationStatus.reverse);
   }
 }

@@ -1,8 +1,8 @@
-import 'package:campus_motorsport/models/route_arguments/login_arguments.dart';
-import 'package:campus_motorsport/widgets/layout/background_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:campus_motorsport/models/route_arguments/login_arguments.dart';
+import 'package:campus_motorsport/widgets/layout/background_image.dart';
 import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
@@ -133,7 +133,7 @@ class _LoginViewState extends State<LoginView> {
                       CMTextButton(
                         child: const Text('ACCOUNT ERSTELLEN'),
                         onPressed: () {
-                          if(_loginController.loading) {
+                          if (_loginController.loading) {
                             _loginController.add(RequestCancelLogin());
                           }
                           Navigator.pushNamed(context, registerRoute);
@@ -167,7 +167,7 @@ class _LoginViewState extends State<LoginView> {
 
   /// Reacts to controller changes.
   void _listener() {
-    if(!mounted) return;
+    if (!mounted) return;
     setState(() {
       /// Show controller errors as snackbars.
       if (_loginController.errorMessage != null &&

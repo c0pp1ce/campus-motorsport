@@ -65,7 +65,7 @@ class _RegistrationViewState extends State<RegistrationView> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: WillPopScope(
               onWillPop: () async {
                 if (_controller!.loading) {
