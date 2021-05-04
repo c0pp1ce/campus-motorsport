@@ -12,6 +12,8 @@ class CMTextButton extends StatelessWidget {
   final double? height;
   final Color? primary;
   final Color? backgroundColor;
+  final double? elevation;
+  final BorderRadius? radius;
 
   /// If loading, the button will be disabled.
   final bool? loading;
@@ -21,6 +23,7 @@ class CMTextButton extends StatelessWidget {
   /// Has no effect when a [gradient] is given.
   final bool? noGradient;
 
+  /// Standard value. Can be overwritten by [radius].
   final BorderRadius _borderRadius = BorderRadius.circular(10.0);
 
   CMTextButton({
@@ -33,6 +36,8 @@ class CMTextButton extends StatelessWidget {
     this.backgroundColor,
     this.loading,
     this.noGradient,
+    this.elevation,
+    this.radius,
     Key? key,
   }) : super(key: key);
 
@@ -42,8 +47,10 @@ class CMTextButton extends StatelessWidget {
       onPressed: (loading ?? false) ? null : onPressed,
       style: _style(context),
       child: Ink(
+        width: width,
+        height: height,
         decoration: BoxDecoration(
-          borderRadius: _borderRadius,
+          borderRadius: radius ?? _borderRadius,
           gradient: (loading ?? false) ? null : gradient ?? _gradient(context),
           color: (loading ?? false)
               ? ColorServices.brighten(
@@ -52,7 +59,7 @@ class CMTextButton extends StatelessWidget {
         ),
         child: Container(
           alignment: Alignment.center,
-          constraints: const BoxConstraints(minWidth: 100, minHeight: 35),
+          constraints: const BoxConstraints(minWidth: 50, minHeight: 35),
           width: width,
           height: height,
           child: Row(
@@ -69,10 +76,10 @@ class CMTextButton extends StatelessWidget {
 
   ButtonStyle _style(BuildContext context) {
     return ButtonStyle(
-      elevation: MaterialStateProperty.all<double>(0),
-      minimumSize: MaterialStateProperty.all<Size>(const Size(100, 35)),
+      elevation: MaterialStateProperty.all<double>(elevation ?? 0),
+      minimumSize: MaterialStateProperty.all<Size>(const Size(50, 35)),
       shape: MaterialStateProperty.all<OutlinedBorder>(
-          RoundedRectangleBorder(borderRadius: _borderRadius)),
+          RoundedRectangleBorder(borderRadius: radius ?? _borderRadius)),
       foregroundColor: MaterialStateProperty.all<Color>(
           primary ?? Theme.of(context).colorScheme.onPrimary),
       overlayColor: MaterialStateProperty.all<Color>(

@@ -39,19 +39,24 @@ class MyApp extends StatelessWidget {
 class MyMaterialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Campus Motorsport',
-      theme: ThemeData(
-        colorScheme: AppColorTheme.darkTheme,
-        textTheme: AppTextTheme.theme,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        applyElevationOverlayColor: true,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColorTheme.darkTheme.surface,
       ),
-      onGenerateRoute: CustomRouter.generateRoute,
-      initialRoute: loginRoute,
-      debugShowCheckedModeBanner: false,
-      //checkerboardRasterCacheImages: true,
-      //checkerboardOffscreenLayers: true,
+      child: MaterialApp(
+        title: 'Campus Motorsport',
+        theme: ThemeData(
+          colorScheme: AppColorTheme.darkTheme,
+          textTheme: AppTextTheme.theme,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          applyElevationOverlayColor: true,
+        ),
+        onGenerateRoute: CustomRouter.generateRoute,
+        initialRoute: homeRoute,
+        debugShowCheckedModeBanner: false,
+        //checkerboardRasterCacheImages: true,
+        //checkerboardOffscreenLayers: true,
+      ),
     );
   }
 }

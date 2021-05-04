@@ -1,9 +1,10 @@
+
+import 'package:campus_motorsport/views/main/main_navigator.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/models/route_arguments/login_arguments.dart';
 import 'package:campus_motorsport/views/login/login_view.dart';
 import 'package:campus_motorsport/views/registration/registration_view.dart';
-
 
 import 'package:campus_motorsport/routes/routes.dart';
 
@@ -11,9 +12,10 @@ import 'package:campus_motorsport/routes/routes.dart';
 class CustomRouter {
   static Route generateRoute(RouteSettings settings) {
     switch (settings.name) {
+
       case homeRoute:
         return MaterialPageRoute(
-          builder: (_) => placeholder(settings.name ?? 'NO ROUTE NAME'),
+          builder: (_) => MainNavigator(),
           settings: settings,
         );
 

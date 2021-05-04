@@ -152,6 +152,7 @@ class RegistrationController extends BaseController {
       return true;
     }
 
+    /// Needed to store the token.
     if (tokenController == null) {
       errorMessage = "Token Controller nicht gefunden.";
       notify();
