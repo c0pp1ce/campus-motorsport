@@ -8,8 +8,6 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-
     return SizedBox(
       width: SizeConfig.screenWidth * 0.8,
       child: Image.asset('assets/images/logo_white.png'),

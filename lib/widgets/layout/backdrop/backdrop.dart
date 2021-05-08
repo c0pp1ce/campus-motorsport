@@ -67,6 +67,8 @@ class BackdropState extends State<Backdrop>
   void initState() {
     super.initState();
 
+    _maxSlide = SizeConfig.screenHeight;
+
     _panelController = new AnimationController(
       duration: const Duration(milliseconds: 300),
       value: 1,
@@ -91,14 +93,6 @@ class BackdropState extends State<Backdrop>
     toggleBackdrop = () {
       _executeAnimation();
     };
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    SizeConfig().init(context);
-    _maxSlide = SizeConfig.screenHeight;
   }
 
   @override

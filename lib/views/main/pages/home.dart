@@ -22,13 +22,33 @@ class _HomeState extends State<Home> {
           width: 100,
           height: 35,
           child: Text("Surprise"),
-          onPressed: () {},
+          onPressed: () async {
+            await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Test"),
+                actions: [
+                  CMTextButton(
+                    width: 100,
+                    height: 40,
+                    child: Text("Leave"),
+                    onPressed: () => Navigator.of(context).pop(false),
+                  ),
+                  CMTextButton(
+                    width: 100,
+                    height: 40,
+                    child: Text("Change"),
+                    onPressed: () => Navigator.of(context).pop(false),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
   }
 }
-
 
 class HomeContext extends StatefulWidget {
   HomeContext({Key? key}) : super(key: key);
@@ -45,9 +65,9 @@ class HomeContextState extends State<HomeContext> {
     return ContextDrawer(
       child: Center(
           child: Text(
-            text,
-            style: Theme.of(context).textTheme.headline6,
-          )),
+        text,
+        style: Theme.of(context).textTheme.headline6,
+      )),
     );
   }
 

@@ -3,21 +3,31 @@ import 'package:campus_motorsport/widgets/layout/stacked_ui/context_drawer.dart'
 import 'package:campus_motorsport/widgets/layout/stacked_ui/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 
+/// Used to determine whether the [ContextDrawer] (right) or [NavigationDrawer] (left) should
+/// be shown when the user performs a drag gesture.
 enum SlideDirection { right, left }
 
 class StackedUI extends StatefulWidget {
   /// The visible width of the main view when it is slided out of view.
+  ///
+  /// Attention: Currently there is no way to adjust the [ContextDrawer] and
+  /// [NavigationDrawer to match changes made to this width.
   final double slidedWidth;
 
+  /// Middle view of the [StackedUI].
   final Widget mainView;
 
-  /// Only tested for usage of [NavigationDrawer].
+  /// Left view of the [StackedUI].
+  ///
+  /// Only tested for usage with [NavigationDrawer].
   final Widget navigationDrawer;
 
-  /// Only tested for usage of [ContextDrawer].
+  /// Right view of the [StackedUI].
+  ///
+  /// Only tested for usage with [ContextDrawer].
   final Widget contextDrawer;
 
-  StackedUI({
+  const StackedUI({
     this.slidedWidth = 50,
     required this.mainView,
     required this.navigationDrawer,
@@ -31,20 +41,32 @@ class StackedUI extends StatefulWidget {
 
 class StackedUIState extends State<StackedUI>
     with SingleTickerProviderStateMixin {
+  /// Calculated based on [widget.slideWidth] and screen width.
+  ///
+  /// In order to have slides to left and right this value needs to switch between
+  /// maxSlide and -maxSlide.
   late double maxSlide;
   late AnimationController animationController;
   bool mainViewOpen = true;
   bool sideViewOpen = false;
+
+  /// Needed in order to determine if the velocity needs to be multiplied by -1
+  /// This is due to the fact that in order to animate a swipe from right to left
+  /// (which opens left side) maxSlide needs to be multiplied by -1.
   bool leftSideOpen = false;
-  bool rightSideOpen = false;
+
+  /// Only set if on [mainViewOpen] was true on drag start.
   SlideDirection? slideDirection;
 
   /// Index of the IndexedStack used for navigation & context widgets.
+  /// 0 = [NavigationDrawer], 1 = [ContextDrawer].
   int _index = 0;
 
   @override
   void initState() {
     super.initState();
+
+    maxSlide = SizeConfig.screenWidth - widget.slidedWidth;
 
     animationController = AnimationController(
       vsync: this,
@@ -60,14 +82,6 @@ class StackedUIState extends State<StackedUI>
         }
       });
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    SizeConfig().init(context);
-    maxSlide = SizeConfig.screenWidth - widget.slidedWidth;
   }
 
   @override
@@ -140,8 +154,6 @@ class StackedUIState extends State<StackedUI>
     if (animationController.isDismissed) {
       if (maxSlide < 0) {
         maxSlide = -maxSlide;
-        leftSideOpen = false;
-        rightSideOpen = true;
         setState(() {
           _index = 0;
         });
@@ -159,6 +171,8 @@ class StackedUIState extends State<StackedUI>
 
   void _onDragUpdate(DragUpdateDetails details) {
     /// Only set slideDirection if a side menu is slided in.
+    ///
+    /// Only called on the first drag update after a drag end.
     if (mainViewOpen && slideDirection == null) {
       double delta = details.primaryDelta ?? 0;
       setState(() {
@@ -174,6 +188,8 @@ class StackedUIState extends State<StackedUI>
       });
     }
 
+    /// maxSlide correctly set in first call of drag update.
+    /// No need to further alter any values to get the desired drag feeling.
     if ((mainViewOpen && slideDirection != null) || sideViewOpen) {
       double delta = (details.primaryDelta ?? 0) / maxSlide;
       animationController.value += delta;
@@ -182,11 +198,6 @@ class StackedUIState extends State<StackedUI>
   }
 
   void _onDragEnd(DragEndDetails details) {
-    if (slideDirection != null) {
-      leftSideOpen = slideDirection == SlideDirection.left;
-      rightSideOpen = slideDirection == SlideDirection.right;
-    }
-
     /// No need for snapping the animation to an end state.
     if (animationController.isDismissed || animationController.isCompleted) {
       if (animationController.isDismissed) {
@@ -203,12 +214,14 @@ class StackedUIState extends State<StackedUI>
       return;
     }
 
+    /// Snap into the current direction if the drag gesture is fast enough.
+    /// Otherwise snap to the closest end state.
     if (details.velocity.pixelsPerSecond.dx.abs() >= 360) {
       double visualVelocity =
           details.velocity.pixelsPerSecond.dx / SizeConfig.screenWidth;
 
-      /// Adjust velocity to negative maxSlide value.
-      if (slideDirection == SlideDirection.left || leftSideOpen) {
+      /// Adjust velocity to the negative maxSlide value.
+      if (slideDirection == SlideDirection.left) {
         visualVelocity = -visualVelocity;
       }
       animationController.fling(velocity: visualVelocity);
@@ -221,12 +234,4 @@ class StackedUIState extends State<StackedUI>
     /// Reset slide direction, so that it will be set again on the next drag.
     slideDirection = null;
   }
-}
-
-abstract class StackedChild extends StatelessWidget {
-  final Widget mainChild;
-  final Widget contextChild;
-
-  StackedChild({required this.mainChild, required this.contextChild, Key? key})
-      : super(key: key);
 }

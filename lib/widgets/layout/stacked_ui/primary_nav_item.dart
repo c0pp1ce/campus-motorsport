@@ -7,7 +7,7 @@ class PrimaryNavigationItem extends StatelessWidget {
   final IconData icon;
   final void Function() onPressed;
 
-  PrimaryNavigationItem({
+  const PrimaryNavigationItem({
     required this.isSelected,
     required this.icon,
     required this.onPressed,

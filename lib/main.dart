@@ -1,6 +1,7 @@
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/routes/custom_router.dart';
 import 'package:campus_motorsport/routes/routes.dart';
+import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/themes/color_themes.dart';
@@ -24,6 +25,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    /// Initialize the size values only once.
+    SizeConfig().init(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

@@ -2,16 +2,17 @@ import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:campus_motorsport/widgets/layout/stacked_ui/primary_nav_item.dart';
 import 'package:flutter/material.dart';
 
-/// The left view of the stacked UI which us used for navigation.
+/// The left view of the stacked UI which is used for navigation.
 ///
 /// 2 Layers of navigation possible.
 class NavigationDrawer extends StatelessWidget {
-  /// The widgets which are displayed in the horizontal list on the left side.
+  /// Used to build the widgets which are displayed in the horizontal list on the left side.
   final List<NavigationItemData> navigationItems;
 
+  /// The currently selected page.
   final int selected;
 
-  NavigationDrawer({
+  const NavigationDrawer({
     required this.navigationItems,
     required this.selected,
     Key? key,
@@ -30,12 +31,15 @@ class NavigationDrawer extends StatelessWidget {
           child: _buildSecondary(context),
         ),
         const SizedBox(
+          /// The width occupied by the inactive [MainView] plus the margin between
+          /// it and the [NavigationDrawer] content.
           width: 55,
         ),
       ],
     );
   }
 
+  /// Build a list of circular buttons ([PrimaryNavigationItem]) which form the main navigation.
   Widget _buildMainMenu(BuildContext context) {
     return Container(
       width: 50,
@@ -55,10 +59,14 @@ class NavigationDrawer extends StatelessWidget {
     );
   }
 
+  /// Places the [secondaryItem] of each [NavigationItemData] in a predefined [Container]
+  /// with maximum available height and width.
   Widget _buildSecondary(BuildContext context) {
     return SafeArea(
       child: Container(
         height: double.infinity,
+
+        /// Should be the same as used in the other [StackedUI] widgets.
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(
             top: const Radius.circular(15.0),
@@ -82,9 +90,16 @@ class NavigationDrawer extends StatelessWidget {
   }
 }
 
+/// A wrapper class for the data that each navigation item used by the [NavigationDrawer]
+/// needs.
 class NavigationItemData {
+  /// The [IconData] displayed on the circular navigation item.
   final IconData icon;
+
+  /// The function which will be executed when pressing the circular navigation item.
   final void Function() onPressed;
+
+  /// Will be placed inside the second layer of navigation..
   final Widget secondaryItem;
 
   NavigationItemData({

@@ -51,7 +51,6 @@ class _RegistrationViewState extends State<RegistrationView> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       extendBodyBehindAppBar: true,

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 /// The middle view of the stacked UI.
+///
+/// The child is placed inside a [Scaffold] with an [AppBar].
+/// In order to connect this view to the [ContextDrawer] a state management solution
+/// like Provider or BloC is recommended.
 class MainView extends StatelessWidget {
   /// The Appbar title.
   final Widget? title;
@@ -14,7 +18,7 @@ class MainView extends StatelessWidget {
   /// Should be the same for any instance.
   static const double appBarElevation = 2;
 
-  MainView({
+  const MainView({
     this.title,
     this.leading,
     required this.child,

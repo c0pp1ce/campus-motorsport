@@ -83,7 +83,6 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       body: BackgroundGradient(
         drawGradient: !_precached!,
