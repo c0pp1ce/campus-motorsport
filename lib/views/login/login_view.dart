@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:campus_motorsport/models/route_arguments/login_arguments.dart';
-import 'package:campus_motorsport/widgets/layout/background_image.dart';
+import 'package:campus_motorsport/widgets/style/background_image.dart';
 import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
-import 'package:campus_motorsport/widgets/helper/background_gradient.dart';
+import 'package:campus_motorsport/widgets/style/background_gradient.dart';
 import 'package:campus_motorsport/views/login/widgets/form_fields.dart';
 import 'package:campus_motorsport/views/login/widgets/logo.dart';
 import 'package:campus_motorsport/services/color_services.dart';

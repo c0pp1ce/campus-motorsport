@@ -6,7 +6,8 @@ import 'package:campus_motorsport/services/validation_services.dart';
 import 'package:campus_motorsport/views/registration/widgets/cancel_registration.dart';
 import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/forms/basic_text_field.dart';
-import 'package:campus_motorsport/widgets/layout/simple_card.dart';
+import 'package:campus_motorsport/widgets/style/simple_card.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

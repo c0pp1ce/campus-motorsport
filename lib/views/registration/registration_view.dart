@@ -5,7 +5,7 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:campus_motorsport/views/registration/widgets/code_check.dart';
 import 'package:campus_motorsport/views/registration/widgets/user_data.dart';
-import 'package:campus_motorsport/widgets/layout/background_image.dart';
+import 'package:campus_motorsport/widgets/style/background_image.dart';
 import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:flutter/material.dart';
 
