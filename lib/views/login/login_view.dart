@@ -9,7 +9,7 @@ import 'package:campus_motorsport/controller/token_controller/token_controller.d
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
-import 'package:campus_motorsport/views/login/widgets/background_gradient.dart';
+import 'package:campus_motorsport/widgets/helper/background_gradient.dart';
 import 'package:campus_motorsport/views/login/widgets/form_fields.dart';
 import 'package:campus_motorsport/views/login/widgets/logo.dart';
 import 'package:campus_motorsport/services/color_services.dart';

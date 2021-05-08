@@ -1,4 +1,5 @@
 
+import 'package:campus_motorsport/main.dart';
 import 'package:campus_motorsport/views/main/main_navigator.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,12 @@ class CustomRouter {
       case homeRoute:
         return MaterialPageRoute(
           builder: (_) => MainNavigator(),
+          settings: settings,
+        );
+
+      case initAppRoute:
+        return MaterialPageRoute(
+          builder: (_) => InitApp(),
           settings: settings,
         );
 

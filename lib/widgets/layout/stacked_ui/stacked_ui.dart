@@ -154,6 +154,7 @@ class StackedUIState extends State<StackedUI>
     if (animationController.isDismissed) {
       if (maxSlide < 0) {
         maxSlide = -maxSlide;
+        leftSideOpen = false;
         setState(() {
           _index = 0;
         });
@@ -198,6 +199,10 @@ class StackedUIState extends State<StackedUI>
   }
 
   void _onDragEnd(DragEndDetails details) {
+    if (slideDirection != null) {
+      leftSideOpen = slideDirection == SlideDirection.left;
+    }
+
     /// No need for snapping the animation to an end state.
     if (animationController.isDismissed || animationController.isCompleted) {
       if (animationController.isDismissed) {
@@ -221,7 +226,7 @@ class StackedUIState extends State<StackedUI>
           details.velocity.pixelsPerSecond.dx / SizeConfig.screenWidth;
 
       /// Adjust velocity to the negative maxSlide value.
-      if (slideDirection == SlideDirection.left) {
+      if (slideDirection == SlideDirection.left || leftSideOpen) {
         visualVelocity = -visualVelocity;
       }
       animationController.fling(velocity: visualVelocity);

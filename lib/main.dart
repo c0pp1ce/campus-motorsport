@@ -2,6 +2,7 @@ import 'package:campus_motorsport/controller/token_controller/token_controller.d
 import 'package:campus_motorsport/routes/custom_router.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
+import 'package:campus_motorsport/widgets/helper/background_gradient.dart';
 import 'package:flutter/material.dart';
 
 import 'package:campus_motorsport/themes/color_themes.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
+
   /// Remark : Might not work on some iOS devices.
   /// For possible fix see: https://stackoverflow.com/questions/49418332/flutter-how-to-prevent-device-orientation-changes-and-force-portrait
   SystemChrome.setPreferredOrientations([
@@ -25,8 +27,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    /// Initialize the size values only once.
-    SizeConfig().init(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -55,10 +55,48 @@ class MyMaterialApp extends StatelessWidget {
           applyElevationOverlayColor: true,
         ),
         onGenerateRoute: CustomRouter.generateRoute,
-        initialRoute: homeRoute,
+        initialRoute: initAppRoute,
         debugShowCheckedModeBanner: false,
         //checkerboardRasterCacheImages: true,
         //checkerboardOffscreenLayers: true,
+      ),
+    );
+  }
+}
+
+/// Initialize SizeConfig.
+///
+/// Auto-Login can be checked here as well.
+class InitApp extends StatefulWidget {
+  const InitApp({Key? key}) : super(key: key);
+
+  @override
+  _InitAppState createState() => _InitAppState();
+}
+
+class _InitAppState extends State<InitApp> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    /// Initialize the size values only once.
+    SizeConfig().init(context);
+
+    /// Check auto login here.
+
+    // TODO : Remove fake loading.
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        Navigator.of(context).pushReplacementNamed(homeRoute);
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BackgroundGradient(
+      child: Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }
