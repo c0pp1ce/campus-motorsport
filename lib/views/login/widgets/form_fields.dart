@@ -1,9 +1,9 @@
 import 'package:campus_motorsport/controller/login_controller/login_controller.dart';
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
 import 'package:campus_motorsport/services/validation_services.dart';
-import 'package:flutter/material.dart';
+import 'package:campus_motorsport/widgets/general/forms/basic_text_field.dart';
 
-import 'package:campus_motorsport/widgets/forms/basic_text_field.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// The text fields of the login form.
