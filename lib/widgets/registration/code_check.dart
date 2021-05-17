@@ -5,12 +5,12 @@ import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/forms/basic_text_field.dart';
 import 'package:campus_motorsport/widgets/general/forms/code_input.dart';
 import 'package:campus_motorsport/widgets/general/style/simple_card.dart';
+import 'package:campus_motorsport/widgets/registration/cancel_registration.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'cancel_registration.dart';
 
 /// The first registration form where the code & email are entered.
 class CodeCheck extends StatefulWidget {

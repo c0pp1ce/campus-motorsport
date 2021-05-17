@@ -3,10 +3,10 @@ import 'package:campus_motorsport/controller/registration_controller/registratio
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
-import 'package:campus_motorsport/views/registration/widgets/code_check.dart';
-import 'package:campus_motorsport/views/registration/widgets/user_data.dart';
+import 'package:campus_motorsport/widgets/registration/code_check.dart';
 import 'package:campus_motorsport/widgets/general/snackbars/error_snackbar.dart';
 import 'package:campus_motorsport/widgets/general/style/background_image.dart';
+import 'package:campus_motorsport/widgets/registration/user_data.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
