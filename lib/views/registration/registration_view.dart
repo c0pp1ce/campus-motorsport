@@ -5,10 +5,10 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:campus_motorsport/views/registration/widgets/code_check.dart';
 import 'package:campus_motorsport/views/registration/widgets/user_data.dart';
-import 'package:campus_motorsport/widgets/style/background_image.dart';
-import 'package:campus_motorsport/widgets/snackbars/error_snackbar.dart';
-import 'package:flutter/material.dart';
+import 'package:campus_motorsport/widgets/general/snackbars/error_snackbar.dart';
+import 'package:campus_motorsport/widgets/general/style/background_image.dart';
 
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// The root of the registration screen.
@@ -98,13 +98,13 @@ class _RegistrationViewState extends State<RegistrationView> {
   /// Reacts to changes in the controller.
   void _listener() {
     /// Dont call setState on unmounted widgets.
-    if(!mounted) return;
+    if (!mounted) return;
+
     /// Rebuild UI on controller changes.
     if (!(_controller?.cancelRequest ?? true)) {
       setState(() {
         /// Show controller errors as snackbars.
-        if (_controller!.errorMessage != null &&
-            !_controller!.cancelRequest) {
+        if (_controller!.errorMessage != null && !_controller!.cancelRequest) {
           ScaffoldMessenger.of(context).showSnackBar(
             ErrorSnackBar(
               _controller!.errorMessage!,

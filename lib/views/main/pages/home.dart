@@ -1,6 +1,6 @@
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
-import 'package:campus_motorsport/widgets/layout/stacked_ui/context_drawer.dart';
-import 'package:campus_motorsport/widgets/layout/stacked_ui/main_view.dart';
+import 'package:campus_motorsport/widgets/general/layout/stacked_ui/context_drawer.dart';
+import 'package:campus_motorsport/widgets/general/layout/stacked_ui/main_view.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {

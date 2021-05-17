@@ -2,9 +2,9 @@ import 'package:campus_motorsport/controller/token_controller/token_controller.d
 import 'package:campus_motorsport/routes/custom_router.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
-import 'package:campus_motorsport/widgets/style/background_gradient.dart';
 import 'package:campus_motorsport/themes/color_themes.dart';
 import 'package:campus_motorsport/themes/text_theme.dart';
+import 'package:campus_motorsport/widgets/general/style/background_gradient.dart';
 
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';

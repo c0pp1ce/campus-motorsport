@@ -1,8 +1,8 @@
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/views/main/pages/home.dart';
 import 'package:campus_motorsport/views/main/pages/vehicles.dart';
-import 'package:campus_motorsport/widgets/layout/stacked_ui/navigation_drawer.dart';
-import 'package:campus_motorsport/widgets/layout/stacked_ui/stacked_ui.dart';
+import 'package:campus_motorsport/widgets/general/layout/stacked_ui/navigation_drawer.dart';
+import 'package:campus_motorsport/widgets/general/layout/stacked_ui/stacked_ui.dart';
 import 'package:flutter/material.dart';
 
 /// The navigator for the main pages which use the stacked UI.
