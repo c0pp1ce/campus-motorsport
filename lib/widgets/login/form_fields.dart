@@ -31,6 +31,7 @@ class FormFields extends StatelessWidget {
           hint: 'Gib dein Passwort ein',
           label: 'Passwort',
           textInputAction: TextInputAction.done,
+          textInputType: TextInputType.text,
           toggleObscure: true,
           fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.4),
           validate: (value) =>

@@ -83,6 +83,7 @@ class _UserDataState extends State<UserData> {
             BasicTextField(
               label: "Vorname",
               textInputAction: TextInputAction.next,
+              textInputType: TextInputType.name,
               validate: (value) =>
                   ValidationServices().validateNotEmpty(value, "Vorname"),
               onSaved: (value) => _controller!.add(ChangeFirstname(value)),
@@ -93,6 +94,7 @@ class _UserDataState extends State<UserData> {
             BasicTextField(
               label: "Nachname",
               textInputAction: TextInputAction.next,
+              textInputType: TextInputType.name,
               validate: (value) =>
                   ValidationServices().validateNotEmpty(value, "Nachname"),
               onSaved: (value) => _controller!.add(ChangeLastname(value)),
@@ -104,6 +106,7 @@ class _UserDataState extends State<UserData> {
               label: "Passwort",
               toggleObscure: true,
               textInputAction: TextInputAction.done,
+              textInputType: TextInputType.text,
               validate: (value) => ValidationServices().validatePassword(value),
               onSaved: (value) => _controller!.add(ChangePassword(value)),
             ),
