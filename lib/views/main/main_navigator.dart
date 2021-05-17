@@ -1,9 +1,12 @@
+import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
+import 'package:campus_motorsport/controller/token_controller/token_event.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/views/main/pages/home.dart';
 import 'package:campus_motorsport/views/main/pages/vehicles.dart';
 import 'package:campus_motorsport/widgets/general/layout/stacked_ui/navigation_drawer.dart';
 import 'package:campus_motorsport/widgets/general/layout/stacked_ui/stacked_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// The navigator for the main pages which use the stacked UI.
 ///
@@ -91,6 +94,7 @@ class _MainNavigatorState extends State<MainNavigator> {
         NavigationItemData(
           icon: Icons.logout,
           onPressed: () {
+            _logout(context);
             Navigator.of(context)
                 .pushNamedAndRemoveUntil(loginRoute, (route) => false);
           },
@@ -101,5 +105,10 @@ class _MainNavigatorState extends State<MainNavigator> {
         ),
       ],
     );
+  }
+
+  /// Reset user specific providers on logout.
+  void _logout(BuildContext context) {
+    Provider.of<TokenController>(context, listen: false).add(DeleteToken());
   }
 }
