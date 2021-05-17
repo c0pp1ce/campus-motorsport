@@ -75,6 +75,8 @@ class InitApp extends StatefulWidget {
 }
 
 class _InitAppState extends State<InitApp> {
+  bool? loggedIn;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -82,18 +84,28 @@ class _InitAppState extends State<InitApp> {
     /// Initialize the size values only once.
     SizeConfig().init(context);
 
-    /// Check auto login here.
-
-    // TODO : Remove fake loading.
-    Future.delayed(Duration(milliseconds: 500)).then((value) {
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        Navigator.of(context).pushReplacementNamed(homeRoute);
+    if(loggedIn == null) {
+      /// Check auto login here.
+      /// then
+      setState(() {
+        loggedIn = true;
       });
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if(loggedIn ?? false) {
+      /// Successful auto login. Go to home screen.
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        Navigator.of(context).pushReplacementNamed(homeRoute);
+      });
+    } else if(!(loggedIn ?? true)) {
+      /// Failed auto login. Go to login screen.
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        Navigator.of(context).pushReplacementNamed(loginRoute);
+      });
+    }
     return BackgroundGradient(
       child: Center(
         child: CircularProgressIndicator(),
