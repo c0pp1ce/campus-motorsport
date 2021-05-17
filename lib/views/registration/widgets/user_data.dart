@@ -4,7 +4,7 @@ import 'package:campus_motorsport/controller/token_controller/token_controller.d
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/validation_services.dart';
 import 'package:campus_motorsport/views/registration/widgets/cancel_registration.dart';
-import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/forms/basic_text_field.dart';
 import 'package:campus_motorsport/widgets/style/simple_card.dart';
 
@@ -41,7 +41,7 @@ class _UserDataState extends State<UserData> {
   @override
   Widget build(BuildContext context) {
     return SimpleCard(
-      color:Colors.transparent,
+      color: Colors.transparent,
       shadowColor: Colors.transparent,
       elevation: 0,
       child: Form(
@@ -83,7 +83,8 @@ class _UserDataState extends State<UserData> {
             BasicTextField(
               label: "Vorname",
               textInputAction: TextInputAction.next,
-              validate: (value) => ValidationServices().validateNotEmpty(value, "Vorname"),
+              validate: (value) =>
+                  ValidationServices().validateNotEmpty(value, "Vorname"),
               onSaved: (value) => _controller!.add(ChangeFirstname(value)),
             ),
             const SizedBox(
@@ -92,7 +93,8 @@ class _UserDataState extends State<UserData> {
             BasicTextField(
               label: "Nachname",
               textInputAction: TextInputAction.next,
-              validate: (value) => ValidationServices().validateNotEmpty(value, "Nachname"),
+              validate: (value) =>
+                  ValidationServices().validateNotEmpty(value, "Nachname"),
               onSaved: (value) => _controller!.add(ChangeLastname(value)),
             ),
             const SizedBox(
@@ -120,7 +122,9 @@ class _UserDataState extends State<UserData> {
               child: const Text("ACCOUNT ERSTELLEN"),
               loading: _controller!.loading,
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             CancelRegistration(),
           ],
         ),

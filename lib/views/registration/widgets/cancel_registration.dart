@@ -2,7 +2,7 @@ import 'package:campus_motorsport/controller/registration_controller/registratio
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/controller/registration_controller/registration_controller.dart';
 

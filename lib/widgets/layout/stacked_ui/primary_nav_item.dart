@@ -1,4 +1,5 @@
-import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
+
+import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:flutter/material.dart';
 
 /// A circle button with an avatar and selected indicator.

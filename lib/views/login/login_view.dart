@@ -14,7 +14,7 @@ import 'package:campus_motorsport/views/login/widgets/form_fields.dart';
 import 'package:campus_motorsport/views/login/widgets/logo.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/views/login/widgets/custom_divider.dart';
-import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 
 class LoginView extends StatefulWidget {
   final LoginArguments arguments;

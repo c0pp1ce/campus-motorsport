@@ -1,7 +1,7 @@
 import 'package:campus_motorsport/controller/registration_controller/registration_controller.dart';
 import 'package:campus_motorsport/controller/registration_controller/registration_event.dart';
 import 'package:campus_motorsport/services/validation_services.dart';
-import 'package:campus_motorsport/widgets/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/forms/basic_text_field.dart';
 import 'package:campus_motorsport/widgets/forms/code_input.dart';
 import 'package:campus_motorsport/widgets/style/simple_card.dart';
@@ -54,7 +54,7 @@ class _CodeCheckState extends State<CodeCheck> {
   @override
   Widget build(BuildContext context) {
     return SimpleCard(
-      color:Colors.transparent,
+      color: Colors.transparent,
       shadowColor: Colors.transparent,
       elevation: 0,
       child: Form(
@@ -83,8 +83,7 @@ class _CodeCheckState extends State<CodeCheck> {
               enabled: !_controller!.validCode,
               error: _codeError,
               textInputType: TextInputType.text,
-              onSaved: (value) =>
-                  _controller!.add(ChangeInvitationCode(value)),
+              onSaved: (value) => _controller!.add(ChangeInvitationCode(value)),
               validate: (value) {
                 String? error =
                     ValidationServices().validateInvitationCode(value);
@@ -121,7 +120,9 @@ class _CodeCheckState extends State<CodeCheck> {
               child: const Text("EINLADUNG PRÜFEN"),
               loading: _controller!.loading,
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             CancelRegistration(),
           ],
         ),
@@ -131,7 +132,8 @@ class _CodeCheckState extends State<CodeCheck> {
 
   /// Reacts to changes in the controller.
   void _listener() {
-    if(!mounted) return;
+    if (!mounted) return;
+
     /// Redraw UI on changes. Cannot use listen: true in initState as it might cause errors.
     setState(() {
       /// Switch to next form if code has been validated by the backend.
