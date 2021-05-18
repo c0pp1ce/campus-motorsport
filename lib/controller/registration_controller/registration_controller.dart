@@ -1,32 +1,28 @@
 import 'package:campus_motorsport/controller/base_controller/base_controller.dart';
 import 'package:campus_motorsport/controller/registration_controller/registration_event.dart';
-import 'package:campus_motorsport/controller/token_controller/token_event.dart';
-import 'package:campus_motorsport/models/utility/response_data.dart';
-import 'package:campus_motorsport/services/rest_services.dart';
+import 'package:campus_motorsport/infrastructure/auth/cm_auth.dart';
+import 'package:campus_motorsport/models/user/user.dart';
 
 /// Responsible for handling the registration process.
 class RegistrationController extends BaseController {
+  final CMAuth _auth;
   String? _firstname;
   String? _lastname;
   String? _email;
   String? _password;
-  String? _invitationCode;
 
   /// Shows if the invitation code check was successful.
   bool validCode = false;
 
-  RegistrationController() : super();
+  RegistrationController()
+      : _auth = CMAuth(),
+        super();
 
   /// Entry point for calls from the UI.
   void add(RegistrationEvent event) {
-    if (event is RequestCodeCheck) {
-      _performCodeCheck();
-      return;
-    }
-
     if (event is RequestRegistration) {
       tokenController = event.tokenController;
-      _performRegistration();
+      _firebaseSignUp();
       return;
     }
 
@@ -59,74 +55,27 @@ class RegistrationController extends BaseController {
       _password = event.password;
       return;
     }
-
-    if (event is ChangeInvitationCode) {
-      _invitationCode = event.code?.trim().toUpperCase();
-      return;
-    }
   }
 
-  /// Sends an http request if the required data is complete.
-  ///
-  /// Sets [validCode] to true if the code was successfully  validated.
-  Future<void> _performCodeCheck() async {
-    /// Wait for completion of the current request.
-    if (loading) return;
-
-    /// Check if the needed data is available.
-    if (!_validateControllerData(false)) {
-      return;
-    }
-
-    /// Reset controller status before new request.
-    validCode = false;
+  Future<void> _firebaseSignUp() async {
     setStatusPreRequest();
-
-    Map<String, dynamic> data = _getControllerData(false);
-    JsonResponseData responseData =
-        await RestServices().postJson('/registration/invitation', data);
-
-    /// On failure set status accordingly.
-    if (responseData.statusCode != 200) {
-      requestFailure(responseData.errorMessage);
-    } else {
-      validCode = true;
-      requestSuccess(mainObjective: false);
-      return;
-    }
-  }
-
-  /// Sends an http request if the required data is complete.
-  ///
-  /// Sets [success] to true if registration is a success.
-  Future<void> _performRegistration() async {
-    /// Wait for completion of the current request.
-    if (loading) return;
-
-    /// Check if the needed data is available.
-    if (!_validateControllerData(true)) {
+    if (!_validateControllerData()) {
       return;
     }
 
-    setStatusPreRequest();
+    User? user = await _auth.register(
+        email: _email!,
+        password: _password!,
+        firstname: _firstname!,
+        lastname: _lastname!);
 
-    Map<String, dynamic> data = _getControllerData(true);
-    JsonResponseData responseData =
-        await RestServices().postJson('/registration', data);
-
-    /// On failure set status accordingly.
-    if (responseData.statusCode != 201) {
-      requestFailure(responseData.errorMessage);
+    if (user != null) {
+      /// If login was a success.
+      /// TODO : Push firstname, lastname.
+      ///
+      requestSuccess(mainObjective: true);
     } else {
-      /// On success hand over token to TokenProvider. Set status accordingly.
-      String? token = responseData.data?['token'];
-      if (token != null) {
-        tokenController!.add(SetToken(token));
-        requestSuccess();
-      } else {
-        /// If no token in response.
-        requestFailure("Kein Token in der Antwort.");
-      }
+      requestFailure("Registrierung fehlgeschlagen");
     }
   }
 
@@ -134,24 +83,7 @@ class RegistrationController extends BaseController {
   ///
   /// [forRegistration] determines which data to check (data for checking
   /// invitation or for performing registration).
-  bool _validateControllerData(bool forRegistration) {
-    if (_email == null) {
-      errorMessage = "Email nicht gefunden.";
-      notify();
-      return false;
-    }
-
-    if (_invitationCode == null) {
-      errorMessage = "Einladungscode nicht gefunden.";
-      notify();
-      return false;
-    }
-
-    /// Data for checking the code is complete.
-    if (!forRegistration) {
-      return true;
-    }
-
+  bool _validateControllerData() {
     /// Needed to store the token.
     if (tokenController == null) {
       errorMessage = "Token Controller nicht gefunden.";
@@ -183,22 +115,11 @@ class RegistrationController extends BaseController {
 
   /// Creates a map of the data.
   ///
-  /// [forRegistration] determines what data to store in the map (for checking
-  /// invitation or for performing registration).
   /// No null checks. Use [_validateControllerData] for that.
-  Map<String, dynamic> _getControllerData(bool forRegistration) {
+  Map<String, dynamic> _getControllerData() {
     Map<String, dynamic> data = Map();
-    data["email"] = _email;
-    data["code"] = _invitationCode;
-
-    /// Data for checking the invitation complete.
-    if (!forRegistration) {
-      return data;
-    }
-
     data["firstname"] = _firstname;
     data["lastname"] = _lastname;
-    data["password"] = _password;
     return data;
   }
 
@@ -209,9 +130,7 @@ class RegistrationController extends BaseController {
     _lastname = null;
     _email = null;
     _password = null;
-    _invitationCode = null;
   }
 
   String? get email => _email;
-  String? get invitationCode => _invitationCode;
 }

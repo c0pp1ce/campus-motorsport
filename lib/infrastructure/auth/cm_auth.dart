@@ -16,17 +16,32 @@ class CMAuth {
       uid: credential.user!.uid,
       accountEmail: Email(credential.user!.email ?? ''),
       name: credential.user!.displayName ?? '',
+      emailVerified: credential.user!.emailVerified,
     );
   }
 
-  bool register({
+  Future<cm.User?> register({
     required String email,
     required String password,
     required String firstname,
     required String lastname,
-    required String code,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    try {
+      cm.User? user = _userFromFirebase(
+        await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      ),
+    );
+      if(user != null) {
+        /// TODO : save firstname, lastname.
+        await _firebaseAuth.currentUser?.sendEmailVerification();
+        return user;
+      }
+    } on FirebaseAuthException catch (e) {
+    print(e.message);
+    return null;
+    }
   }
 
   Future<cm.User?> login({

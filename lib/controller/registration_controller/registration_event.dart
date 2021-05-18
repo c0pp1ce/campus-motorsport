@@ -48,9 +48,3 @@ class ChangePassword extends RegistrationEvent {
 
   ChangePassword(this.password);
 }
-
-class ChangeInvitationCode extends RegistrationEvent {
-  String? code;
-
-  ChangeInvitationCode(this.code);
-}

@@ -1,9 +1,7 @@
 import 'package:campus_motorsport/controller/registration_controller/registration_controller.dart';
 import 'package:campus_motorsport/controller/registration_controller/registration_event.dart';
-import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utils/size_config.dart';
-import 'package:campus_motorsport/widgets/registration/code_check.dart';
 import 'package:campus_motorsport/widgets/general/snackbars/error_snackbar.dart';
 import 'package:campus_motorsport/widgets/general/style/background_image.dart';
 import 'package:campus_motorsport/widgets/registration/user_data.dart';
@@ -22,31 +20,21 @@ class RegistrationView extends StatefulWidget {
 }
 
 class _RegistrationViewState extends State<RegistrationView> {
-  RegistrationController? _controller;
-
-  Widget? _currentFormWidget;
+  late RegistrationController _controller;
 
   @override
   void initState() {
     super.initState();
 
     _controller = RegistrationController();
-    _controller!.addListener(() {
-      this._listener();
-    });
-
-    _currentFormWidget = CodeCheck(
-      switchForm: _switchFormWidget,
-    );
+    _controller.addListener(_listener);
   }
 
   @override
   void dispose() {
-    _controller!.removeListener(() {
-      this._listener();
-    });
+    _controller.removeListener(_listener);
+    _controller.dispose();
     super.dispose();
-    _controller!.dispose();
   }
 
   @override
@@ -67,24 +55,14 @@ class _RegistrationViewState extends State<RegistrationView> {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: WillPopScope(
                   onWillPop: () async {
-                    if (_controller!.loading) {
-                      _controller!.add(RequestCancelRequest());
+                    if (_controller.loading) {
+                      _controller.add(RequestCancelRequest());
                     }
                     return true;
                   },
                   child: ChangeNotifierProvider.value(
-                    value: _controller!,
-                    child: AnimatedSwitcher(
-                      child: _currentFormWidget,
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return ScaleTransition(
-                          child: child,
-                          scale: animation,
-                        );
-                      },
-                    ),
+                    value: _controller,
+                    child: UserData(),
                   ),
                 ),
               ),
@@ -101,13 +79,13 @@ class _RegistrationViewState extends State<RegistrationView> {
     if (!mounted) return;
 
     /// Rebuild UI on controller changes.
-    if (!(_controller?.cancelRequest ?? true)) {
+    if (!(_controller.cancelRequest)) {
       setState(() {
         /// Show controller errors as snackbars.
-        if (_controller!.errorMessage != null && !_controller!.cancelRequest) {
+        if (_controller.errorMessage != null && !_controller.cancelRequest) {
           ScaffoldMessenger.of(context).showSnackBar(
             ErrorSnackBar(
-              _controller!.errorMessage!,
+              _controller.errorMessage!,
               'OK',
               backgroundColor: ColorServices.brighten(
                   Theme.of(context).colorScheme.surface, 8),
@@ -119,18 +97,12 @@ class _RegistrationViewState extends State<RegistrationView> {
         }
 
         /// Schedule navigation to home screen on successful registration.
-        if (_controller!.success && !_controller!.cancelRequest) {
+        if (_controller.success && !_controller.cancelRequest) {
           WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-            Navigator.of(context).pushReplacementNamed(homeRoute);
+            Navigator.of(context).pop();
           });
         }
       });
     }
-  }
-
-  _switchFormWidget() {
-    setState(() {
-      _currentFormWidget = UserData();
-    });
   }
 }

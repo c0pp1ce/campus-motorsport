@@ -1,7 +1,6 @@
 import 'package:campus_motorsport/controller/registration_controller/registration_controller.dart';
 import 'package:campus_motorsport/controller/registration_controller/registration_event.dart';
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
-import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/validation_services.dart';
 import 'package:campus_motorsport/widgets/registration/cancel_registration.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
@@ -25,17 +24,11 @@ class _UserDataState extends State<UserData> {
   void initState() {
     super.initState();
     _controller = Provider.of<RegistrationController>(context, listen: false);
-    _controller!.addListener(() {
-      this._listener();
-    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller!.removeListener(() {
-      this._listener();
-    });
   }
 
   @override
@@ -49,33 +42,28 @@ class _UserDataState extends State<UserData> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: RichText(
-                text: TextSpan(
-                  text: "Registrierung abschließen\n\n",
-                  style: Theme.of(context).textTheme.headline6,
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "Gleich hast du es geschafft!\n",
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                  ],
-                ),
+            RichText(
+              text: TextSpan(
+                text:
+                    "Gib hier die nötigen Daten für die Registrierung ein.\n",
+                style: Theme.of(context).textTheme.headline6,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: "Im Anschluss musst du deine Email Adresse bestätigen.\n"
+                        "Im letzen Schritt muss die Registrierung durch einen Admin bestätigt werden.\n"
+                        "Danach kann es losgehen!\n",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                ],
               ),
             ),
             BasicTextField(
-              enabled: false,
-              label: "Einladungscode",
-              initialValue: _controller!.invitationCode,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            BasicTextField(
-              enabled: false,
-              label: "E-Mail",
-              initialValue: _controller!.email,
+              hint: 'Gib deine E-Mail ein',
+              label: 'E-Mail',
+              textInputType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              validate: (value) => ValidationServices().validateEmail(value),
+              onSaved: (value) => _controller!.add(ChangeEmail(value)),
             ),
             const SizedBox(
               height: 20,
@@ -133,21 +121,5 @@ class _UserDataState extends State<UserData> {
         ),
       ),
     );
-  }
-
-  /// The reactions to controller changes.
-  void _listener() {
-    if (!mounted) return;
-
-    /// Redraw UI on changes. Cannot use listen: true in initState as it might cause errors.
-    setState(() {
-      /// Switch to next form if code has been validated by the backend.
-      if (_controller!.success && !_controller!.cancelRequest) {
-        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-          Navigator.of(context)
-              .pushReplacementNamed(homeRoute); // TODO : Onboarding wanted?
-        });
-      }
-    });
   }
 }

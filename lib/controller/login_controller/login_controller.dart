@@ -53,61 +53,18 @@ class LoginController extends BaseController {
 
       if (user != null) {
         /// If login was a success.
-        requestSuccess(mainObjective: true);
+        if(!user.emailVerified) {
+          requestFailure("Email muss bestätigt werden.");
+          return;
+        } else {
+          // TODO : Check if user has been accepted.
+          requestSuccess(mainObjective: true);
+        }
       } else {
         requestFailure("Login fehlgeschlagen");
       }
     }
   }
-
-  /// Performs the http request and processes the answer.
-  /// DEPRECATED. FIREBASE USED INSTEAD:
-  /*Future<void> _login() async {
-    /// Wait for the current request to finish before sending another.
-    if (loading) return;
-
-    /// Avoid request with incomplete data.
-    if (_email == null || _password == null) {
-      errorMessage = 'Login Daten unvollständig.';
-      success = false;
-      notify();
-      return;
-    }
-
-    /// tokenController needed to store the token.
-    if (tokenController == null) {
-      errorMessage = 'TokenController nicht gefunden.';
-      success = false;
-      notify();
-    }
-
-    setStatusPreRequest();
-
-    /// Create map for json encoding.
-    Map<String, String> data = new Map();
-    data['email'] = _email!;
-    data['password'] = _password!;
-    //data['appid'] = 'Here should be the app id';
-
-    /// Perform request.
-    JsonResponseData responseData =
-        await RestServices().postJson('/login', data);
-
-    /// On failure set status accordingly.
-    if (responseData.statusCode != 200) {
-      requestFailure(responseData.errorMessage);
-    } else {
-      /// On success hand over token to TokenProvider. Set status accordingly.
-      String? token = responseData.data?['token'];
-      if (token != null) {
-        tokenController!.add(SetToken(token));
-        requestSuccess();
-      } else {
-        /// If no token in response.
-        requestFailure("Kein Token in der Antwort.");
-      }
-    }
-  }*/
 
   /// Resets the controller.
   void reset() {

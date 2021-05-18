@@ -90,7 +90,7 @@ class _InitAppState extends State<InitApp> {
       /// Check auto login here.
       /// then
       setState(() {
-        //loggedIn = false;
+        loggedIn = false;
       });
     }
   }
