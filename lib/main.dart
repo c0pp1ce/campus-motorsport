@@ -5,12 +5,13 @@ import 'package:campus_motorsport/utils/size_config.dart';
 import 'package:campus_motorsport/themes/color_themes.dart';
 import 'package:campus_motorsport/themes/text_theme.dart';
 import 'package:campus_motorsport/widgets/general/style/background_gradient.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
 
@@ -20,6 +21,7 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -88,7 +90,7 @@ class _InitAppState extends State<InitApp> {
       /// Check auto login here.
       /// then
       setState(() {
-        loggedIn = true;
+        //loggedIn = false;
       });
     }
   }

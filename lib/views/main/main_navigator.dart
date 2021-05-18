@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
 import 'package:campus_motorsport/controller/token_controller/token_event.dart';
+import 'package:campus_motorsport/infrastructure/auth/cm_auth.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/views/main/pages/home.dart';
 import 'package:campus_motorsport/views/main/pages/vehicles.dart';
@@ -93,8 +94,8 @@ class _MainNavigatorState extends State<MainNavigator> {
         /// The onPressed needs to handle everything logout-related.
         NavigationItemData(
           icon: Icons.logout,
-          onPressed: () {
-            _logout(context);
+          onPressed: () async {
+            await _logout(context);
             Navigator.of(context)
                 .pushNamedAndRemoveUntil(loginRoute, (route) => false);
           },
@@ -108,7 +109,9 @@ class _MainNavigatorState extends State<MainNavigator> {
   }
 
   /// Reset user specific providers on logout.
-  void _logout(BuildContext context) {
+  Future<void> _logout(BuildContext context) async {
     Provider.of<TokenController>(context, listen: false).add(DeleteToken());
+    CMAuth auth = CMAuth();
+    await auth.signOut();
   }
 }

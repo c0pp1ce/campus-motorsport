@@ -1,0 +1,1 @@
+This folder contains code that deals with third party dependencies like Firebase or local storage.

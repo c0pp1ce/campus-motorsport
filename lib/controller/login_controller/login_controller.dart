@@ -1,16 +1,18 @@
 import 'package:campus_motorsport/controller/base_controller/base_controller.dart';
-import 'package:campus_motorsport/controller/token_controller/token_event.dart';
-import 'package:campus_motorsport/models/utility/response_data.dart';
-import 'package:campus_motorsport/services/rest_services.dart';
+import 'package:campus_motorsport/infrastructure/auth/cm_auth.dart';
 
 import 'package:campus_motorsport/controller/login_controller/login_event.dart';
+import 'package:campus_motorsport/models/user/user.dart';
 
 /// Responsible for handling the login process.
 class LoginController extends BaseController {
+  final CMAuth _auth;
   String? _email;
   String? _password;
 
-  LoginController() : super();
+  LoginController()
+      : _auth = CMAuth(),
+        super();
 
   /// Entry point for calls from the UI.
   void add(LoginEvent event) {
@@ -26,7 +28,7 @@ class LoginController extends BaseController {
 
     if (event is RequestLogin) {
       tokenController = event.tokenController;
-      _login();
+      _firebaseLogin();
       return;
     }
 
@@ -41,8 +43,26 @@ class LoginController extends BaseController {
     }
   }
 
+  /// Firebase login.
+  Future<void> _firebaseLogin() async {
+    setStatusPreRequest();
+    if (_email != null && _password != null) {
+      /// Try login if data is complete.
+      User? user =
+          await _auth.login(email: _email!, password: _password!);
+
+      if (user != null) {
+        /// If login was a success.
+        requestSuccess(mainObjective: true);
+      } else {
+        requestFailure("Login fehlgeschlagen");
+      }
+    }
+  }
+
   /// Performs the http request and processes the answer.
-  Future<void> _login() async {
+  /// DEPRECATED. FIREBASE USED INSTEAD:
+  /*Future<void> _login() async {
     /// Wait for the current request to finish before sending another.
     if (loading) return;
 
@@ -87,7 +107,7 @@ class LoginController extends BaseController {
         requestFailure("Kein Token in der Antwort.");
       }
     }
-  }
+  }*/
 
   /// Resets the controller.
   void reset() {

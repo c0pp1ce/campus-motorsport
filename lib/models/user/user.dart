@@ -2,37 +2,39 @@ import 'email.dart';
 
 /// Representation of the user of the app.
 class User {
-  int? id;
-  String firstname;
-  String lastname;
+  final String? uid;
+  String name;
   Email? accountEmail;
   bool isSuperuser;
 
-  User(this.firstname, this.lastname, this.accountEmail, this.isSuperuser,
-      {this.id});
+  User({
+    this.name = '',
+    this.isSuperuser = false,
+    this.uid,
+    this.accountEmail,
+  });
 
   /// Returns a dummy user if an error occurs.
   factory User.fromJson(Map<String, dynamic> json) {
     try {
       return User(
-        json["firstname"],
-        json["lastname"],
+        name: json["name"],
+
         /// Email is only returned for GET /me.
-        (json["email"] != null ? Email(json["email"]) : null),
-        json["is_superuser"],
-        id: json["id"],
+        isSuperuser: json["is_superuser"],
+        accountEmail: (json["email"] != null ? Email(json["email"]) : null),
+        uid: json["uid"],
       );
     } on Exception catch (e) {
       print(e);
-      return User('ERROR', 'ERROR', Email('ERROR'), false);
+      return User(name: 'ERROR', isSuperuser: false);
     }
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> jsonUser = new Map();
-    jsonUser["firstname"] = firstname;
-    jsonUser["lastname"] = lastname;
-    if(accountEmail != null) jsonUser["email"] = accountEmail!.email;
+    jsonUser["name"] = name;
+    if (accountEmail != null) jsonUser["email"] = accountEmail!.email;
     return jsonUser;
   }
 }
