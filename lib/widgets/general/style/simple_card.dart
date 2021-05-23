@@ -6,7 +6,6 @@ class SimpleCard extends StatelessWidget {
   final double elevation;
   final Color? color;
   final Color? shadowColor;
-
   SimpleCard(
       {required this.child,
       this.elevation = 5.0,
@@ -20,6 +19,7 @@ class SimpleCard extends StatelessWidget {
     return Card(
       elevation: elevation,
       color: color ?? Theme.of(context).colorScheme.surface,
+      margin: EdgeInsets.zero,
       shadowColor: shadowColor,
       child: Padding(
         padding: const EdgeInsets.all(10.0),

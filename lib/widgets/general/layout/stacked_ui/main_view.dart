@@ -9,6 +9,8 @@ class MainView extends StatelessWidget {
   /// The Appbar title.
   final Widget? title;
 
+  final Widget? flexibleSpace;
+
   /// The leading widget inside the Appbar.
   final Widget? leading;
 
@@ -20,6 +22,7 @@ class MainView extends StatelessWidget {
 
   const MainView({
     this.title,
+    this.flexibleSpace,
     this.leading,
     required this.child,
     Key? key,
@@ -41,6 +44,7 @@ class MainView extends StatelessWidget {
             ),
           ),
           title: title,
+          flexibleSpace: flexibleSpace,
         ),
         body: Material(
           color: Theme.of(context).colorScheme.surface,

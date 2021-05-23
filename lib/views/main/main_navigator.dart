@@ -24,7 +24,7 @@ class _MainNavigatorState extends State<MainNavigator> {
   /// The pages of the main navigation.
   /// Length must be equal to [_contextMenus].
   late List<Widget> _pages = [
-    Home("Home"),
+    Home(),
     Vehicles("Fahrzeuge"),
   ];
 
@@ -61,7 +61,7 @@ class _MainNavigatorState extends State<MainNavigator> {
             }
           },
           secondaryItem: Center(
-            key: UniqueKey(),
+            key: ValueKey("home"),
             child: Text(
               "Home Secondary",
               style: Theme.of(context).textTheme.headline6,
@@ -80,7 +80,7 @@ class _MainNavigatorState extends State<MainNavigator> {
             }
           },
           secondaryItem: Center(
-            key: UniqueKey(),
+            key: ValueKey("vehicles"),
             child: Text(
               "Vehicles Secondary",
               style: Theme.of(context).textTheme.headline6,
@@ -100,7 +100,7 @@ class _MainNavigatorState extends State<MainNavigator> {
                 .pushNamedAndRemoveUntil(loginRoute, (route) => false);
           },
           secondaryItem: Center(
-            key: UniqueKey(),
+            key: ValueKey("logout"),
             child: Container(),
           ),
         ),

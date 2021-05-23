@@ -1,51 +1,42 @@
-import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/layout/stacked_ui/context_drawer.dart';
 import 'package:campus_motorsport/widgets/general/layout/stacked_ui/main_view.dart';
+import 'package:campus_motorsport/widgets/home/feed.dart';
+import 'package:campus_motorsport/widgets/home/overview.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  final String title;
-
-  Home(this.title);
-
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  String currentPage = "Übersicht"; // TODO : Connect with provider.
+
   @override
   Widget build(BuildContext context) {
     return MainView(
-      title: Text(widget.title),
-      child: Center(
-        child: CMTextButton(
-          width: 100,
-          height: 35,
-          child: Text("Surprise"),
-          onPressed: () async {
-            await showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text("Test"),
-                actions: [
-                  CMTextButton(
-                    width: 100,
-                    height: 40,
-                    child: Text("Leave"),
-                    onPressed: () => Navigator.of(context).pop(false),
-                  ),
-                  CMTextButton(
-                    width: 100,
-                    height: 40,
-                    child: Text("Change"),
-                    onPressed: () => Navigator.of(context).pop(false),
-                  ),
-                ],
-              ),
-            );
-          },
+      title: Text(currentPage),
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        child: Column(
+          children: <Widget>[
+            Overview(
+              vehicleCount: 4,
+              partCount: 33,
+              userCount: 5,
+            ),
+            _spacer(1),
+            Feed(),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _spacer(int factor) {
+    return SizedBox(
+      height: 10.0 * factor,
     );
   }
 }
