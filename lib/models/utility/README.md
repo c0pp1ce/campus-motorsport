@@ -1,1 +1,0 @@
-This folder contains models that help to simplify processes like http responses.

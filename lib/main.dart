@@ -1,15 +1,13 @@
-import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
-import 'package:campus_motorsport/routes/custom_router.dart';
-import 'package:campus_motorsport/routes/routes.dart';
-import 'package:campus_motorsport/utils/size_config.dart';
-import 'package:campus_motorsport/themes/color_themes.dart';
-import 'package:campus_motorsport/themes/text_theme.dart';
-import 'package:campus_motorsport/widgets/general/style/background_gradient.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+import 'package:campus_motorsport/routes/cm_router.dart';
+import 'package:campus_motorsport/themes/color_theme.dart';
+import 'package:campus_motorsport/routes/routes.dart';
+import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/themes/text_theme.dart';
+import 'package:campus_motorsport/widgets/general/background/background_gradient.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,14 +27,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => TokenController(),
-        ),
-      ],
-      child: MyMaterialApp(),
-    );
+    return MyMaterialApp();
   }
 }
 
@@ -50,11 +41,9 @@ class MyMaterialApp extends StatelessWidget {
       ),
       child: MaterialApp(
         title: 'Campus Motorsport',
-        theme: ThemeData(
+        theme: ThemeData.from(
           colorScheme: AppColorTheme.darkTheme,
           textTheme: AppTextTheme.theme,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          applyElevationOverlayColor: true,
         ),
         onGenerateRoute: CustomRouter.generateRoute,
         initialRoute: initAppRoute,
@@ -86,23 +75,23 @@ class _InitAppState extends State<InitApp> {
     /// Initialize the size values only once.
     SizeConfig().init(context);
 
-    if(loggedIn == null) {
+    if (loggedIn == null) {
       /// Check auto login here.
       /// then
       setState(() {
-        loggedIn = false;
+        loggedIn = true;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(loggedIn ?? false) {
+    if (loggedIn ?? false) {
       /// Successful auto login. Go to home screen.
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        Navigator.of(context).pushReplacementNamed(homeRoute);
+        Navigator.of(context).pushReplacementNamed(mainRoute);
       });
-    } else if(!(loggedIn ?? true)) {
+    } else if (!(loggedIn ?? true)) {
       /// Failed auto login. Go to login screen.
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         Navigator.of(context).pushReplacementNamed(loginRoute);

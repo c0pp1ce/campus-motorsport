@@ -1,11 +1,9 @@
-import 'package:campus_motorsport/controller/token_controller/token_controller.dart';
-import 'package:campus_motorsport/controller/token_controller/token_event.dart';
-import 'package:campus_motorsport/infrastructure/auth/cm_auth.dart';
+import 'package:campus_motorsport/provider/home/home_provider.dart';
 import 'package:campus_motorsport/routes/routes.dart';
-import 'package:campus_motorsport/views/main/pages/home.dart';
-import 'package:campus_motorsport/views/main/pages/vehicles.dart';
-import 'package:campus_motorsport/widgets/general/layout/stacked_ui/navigation_drawer.dart';
-import 'package:campus_motorsport/widgets/general/layout/stacked_ui/stacked_ui.dart';
+import 'package:campus_motorsport/views/main/pages/home/home.dart';
+import 'package:campus_motorsport/widgets/general/stacked_ui/navigation_drawer.dart';
+import 'package:campus_motorsport/widgets/general/stacked_ui/primary_navigation_item.dart';
+import 'package:campus_motorsport/widgets/general/stacked_ui/stacked_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,22 +23,29 @@ class _MainNavigatorState extends State<MainNavigator> {
   /// Length must be equal to [_contextMenus].
   late List<Widget> _pages = [
     Home(),
-    Vehicles("Fahrzeuge"),
   ];
 
   /// The context menus of the main navigation.
   /// Length must be equal to [_pages].
   late List<Widget> _contextMenus = [
     HomeContext(),
-    VehiclesContext(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return StackedUI(
-      navigationDrawer: _buildDrawer(context),
-      mainView: _pages[_currentIndex],
-      contextDrawer: _contextMenus[_currentIndex],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => HomeProvider(),
+        ),
+      ],
+      builder: (context, child) {
+        return StackedUI(
+          navigationDrawer: _buildDrawer(context),
+          mainView: _pages[_currentIndex],
+          contextDrawer: _contextMenus[_currentIndex],
+        );
+      },
     );
   }
 
@@ -60,32 +65,7 @@ class _MainNavigatorState extends State<MainNavigator> {
               });
             }
           },
-          secondaryItem: Center(
-            key: ValueKey("home"),
-            child: Text(
-              "Home Secondary",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ),
-        ),
-
-        /// TEST TODO : Remove
-        NavigationItemData(
-          icon: Icons.car_repair,
-          onPressed: () {
-            if (_currentIndex != 1) {
-              setState(() {
-                _currentIndex = 1;
-              });
-            }
-          },
-          secondaryItem: Center(
-            key: ValueKey("vehicles"),
-            child: Text(
-              "Vehicles Secondary",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ),
+          secondaryItem: HomeSecondary(),
         ),
 
         /// LOGOUT
@@ -110,8 +90,9 @@ class _MainNavigatorState extends State<MainNavigator> {
 
   /// Reset user specific providers on logout.
   Future<void> _logout(BuildContext context) async {
-    Provider.of<TokenController>(context, listen: false).add(DeleteToken());
-    CMAuth auth = CMAuth();
-    await auth.signOut();
+    // TODO : Logout.
+    //Provider.of<TokenController>(context, listen: false).add(DeleteToken());
+    //CMAuth auth = CMAuth();
+    //await auth.signOut();
   }
 }

@@ -1,6 +1,6 @@
-/// Routing constants used within the app.
-
-const String homeRoute = '/';
+/// main_navigator
+const String mainRoute = '/';
+/// Initializes the app.
 const String initAppRoute = '/init';
 
 const String loginRoute = '/login';

@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/services/color_services.dart';
+
 import 'package:flutter/material.dart';
 
 /// Simple [TextButton] which can have gradient background and a loading indicator.
@@ -76,17 +77,25 @@ class CMTextButton extends StatelessWidget {
 
   ButtonStyle _style(BuildContext context) {
     return ButtonStyle(
-      elevation: MaterialStateProperty.all<double>(elevation ?? 0),
-      minimumSize: MaterialStateProperty.all<Size>(const Size(50, 35)),
+      elevation: MaterialStateProperty.all<double>(
+        elevation ?? 0,
+      ),
+      minimumSize: MaterialStateProperty.all<Size>(
+        const Size(50, 35),
+      ),
       shape: MaterialStateProperty.all<OutlinedBorder>(
-          RoundedRectangleBorder(borderRadius: radius ?? _borderRadius)),
+        RoundedRectangleBorder(borderRadius: radius ?? _borderRadius),
+      ),
       foregroundColor: MaterialStateProperty.all<Color>(
-          primary ?? Theme.of(context).colorScheme.onPrimary),
+        primary ?? Theme.of(context).colorScheme.onPrimary,
+      ),
       overlayColor: MaterialStateProperty.all<Color>(
-          primary?.withOpacity(0.15) ??
-              Theme.of(context).colorScheme.onPrimary.withOpacity(0.15)),
+        primary?.withOpacity(0.15) ??
+            Theme.of(context).colorScheme.onPrimary.withOpacity(0.15),
+      ),
       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-          const EdgeInsets.all(0.0)),
+        const EdgeInsets.all(0.0),
+      ),
     );
   }
 
@@ -101,7 +110,8 @@ class CMTextButton extends StatelessWidget {
         child: CircularProgressIndicator(
           strokeWidth: 1.2,
           valueColor: AlwaysStoppedAnimation<Color>(
-              primary ?? Theme.of(context).colorScheme.onPrimary),
+            primary ?? Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
       ),
     ];
