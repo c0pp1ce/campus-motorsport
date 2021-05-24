@@ -79,13 +79,17 @@ class HomeContextState extends State<HomeContext> {
               const SizedBox(
                 height: 10,
               ),
-              _buildInfo(context,
-                  "Wähle im Filter aus welche Arten von Aktivitäten angezeigt werden sollen.", LineIcons.filter),
+              _buildInfo(
+                  context,
+                  "Wähle im Filter aus welche Arten von Aktivitäten angezeigt werden sollen.",
+                  LineIcons.filter),
               const SizedBox(
                 height: 10,
               ),
-              _buildInfo(context,
-                  "Tippe auf einen Eintrag im Feed um zur Detailansicht zu gelangen.", LineIcons.infoCircle),
+              _buildInfo(
+                  context,
+                  "Tippe auf einen Eintrag im Feed um zur Detailansicht zu gelangen.",
+                  LineIcons.infoCircle),
             ],
           ),
         ),
