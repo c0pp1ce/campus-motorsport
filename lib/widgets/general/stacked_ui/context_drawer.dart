@@ -42,7 +42,7 @@ class ContextDrawer extends StatelessWidget {
             top: const Radius.circular(15.0),
           ),
           color: ElevationOverlay.applyOverlay(
-              context, Theme.of(context).colorScheme.surface, 5),
+              context, Theme.of(context).colorScheme.surface, 3),
         ),
         child: child,
       ),
