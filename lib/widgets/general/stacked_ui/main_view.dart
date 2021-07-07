@@ -23,7 +23,7 @@ class MainView extends StatelessWidget {
   final Color? appBarShadowColor;
 
   /// Should be the same for any instance.
-  static const double appBarElevation = 5;
+  static const double appBarElevation = SizeConfig.baseBackgroundElevation;
 
   /// background of the body.
   final Color? backgroundColor;

@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:flutter/material.dart';
 
 /// A reusable card with predefined content padding and color.
@@ -6,11 +7,13 @@ class SimpleCard extends StatelessWidget {
   final double elevation;
   final Color? color;
   final Color? shadowColor;
+  final EdgeInsets margin;
   SimpleCard(
       {required this.child,
-      this.elevation = 5.0,
+      this.elevation = SizeConfig.baseBackgroundElevation,
       this.color,
       this.shadowColor,
+        this.margin = EdgeInsets.zero,
       Key? key})
       : super(key: key);
 
@@ -19,10 +22,10 @@ class SimpleCard extends StatelessWidget {
     return Card(
       elevation: elevation,
       color: color ?? Theme.of(context).colorScheme.surface,
-      margin: EdgeInsets.zero,
+      margin: margin,
       shadowColor: shadowColor,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(SizeConfig.basePadding),
         child: child,
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/widgets/general/stacked_ui/main_view.dart';
+import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
 
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -18,70 +18,56 @@ class AppStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Clip shadow on top side.
-    return ClipRRect(
-      /// Same color as rest of the body.
-      child: Container(
-        height: 150,
-        color: ElevationOverlay.applyOverlay(
-          context,
-          Theme.of(context).colorScheme.surface,
-          3,
+    return Column(
+      /// Actual content of the header.
+      children: <Widget>[
+        ExpandedTitle(
+          title: "Übersicht",
         ),
-
-        /// Padding to not clip shadow on the bottom side.
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Container(
-          child: Material(
-            /// Color of the header part == Color of the app bar.
-            /// Creates the shadow.
-            color: Theme.of(context).colorScheme.surface,
-            elevation: MainView.appBarElevation,
-            child: Column(
-              /// Actual content of the header.
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  width: double.infinity,
-                  child: Text(
-                    "Übersicht",
-                    style: Theme.of(context).textTheme.headline5?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
+        Container(
+          height: 80,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: _buildCounter(
+                  "Fahrzeuge",
+                  LineIcons.car,
+                  vehicleCount,
+                  context,
                 ),
-                Container(
-                  height: 80,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: _buildCounter(
-                            "Fahrzeuge", LineIcons.car, vehicleCount, context),
-                      ),
-                      _buildDivider(context),
-                      Expanded(
-                        child: _buildCounter(
-                            "Teile", LineIcons.tools, partCount, context),
-                      ),
-                      _buildDivider(context),
-                      Expanded(
-                        child: _buildCounter(
-                            "User", LineIcons.users, userCount, context),
-                      ),
-                    ],
-                  ),
+              ),
+              _buildDivider(context),
+              Expanded(
+                child: _buildCounter(
+                  "Teile",
+                  LineIcons.tools,
+                  partCount,
+                  context,
                 ),
-              ],
-            ),
+              ),
+              _buildDivider(context),
+              Expanded(
+                child: _buildCounter(
+                  "User",
+                  LineIcons.users,
+                  userCount,
+                  context,
+                ),
+              ),
+            ],
           ),
         ),
-      ),
+      ],
     );
   }
 
   Widget _buildCounter(
-      String title, IconData icon, int count, BuildContext context) {
+    String title,
+    IconData icon,
+    int count,
+    BuildContext context,
+  ) {
     Color color = Theme.of(context).colorScheme.onSurface;
     return Container(
       height: 60,
@@ -127,8 +113,8 @@ class AppStatistics extends StatelessWidget {
       color: Theme.of(context).colorScheme.primary,
       thickness: 1.2,
       width: 10,
-      indent: 10,
-      endIndent: 10,
+      indent: 5,
+      endIndent: 5,
     );
   }
 }

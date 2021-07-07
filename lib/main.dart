@@ -41,13 +41,13 @@ class MyMaterialApp extends StatelessWidget {
       ),
       child: MaterialApp(
         title: 'Campus Motorsport',
+        onGenerateRoute: CustomRouter.generateRoute,
+        initialRoute: initAppRoute,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData.from(
           colorScheme: AppColorTheme.darkTheme,
           textTheme: AppTextTheme.theme,
         ),
-        onGenerateRoute: CustomRouter.generateRoute,
-        initialRoute: initAppRoute,
-        debugShowCheckedModeBanner: false,
         //checkerboardRasterCacheImages: true,
         //checkerboardOffscreenLayers: true,
       ),
