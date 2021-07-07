@@ -108,14 +108,14 @@ class _CMTextFieldState extends State<CMTextField> {
     return InputDecoration(
       hintText: hint,
       hintStyle: Theme.of(context).textTheme.subtitle2?.copyWith(
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-      ),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
       labelText: label,
       labelStyle: _labelStyle(context),
       errorStyle: Theme.of(context).textTheme.bodyText2?.copyWith(
-        fontSize: 12,
-        color: Theme.of(context).colorScheme.error,
-      ),
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.error,
+          ),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       filled: widget.fillColor != null ? true : false,
       fillColor: widget.fillColor,
@@ -126,21 +126,19 @@ class _CMTextFieldState extends State<CMTextField> {
       focusedErrorBorder: _focusedErrorBorder(context),
 
       /// Only show eye-icon when toggleObscure is set to true.
-      suffixIcon: !widget.toggleObscure
-          ? null
-          : _switchObscure(context),
+      suffixIcon: !widget.toggleObscure ? null : _switchObscure(context),
     );
   }
 
   /// Label color changes based on focus and error state.
   TextStyle? _labelStyle(BuildContext context) {
     return Theme.of(context).textTheme.subtitle2?.copyWith(
-      color: _focusNode!.hasFocus
-          ? _errorShown
-          ? Theme.of(context).colorScheme.error
-          : Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-    );
+          color: _focusNode!.hasFocus
+              ? _errorShown
+                  ? Theme.of(context).colorScheme.error
+                  : Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+        );
   }
 
   GestureDetector _switchObscure(BuildContext context) {
@@ -151,9 +149,7 @@ class _CMTextFieldState extends State<CMTextField> {
         });
       },
       child: Icon(
-        _obscure
-            ? Icons.visibility_outlined
-            : Icons.visibility_off_outlined,
+        _obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
         color: _focusNode!.hasFocus
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
@@ -167,7 +163,7 @@ class _CMTextFieldState extends State<CMTextField> {
       gapPadding: 3.0,
       borderSide: BorderSide(
         color:
-        ColorServices.brighten(Theme.of(context).colorScheme.surface, 40),
+            ColorServices.brighten(Theme.of(context).colorScheme.surface, 40),
         width: 1.0,
         style: BorderStyle.solid,
       ),
@@ -204,7 +200,7 @@ class _CMTextFieldState extends State<CMTextField> {
       gapPadding: 3.0,
       borderSide: BorderSide(
         color:
-        ColorServices.brighten(Theme.of(context).colorScheme.surface, 80),
+            ColorServices.brighten(Theme.of(context).colorScheme.surface, 80),
         width: 1.3,
         style: BorderStyle.solid,
       ),

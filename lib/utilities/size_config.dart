@@ -26,6 +26,11 @@ class SizeConfig {
 
   static Orientation orientation = Orientation.portrait;
 
+  /// Global style variables
+  static const double basePadding = 10.0;
+  static const double baseBorderRadius = 15.0;
+  static const double baseBackgroundElevation = 5.0;
+
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
 

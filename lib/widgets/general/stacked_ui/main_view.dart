@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:flutter/material.dart';
 
 /// The middle view of the stacked UI.
@@ -37,7 +38,7 @@ class MainView extends StatelessWidget {
     this.appBarColor,
     this.appBarShadowColor,
     this.backgroundColor,
-    this.backgroundElevation = 5.0,
+    this.backgroundElevation = SizeConfig.baseBackgroundElevation,
     required this.child,
     Key? key,
   }) : super(key: key);
@@ -46,7 +47,7 @@ class MainView extends StatelessWidget {
   Widget build(BuildContext context) {
     final RoundedRectangleBorder shape = RoundedRectangleBorder(
       borderRadius: const BorderRadius.vertical(
-        top: const Radius.circular(15.0),
+        top: const Radius.circular(SizeConfig.baseBorderRadius),
       ),
     );
 

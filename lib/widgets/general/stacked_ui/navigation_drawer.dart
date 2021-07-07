@@ -70,12 +70,15 @@ class NavigationDrawer extends StatelessWidget {
         /// Should be the same as used in the other [StackedUI] widgets.
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(
-            top: const Radius.circular(15.0),
+            top: const Radius.circular(SizeConfig.baseBorderRadius),
           ),
           color: ElevationOverlay.applyOverlay(
-              context, Theme.of(context).colorScheme.surface, 3),
+            context,
+            Theme.of(context).colorScheme.surface,
+            SizeConfig.baseBackgroundElevation,
+          ),
         ),
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(SizeConfig.basePadding),
         child: AnimatedSwitcher(
           child: navigationItems[selected].secondaryItem,
           duration: const Duration(milliseconds: 300),

@@ -131,7 +131,7 @@ class StackedUIState extends State<StackedUI>
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                   borderRadius: const BorderRadius.vertical(
-                    top: const Radius.circular(15.0),
+                    top: const Radius.circular(SizeConfig.baseBorderRadius),
                   ),
                 ),
               ),

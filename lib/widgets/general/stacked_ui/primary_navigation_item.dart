@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 
 import 'package:flutter/material.dart';
@@ -32,7 +33,9 @@ class PrimaryNavigationItem extends StatelessWidget {
         noGradient: true,
         radius: BorderRadius.circular(50.0),
         backgroundColor: ElevationOverlay.applyOverlay(
-            context, Theme.of(context).colorScheme.surface, 5),
+            context,
+            Theme.of(context).colorScheme.surface,
+            SizeConfig.baseBackgroundElevation),
         primary: isSelected
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.secondary,
