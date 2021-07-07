@@ -6,7 +6,6 @@ import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 
 import 'package:flutter/material.dart';
 
-
 /// The form widget where the user enters his data on registration.
 class FormFields extends StatefulWidget {
   @override
@@ -110,15 +109,9 @@ class _FormFieldsState extends State<FormFields> {
               gradient: LinearGradient(
                 colors: <Color>[
                   ColorServices.brighten(
-                      Theme.of(context)
-                          .colorScheme
-                          .surface
-                          .withOpacity(0.7),
+                      Theme.of(context).colorScheme.surface.withOpacity(0.7),
                       25),
-                  Theme.of(context)
-                      .colorScheme
-                      .surface
-                      .withOpacity(0.9),
+                  Theme.of(context).colorScheme.surface.withOpacity(0.9),
                 ],
               ),
               onPressed: () {

@@ -55,22 +55,20 @@ class Validators {
       return valueEmptyError;
     }
 
-    if(value!.length < 6) {
+    if (value!.length < 6) {
       return "Der Code ist zu kurz.";
     }
 
-    if(value.length > 6) {
+    if (value.length > 6) {
       return "Der Code ist zu lang";
     }
 
-    if(value.trim().isEmpty) {
+    if (value.trim().isEmpty) {
       return "Nur Leerzeichen enthalten.\nIns Feld tippen und Eingabe löschen.";
     }
 
-    RegExp regExp = new RegExp(
-        r"^[a-zA-Z0-9]+$"
-    );
-    if(!regExp.hasMatch(value)) {
+    RegExp regExp = new RegExp(r"^[a-zA-Z0-9]+$");
+    if (!regExp.hasMatch(value)) {
       return "Code darf keine Sonderzeichen enthalten.";
     }
 

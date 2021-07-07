@@ -5,12 +5,11 @@ class HomeProvider extends BaseProvider {
   HomePage currentPage = HomePage.overview;
 
   void switchTo(HomePage page) {
-    if(page != currentPage) {
+    if (page != currentPage) {
       currentPage = page;
       notify();
     }
   }
-
 }
 
 enum HomePage {
@@ -20,7 +19,7 @@ enum HomePage {
 
 extension HomePageExtension on HomePage {
   String get pageName {
-    switch(this) {
+    switch (this) {
       case HomePage.overview:
         return "Übersicht";
       case HomePage.attendanceList:

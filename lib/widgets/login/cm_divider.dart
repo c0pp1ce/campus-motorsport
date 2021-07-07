@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// A custom divider to split up login section from the register button.
 class CMDivider extends StatelessWidget {
-
   const CMDivider({Key? key}) : super(key: key);
 
   @override
@@ -18,8 +17,9 @@ class CMDivider extends StatelessWidget {
           Text(
             'oder',
             style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                ),
           ),
           _verticalSpacing(),
           Expanded(

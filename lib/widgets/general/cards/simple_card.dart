@@ -8,10 +8,10 @@ class SimpleCard extends StatelessWidget {
   final Color? shadowColor;
   SimpleCard(
       {required this.child,
-        this.elevation = 5.0,
-        this.color,
-        this.shadowColor,
-        Key? key})
+      this.elevation = 5.0,
+      this.color,
+      this.shadowColor,
+      Key? key})
       : super(key: key);
 
   @override

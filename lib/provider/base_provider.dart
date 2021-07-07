@@ -4,7 +4,7 @@ class BaseProvider extends ChangeNotifier {
   bool disposed = false;
 
   void notify() {
-    if(!disposed) {
+    if (!disposed) {
       notifyListeners();
     }
   }

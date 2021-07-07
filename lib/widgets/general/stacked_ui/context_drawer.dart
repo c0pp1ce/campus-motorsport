@@ -37,13 +37,16 @@ class ContextDrawer extends StatelessWidget {
         width: double.infinity,
         margin: const EdgeInsets.only(right: 5.0),
         padding: const EdgeInsets.all(SizeConfig.basePadding),
+
         /// Should be the same as used in the other [StackedUI] widgets.
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(
             top: const Radius.circular(SizeConfig.baseBorderRadius),
           ),
           color: ElevationOverlay.applyOverlay(
-              context, Theme.of(context).colorScheme.surface, SizeConfig.baseBackgroundElevation),
+              context,
+              Theme.of(context).colorScheme.surface,
+              SizeConfig.baseBackgroundElevation),
         ),
         child: child,
       ),
