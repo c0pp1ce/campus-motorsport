@@ -21,9 +21,9 @@ extension HomePageExtension on HomePage {
   String get pageName {
     switch (this) {
       case HomePage.overview:
-        return "Übersicht";
+        return 'Übersicht';
       case HomePage.attendanceList:
-        return "Anwesenheitsliste";
+        return 'Anwesenheitsliste';
     }
   }
 }

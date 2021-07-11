@@ -6,6 +6,21 @@ import 'package:flutter/material.dart';
 ///
 /// Code based on https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_button.dart (last visited: 02.04.2021).
 class CMTextButton extends StatelessWidget {
+  CMTextButton({
+    required this.child,
+    this.onPressed,
+    this.gradient,
+    this.width,
+    this.height,
+    this.primary,
+    this.backgroundColor,
+    this.loading,
+    this.noGradient,
+    this.elevation,
+    this.radius,
+    Key? key,
+  }) : super(key: key);
+
   final Widget child;
   final void Function()? onPressed;
   final Gradient? gradient;
@@ -27,21 +42,6 @@ class CMTextButton extends StatelessWidget {
   /// Standard value. Can be overwritten by [radius].
   final BorderRadius _borderRadius = BorderRadius.circular(10.0);
 
-  CMTextButton({
-    required this.child,
-    this.onPressed,
-    this.gradient,
-    this.width,
-    this.height,
-    this.primary,
-    this.backgroundColor,
-    this.loading,
-    this.noGradient,
-    this.elevation,
-    this.radius,
-    Key? key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -56,7 +56,7 @@ class CMTextButton extends StatelessWidget {
           color: (loading ?? false)
               ? ColorServices.brighten(
                   Theme.of(context).colorScheme.surface, 35)
-              : backgroundColor ?? null,
+              : backgroundColor,
         ),
         child: Container(
           alignment: Alignment.center,
@@ -94,7 +94,7 @@ class CMTextButton extends StatelessWidget {
             Theme.of(context).colorScheme.onPrimary.withOpacity(0.15),
       ),
       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-        const EdgeInsets.all(0.0),
+        EdgeInsets.zero,
       ),
     );
   }
@@ -118,7 +118,7 @@ class CMTextButton extends StatelessWidget {
   }
 
   LinearGradient? _gradient(BuildContext context) {
-    if ((noGradient ?? false)) {
+    if (noGradient ?? false) {
       return null;
     }
     return LinearGradient(

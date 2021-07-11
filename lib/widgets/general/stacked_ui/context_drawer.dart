@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 /// In order to connect this view to the [MainView] a state management solution
 /// like Provider or BloC is recommended.
 class ContextDrawer extends StatelessWidget {
+  const ContextDrawer({
+    this.child,
+    Key? key,
+  }) : super(key: key);
+
   /// The content of this [ContextDrawer].
   final Widget? child;
-
-  const ContextDrawer({this.child, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class ContextDrawer extends StatelessWidget {
         /// Should be the same as used in the other [StackedUI] widgets.
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(
-            top: const Radius.circular(SizeConfig.baseBorderRadius),
+            top: Radius.circular(SizeConfig.baseBorderRadius),
           ),
           color: ElevationOverlay.applyOverlay(
               context,

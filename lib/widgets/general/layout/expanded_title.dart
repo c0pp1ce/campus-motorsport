@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 
 /// A title layout for the expanded appbar layout.
 class ExpandedTitle extends StatelessWidget {
-  final String title;
-  final EdgeInsets margin;
   const ExpandedTitle({
     required this.title,
     this.margin = const EdgeInsets.only(bottom: SizeConfig.basePadding),
     Key? key,
   }) : super(key: key);
+
+  final String title;
+  final EdgeInsets margin;
 
   @override
   Widget build(BuildContext context) {

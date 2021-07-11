@@ -7,6 +7,14 @@ import 'package:flutter/material.dart';
 enum SlideDirection { right, left }
 
 class StackedUI extends StatefulWidget {
+  const StackedUI({
+    this.slidedWidth = 50,
+    required this.mainView,
+    required this.navigationDrawer,
+    required this.contextDrawer,
+    Key? key,
+  }) : super(key: key);
+
   /// The visible width of the main view when it is slided out of view.
   ///
   /// Attention: Currently there is no way to adjust the [ContextDrawer] and
@@ -25,14 +33,6 @@ class StackedUI extends StatefulWidget {
   ///
   /// Only tested for usage with [ContextDrawer].
   final Widget contextDrawer;
-
-  const StackedUI({
-    this.slidedWidth = 50,
-    required this.mainView,
-    required this.navigationDrawer,
-    required this.contextDrawer,
-    Key? key,
-  }) : super(key: key);
 
   @override
   StackedUIState createState() => StackedUIState();
@@ -103,7 +103,7 @@ class StackedUIState extends State<StackedUI>
           child: AnimatedBuilder(
             animation: animationController,
             builder: (context, _) {
-              double slide = maxSlide * animationController.value;
+              final double slide = maxSlide * animationController.value;
               return Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
@@ -131,7 +131,7 @@ class StackedUIState extends State<StackedUI>
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                   borderRadius: const BorderRadius.vertical(
-                    top: const Radius.circular(SizeConfig.baseBorderRadius),
+                    top: Radius.circular(SizeConfig.baseBorderRadius),
                   ),
                 ),
               ),
@@ -179,15 +179,19 @@ class StackedUIState extends State<StackedUI>
     ///
     /// Only called on the first drag update after a drag end.
     if (mainViewOpen && slideDirection == null) {
-      double delta = details.primaryDelta ?? 0;
+      final double delta = details.primaryDelta ?? 0;
       setState(() {
         if (delta < 0) {
           slideDirection = SlideDirection.left;
-          if (maxSlide > 0) maxSlide = -maxSlide;
+          if (maxSlide > 0) {
+            maxSlide = -maxSlide;
+          }
           _index = 1;
         } else if (delta > 0) {
           slideDirection = SlideDirection.right;
-          if (maxSlide < 0) maxSlide = -maxSlide;
+          if (maxSlide < 0) {
+            maxSlide = -maxSlide;
+          }
           _index = 0;
         }
       });
@@ -196,7 +200,7 @@ class StackedUIState extends State<StackedUI>
     /// maxSlide correctly set in first call of drag update.
     /// No need to further alter any values to get the desired drag feeling.
     if ((mainViewOpen && slideDirection != null) || sideViewOpen) {
-      double delta = (details.primaryDelta ?? 0) / maxSlide;
+      final double delta = (details.primaryDelta ?? 0) / maxSlide;
       animationController.value += delta;
       return;
     }

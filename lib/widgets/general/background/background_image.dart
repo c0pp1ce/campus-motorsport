@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 /// Displays the [image] if given, or a transparent image.
 class BackgroundImage extends StatelessWidget {
-  final Widget? child;
-  final ImageProvider image;
-
   const BackgroundImage({
     this.child,
     required this.image,
     Key? key,
   }) : super(key: key);
+
+  final Widget? child;
+  final ImageProvider image;
 
   @override
   Widget build(BuildContext context) {

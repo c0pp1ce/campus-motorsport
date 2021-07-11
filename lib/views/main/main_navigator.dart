@@ -12,6 +12,8 @@ import 'package:provider/provider.dart';
 /// Provider or BloCs needed for those pages need to be inserted above the [StackedUI]
 /// widget.
 class MainNavigator extends StatefulWidget {
+  const MainNavigator({Key? key}) : super(key: key);
+
   @override
   _MainNavigatorState createState() => _MainNavigatorState();
 }
@@ -21,13 +23,13 @@ class _MainNavigatorState extends State<MainNavigator> {
 
   /// The pages of the main navigation.
   /// Length must be equal to [_contextMenus].
-  late List<Widget> _pages = [
+  final List<Widget> _pages = [
     Home(),
   ];
 
   /// The context menus of the main navigation.
   /// Length must be equal to [_pages].
-  late List<Widget> _contextMenus = [
+  final List<Widget> _contextMenus = [
     HomeContext(),
   ];
 
@@ -80,8 +82,8 @@ class _MainNavigatorState extends State<MainNavigator> {
                 .pushNamedAndRemoveUntil(loginRoute, (route) => false);
           },
           secondaryItem: Center(
-            key: ValueKey("logout"),
-            child: Container(),
+            key: ValueKey('logout'),
+            child: const SizedBox(),
           ),
         ),
       ],

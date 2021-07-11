@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
 class AppStatistics extends StatelessWidget {
-  final int vehicleCount;
-  final int partCount;
-  final int userCount;
-
   const AppStatistics({
     required this.vehicleCount,
     required this.partCount,
     required this.userCount,
     Key? key,
   }) : super(key: key);
+
+  final int vehicleCount;
+  final int partCount;
+  final int userCount;
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +22,16 @@ class AppStatistics extends StatelessWidget {
       /// Actual content of the header.
       children: <Widget>[
         ExpandedTitle(
-          title: "Übersicht",
+          title: 'Übersicht',
         ),
-        Container(
+        SizedBox(
           height: 80,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
                 child: _buildCounter(
-                  "Fahrzeuge",
+                  'Fahrzeuge',
                   LineIcons.car,
                   vehicleCount,
                   context,
@@ -40,7 +40,7 @@ class AppStatistics extends StatelessWidget {
               _buildDivider(context),
               Expanded(
                 child: _buildCounter(
-                  "Teile",
+                  'Teile',
                   LineIcons.tools,
                   partCount,
                   context,
@@ -49,7 +49,7 @@ class AppStatistics extends StatelessWidget {
               _buildDivider(context),
               Expanded(
                 child: _buildCounter(
-                  "User",
+                  'User',
                   LineIcons.users,
                   userCount,
                   context,
@@ -68,8 +68,8 @@ class AppStatistics extends StatelessWidget {
     int count,
     BuildContext context,
   ) {
-    Color color = Theme.of(context).colorScheme.onSurface;
-    return Container(
+    final Color color = Theme.of(context).colorScheme.onSurface;
+    return SizedBox(
       height: 60,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -86,7 +86,7 @@ class AppStatistics extends StatelessWidget {
                 width: 10,
               ),
               Text(
-                "$count",
+                '$count',
                 style: Theme.of(context).textTheme.headline6?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.normal,

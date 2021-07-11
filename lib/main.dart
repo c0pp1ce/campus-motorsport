@@ -9,7 +9,7 @@ import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/themes/text_theme.dart';
 import 'package:campus_motorsport/widgets/general/background/background_gradient.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
 
@@ -19,12 +19,17 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await Firebase.initializeApp();
-  runApp(MyApp());
+
+  Firebase.initializeApp().then(
+    (value) => runApp(MyApp()),
+    onError: (error) => print(error),
+  );
 }
 
-/// Provider for controllers which need to be available globally.
+/// Provider for controllers which need to be available globally should go here.
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MyMaterialApp();
@@ -33,11 +38,16 @@ class MyApp extends StatelessWidget {
 
 /// General app settings.
 class MyMaterialApp extends StatelessWidget {
+  const MyMaterialApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    // Dynamically switch themes here.
+    final AppColorTheme colors = AppColorTheme();
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: AppColorTheme.darkTheme.surface,
+        statusBarColor: colors.darkTheme.surface,
       ),
       child: MaterialApp(
         title: 'Campus Motorsport',
@@ -45,8 +55,8 @@ class MyMaterialApp extends StatelessWidget {
         initialRoute: initAppRoute,
         debugShowCheckedModeBanner: false,
         theme: ThemeData.from(
-          colorScheme: AppColorTheme.darkTheme,
-          textTheme: AppTextTheme.theme,
+          colorScheme: colors.darkTheme,
+          textTheme: textTheme,
         ),
         //checkerboardRasterCacheImages: true,
         //checkerboardOffscreenLayers: true,

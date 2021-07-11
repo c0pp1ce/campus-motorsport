@@ -5,12 +5,12 @@ import 'package:campus_motorsport/widgets/registration/form_fields.dart';
 import 'package:flutter/material.dart';
 
 class Registration extends StatelessWidget {
-  final ImageProvider backgroundImage;
-
   const Registration({
     required this.backgroundImage,
     Key? key,
   }) : super(key: key);
+
+  final ImageProvider backgroundImage;
 
   @override
   Widget build(BuildContext context) {

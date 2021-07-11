@@ -14,7 +14,7 @@ class Overview extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpandedAppBar(
       expandedHeight: 150,
-      appbarTitle: Text("Übersicht"),
+      appbarTitle: Text('Übersicht'),
       appbarChild: AppStatistics(
         vehicleCount: 5,
         partCount: 3,

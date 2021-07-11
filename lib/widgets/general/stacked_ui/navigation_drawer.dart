@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 ///
 /// 2 Layers of navigation possible.
 class NavigationDrawer extends StatelessWidget {
-  /// Used to build the widgets which are displayed in the horizontal list on the left side.
-  final List<NavigationItemData> navigationItems;
-
-  /// The currently selected page.
-  final int selected;
-
   const NavigationDrawer({
     required this.navigationItems,
     required this.selected,
     Key? key,
   }) : super(key: key);
+
+  /// Used to build the widgets which are displayed in the horizontal list on the left side.
+  final List<NavigationItemData> navigationItems;
+
+  /// The currently selected page.
+  final int selected;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class NavigationDrawer extends StatelessWidget {
         /// Should be the same as used in the other [StackedUI] widgets.
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(
-            top: const Radius.circular(SizeConfig.baseBorderRadius),
+            top: Radius.circular(SizeConfig.baseBorderRadius),
           ),
           color: ElevationOverlay.applyOverlay(
             context,

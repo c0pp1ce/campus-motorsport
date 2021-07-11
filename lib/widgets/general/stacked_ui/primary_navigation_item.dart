@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 
 /// A circle button with an avatar and selected indicator.
 class PrimaryNavigationItem extends StatelessWidget {
-  final bool isSelected;
-  final IconData icon;
-  final void Function() onPressed;
-
   const PrimaryNavigationItem({
     required this.isSelected,
     required this.icon,
     required this.onPressed,
     Key? key,
   }) : super(key: key);
+
+  final bool isSelected;
+  final IconData icon;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +47,12 @@ class PrimaryNavigationItem extends StatelessWidget {
 /// A wrapper class for the data that each navigation item used by the [NavigationDrawer]
 /// needs.
 class NavigationItemData {
+  const NavigationItemData({
+    required this.icon,
+    required this.onPressed,
+    required this.secondaryItem,
+  });
+
   /// The [IconData] displayed on the circular navigation item.
   final IconData icon;
 
@@ -55,10 +61,4 @@ class NavigationItemData {
 
   /// Will be placed inside the second layer of navigation..
   final Widget secondaryItem;
-
-  NavigationItemData({
-    required this.icon,
-    required this.onPressed,
-    required this.secondaryItem,
-  });
 }

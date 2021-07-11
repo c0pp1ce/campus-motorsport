@@ -11,14 +11,14 @@ import 'package:campus_motorsport/widgets/login/cm_logo.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
-  /// Given via route arguments. Determines if the background image should be
-  /// faded in.
-  final bool fadeIn;
-
   const Login({
     this.fadeIn = true,
     Key? key,
   }) : super(key: key);
+
+  /// Given via route arguments. Determines if the background image should be
+  /// faded in.
+  final bool fadeIn;
 
   @override
   _LoginState createState() => _LoginState();
@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
 
   /// The background image of the view.
   final ImageProvider _image = AssetImage('assets/images/designer_edited.jpg');
-  bool? _precached;
+  late bool _precached;
 
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
 
     /// Play fade in animation when bg image is precached.
     /// Cannot be done in the initState() as that can lead to an an error.
-    if (widget.fadeIn && !_precached!) {
+    if (widget.fadeIn && !_precached) {
       precacheImage(_image, context).then((_) {
         setState(() {
           _opacity = 1.0;
@@ -73,7 +73,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BackgroundGradient(
-        drawGradient: !_precached!,
+        drawGradient: !_precached,
         child: AnimatedOpacity(
           opacity: _opacity,
           duration: const Duration(milliseconds: 800),

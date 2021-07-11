@@ -7,6 +7,15 @@ import 'package:flutter/material.dart';
 
 /// A layout preset for the StackedUI MainView.
 class ExpandedAppBar extends StatefulWidget {
+  const ExpandedAppBar({
+    required this.appbarTitle,
+    required this.appbarChild,
+    this.body = const SizedBox(),
+    this.expandedHeight = 150,
+    this.offsetBeforeTitleShown = 20,
+    Key? key,
+  }) : super(key: key);
+
   /// The title is shown when the appbars expanded space is not visible.
   final Widget appbarTitle;
 
@@ -18,15 +27,6 @@ class ExpandedAppBar extends StatefulWidget {
 
   final double expandedHeight;
   final double offsetBeforeTitleShown;
-
-  const ExpandedAppBar({
-    required this.appbarTitle,
-    required this.appbarChild,
-    this.body = const SizedBox(),
-    this.expandedHeight = 150,
-    this.offsetBeforeTitleShown = 20,
-    Key? key,
-  }) : super(key: key);
 
   @override
   _ExpandedAppBarState createState() => _ExpandedAppBarState();
@@ -52,7 +52,7 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
         return;
       }
 
-      double newHeight =
+      final double newHeight =
           max<double>(0, widget.expandedHeight - _scrollController.offset);
 
       if (_showAppbarTitle != _appbarCollapsed) {
@@ -62,10 +62,8 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
 
         /// Scroll down && scroll distance large enough
       } else if (newHeight > currentExpandedHeight &&
-          newHeight - widget.expandedHeight > currentExpandedHeight) {
+          newHeight - (widget.expandedHeight - 3) > currentExpandedHeight) {
         setState(() {
-          print(
-              "New height: $newHeight; current height: $currentExpandedHeight\n");
           currentExpandedHeight = newHeight;
         });
 

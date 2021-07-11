@@ -8,12 +8,14 @@ import 'package:flutter/material.dart';
 
 /// The form widget where the user enters his data on registration.
 class FormFields extends StatefulWidget {
+  const FormFields({Key? key}) : super(key: key);
+
   @override
   _FormFieldsState createState() => _FormFieldsState();
 }
 
 class _FormFieldsState extends State<FormFields> {
-  GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   void dispose() {
@@ -33,14 +35,14 @@ class _FormFieldsState extends State<FormFields> {
           children: <Widget>[
             RichText(
               text: TextSpan(
-                text: "Gib hier die nötigen Daten für die Registrierung ein.\n",
+                text: 'Gib hier die nötigen Daten für die Registrierung ein.\n',
                 style: Theme.of(context).textTheme.headline6,
                 children: <TextSpan>[
                   TextSpan(
                     text:
-                        "Im Anschluss musst du deine Email Adresse bestätigen.\n"
-                        "Im letzen Schritt muss die Registrierung durch einen Admin bestätigt werden.\n"
-                        "Danach kann es losgehen!\n",
+                        'Im Anschluss musst du deine Email Adresse bestätigen.\n'
+                        'Im letzen Schritt muss die Registrierung durch einen Admin bestätigt werden.\n'
+                        'Danach kann es losgehen!\n',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ],
@@ -52,40 +54,40 @@ class _FormFieldsState extends State<FormFields> {
               textInputType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
               validate: (value) => Validators().validateEmail(value),
-              onSaved: (value) => null, // TODO : save email
+              onSaved: (value) {}, // TODO : save email
             ),
             const SizedBox(
               height: 20,
             ),
             CMTextField(
-              label: "Vorname",
+              label: 'Vorname',
               textInputAction: TextInputAction.next,
               textInputType: TextInputType.name,
               validate: (value) =>
-                  Validators().validateNotEmpty(value, "Vorname"),
-              onSaved: (value) => null, // TODO : Save firstname
+                  Validators().validateNotEmpty(value, 'Vorname'),
+              onSaved: (value) {}, // TODO : Save firstname
             ),
             const SizedBox(
               height: 20,
             ),
             CMTextField(
-              label: "Nachname",
+              label: 'Nachname',
               textInputAction: TextInputAction.next,
               textInputType: TextInputType.name,
               validate: (value) =>
-                  Validators().validateNotEmpty(value, "Nachname"),
-              onSaved: (value) => null, // TODO : save lastname
+                  Validators().validateNotEmpty(value, 'Nachname'),
+              onSaved: (value) {}, // TODO : save lastname
             ),
             const SizedBox(
               height: 20,
             ),
             CMTextField(
-              label: "Passwort",
+              label: 'Passwort',
               toggleObscure: true,
               textInputAction: TextInputAction.done,
               textInputType: TextInputType.text,
               validate: (value) => Validators().validatePassword(value),
-              onSaved: (value) => null, // TODO : Save password
+              onSaved: (value) {}, // TODO : Save password
             ),
             const SizedBox(
               height: 50,
@@ -97,7 +99,7 @@ class _FormFieldsState extends State<FormFields> {
                   // TODO : perform registration
                 }
               },
-              child: const Text("ACCOUNT ERSTELLEN"),
+              child: const Text('ACCOUNT ERSTELLEN'),
               loading: false, // TODO : Loading state
             ),
             const SizedBox(
@@ -117,7 +119,7 @@ class _FormFieldsState extends State<FormFields> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("ABBRECHEN"),
+              child: const Text('ABBRECHEN'),
             ),
           ],
         ),

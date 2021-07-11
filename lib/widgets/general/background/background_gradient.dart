@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 /// Gradient background, should be the same gradient as used for the splash screen.
 class BackgroundGradient extends StatelessWidget {
-  final Widget? child;
-  final bool? drawGradient;
-
   const BackgroundGradient({
     this.child,
     this.drawGradient,
     Key? key,
   }) : super(key: key);
+
+  final Widget? child;
+  final bool? drawGradient;
 
   @override
   Widget build(BuildContext context) {

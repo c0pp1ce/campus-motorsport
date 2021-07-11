@@ -24,20 +24,12 @@ class CustomRouter {
 
       case loginRoute:
         if (settings.arguments != null) {
-          try {
-            return MaterialPageRoute(
-              builder: (_) => Login(
-                fadeIn: settings.arguments as bool,
-              ),
-              settings: settings,
-            );
-          } on Exception catch (e) {
-            print(e);
-            return MaterialPageRoute(
-              builder: (_) => Login(),
-              settings: settings,
-            );
-          }
+          return MaterialPageRoute(
+            builder: (_) => Login(
+              fadeIn: settings.arguments! as bool,
+            ),
+            settings: settings,
+          );
         } else {
           return MaterialPageRoute(
             builder: (_) => Login(),
@@ -46,18 +38,20 @@ class CustomRouter {
         }
 
       case registerRoute:
-        return MaterialPageRoute(
-          builder: (_) => Registration(
-            backgroundImage: settings.arguments as ImageProvider,
-          ),
-          settings: settings,
-        );
+        if (settings.arguments != null) {
+          return MaterialPageRoute(
+            builder: (_) => Registration(
+              backgroundImage: settings.arguments! as ImageProvider,
+            ),
+            settings: settings,
+          );
+        } else {
+          print('Missing route arguments.');
+          return routeNotFound(settings.name ?? 'Registration');
+        }
 
       default:
-        return MaterialPageRoute(
-          builder: (_) => routeNotFound(settings.name ?? 'NO ROUTE NAME'),
-          settings: settings,
-        );
+        return routeNotFound(settings.name ?? 'NO ROUTE NAME');
     }
   }
 
@@ -69,11 +63,13 @@ class CustomRouter {
     );
   }
 
-  static Widget routeNotFound(String route) {
-    return Scaffold(
-      body: Center(
-        child: Text('Router could not find route $route.'),
-      ),
-    );
+  static MaterialPageRoute routeNotFound(String route) {
+    return MaterialPageRoute(builder: (_) {
+      return Scaffold(
+        body: Center(
+          child: Text('Router could not find route $route.'),
+        ),
+      );
+    });
   }
 }

@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 
 /// A reusable card with predefined content padding and color.
 class SimpleCard extends StatelessWidget {
+  const SimpleCard({
+    required this.child,
+    this.elevation = SizeConfig.baseBackgroundElevation,
+    this.color,
+    this.shadowColor,
+    this.margin = EdgeInsets.zero,
+    Key? key,
+  }) : super(key: key);
+
   final Widget child;
   final double elevation;
   final Color? color;
   final Color? shadowColor;
   final EdgeInsets margin;
-  SimpleCard(
-      {required this.child,
-      this.elevation = SizeConfig.baseBackgroundElevation,
-      this.color,
-      this.shadowColor,
-        this.margin = EdgeInsets.zero,
-      Key? key})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

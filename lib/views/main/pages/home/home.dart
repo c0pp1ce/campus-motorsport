@@ -17,34 +17,34 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeProvider homeProvider = context.watch<HomeProvider>();
+    final HomeProvider homeProvider = context.watch<HomeProvider>();
     switch (homeProvider.currentPage) {
       case HomePage.overview:
         return Overview();
       case HomePage.attendanceList:
         return ExpandedAppBar(
           offsetBeforeTitleShown: 35,
-          appbarTitle: Text("Anwesenheitsliste"),
+          appbarTitle: Text('Anwesenheitsliste'),
           appbarChild: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               ExpandedTitle(
-                title: "Anwesenheitsliste",
+                title: 'Anwesenheitsliste',
                 margin: EdgeInsets.zero,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Derzeit vor Ort",
+                    'Derzeit vor Ort',
                     style: Theme.of(context).textTheme.bodyText2?.copyWith(
                           fontSize: 16,
                         ),
                   ),
                   Switch(
                     value: true,
-                    onChanged: (value) => null,
+                    onChanged: (value) => {},
                   ),
                 ],
               ),
@@ -61,7 +61,7 @@ class HomeContext extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeProvider homeProvider = context.watch<HomeProvider>();
+    final HomeProvider homeProvider = context.watch<HomeProvider>();
     switch (homeProvider.currentPage) {
       case HomePage.overview:
         return OverviewContext();
@@ -71,17 +71,17 @@ class HomeContext extends StatelessWidget {
             color: Colors.transparent,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+              children: const <Widget>[
                 Icon(
                   LineIcons.infoCircle,
                 ),
                 Expanded(
                   child: SimpleCard(
                     elevation: SizeConfig.baseBackgroundElevation - 3,
-                    margin: const EdgeInsets.only(left: 5),
+                    margin: EdgeInsets.only(left: 5),
                     child: Text(
-                      "Auf dieser Seite kannst du sehen, wer gerade vor Ort ist.\n\n"
-                      "Bitte ändere hier deinen Status, wenn du ankommst oder die Räume des Campus verlässt.",
+                      'Auf dieser Seite kannst du sehen, wer gerade vor Ort ist.\n\n'
+                      'Bitte ändere hier deinen Status, wenn du ankommst oder die Räume des Campus verlässt.',
                     ),
                   ),
                 ),
@@ -99,7 +99,7 @@ class HomeSecondary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeProvider homeProvider = context.watch<HomeProvider>();
+    final HomeProvider homeProvider = context.watch<HomeProvider>();
 
     return Material(
       color: Colors.transparent,

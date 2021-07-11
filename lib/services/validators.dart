@@ -20,7 +20,7 @@ class Validators {
 
   /// Returns null if [value] is a valid email.
   String? validateEmail(String? value) {
-    String? valueEmptyError = validateNotEmpty(value, 'Email');
+    final String? valueEmptyError = validateNotEmpty(value, 'Email');
     if (valueEmptyError != null) {
       return valueEmptyError;
     }
@@ -35,7 +35,7 @@ class Validators {
 
   /// Returns null if [value] is a valid password.
   String? validatePassword(String? value) {
-    String? valueEmptyError = validateNotEmpty(value, 'Passwort');
+    final String? valueEmptyError = validateNotEmpty(value, 'Passwort');
     if (valueEmptyError != null) {
       return valueEmptyError;
     }
@@ -48,28 +48,29 @@ class Validators {
     }
   }
 
+  // TODO : Remove if not needed anymore.
   /// Returns null if [value] is a valid invitation code.
   String? validateInvitationCode(String? value) {
-    String? valueEmptyError = validateNotEmpty(value, 'Einladungscode');
+    final String? valueEmptyError = validateNotEmpty(value, 'Einladungscode');
     if (valueEmptyError != null) {
       return valueEmptyError;
     }
 
     if (value!.length < 6) {
-      return "Der Code ist zu kurz.";
+      return 'Der Code ist zu kurz.';
     }
 
     if (value.length > 6) {
-      return "Der Code ist zu lang";
+      return 'Der Code ist zu lang';
     }
 
     if (value.trim().isEmpty) {
-      return "Nur Leerzeichen enthalten.\nIns Feld tippen und Eingabe löschen.";
+      return 'Nur Leerzeichen enthalten.\nIns Feld tippen und Eingabe löschen.';
     }
 
-    RegExp regExp = new RegExp(r"^[a-zA-Z0-9]+$");
+    final RegExp regExp = RegExp(r'^[a-zA-Z0-9]+$');
     if (!regExp.hasMatch(value)) {
-      return "Code darf keine Sonderzeichen enthalten.";
+      return 'Code darf keine Sonderzeichen enthalten.';
     }
 
     return null;

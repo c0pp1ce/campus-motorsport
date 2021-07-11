@@ -4,6 +4,21 @@ import 'package:campus_motorsport/services/color_services.dart';
 
 /// Styled [TextFormField] to be used throughout the app.
 class CMTextField extends StatefulWidget {
+  const CMTextField({
+    this.hint,
+    this.label,
+    this.initialValue,
+    this.validate,
+    this.onSaved,
+    this.onChanged,
+    this.textInputType,
+    this.textInputAction,
+    this.toggleObscure = false,
+    this.enabled = true,
+    this.fillColor,
+    Key? key,
+  }) : super(key: key);
+
   final String? hint;
   final String? label;
   final String? initialValue;
@@ -19,21 +34,6 @@ class CMTextField extends StatefulWidget {
   /// If set to true, a suffix icon will be displayed which toggles obscureText.
   final bool toggleObscure;
   final bool enabled;
-
-  CMTextField({
-    this.hint,
-    this.label,
-    this.initialValue,
-    this.validate,
-    this.onSaved,
-    this.onChanged,
-    this.textInputType,
-    this.textInputAction,
-    this.toggleObscure = false,
-    this.enabled = true,
-    this.fillColor,
-    Key? key,
-  }) : super(key: key);
 
   @override
   _CMTextFieldState createState() => _CMTextFieldState();
@@ -89,7 +89,7 @@ class _CMTextFieldState extends State<CMTextField> {
   /// result.
   String? _validate(String? value) {
     if (widget.validate != null) {
-      String? result = widget.validate!(value);
+      final String? result = widget.validate!(value);
       if (result != null) {
         setState(() {
           _errorShown = true;
@@ -117,7 +117,7 @@ class _CMTextFieldState extends State<CMTextField> {
             color: Theme.of(context).colorScheme.error,
           ),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
-      filled: widget.fillColor != null ? true : false,
+      filled: widget.fillColor != null,
       fillColor: widget.fillColor,
       enabledBorder: _enabledBorder(context),
       disabledBorder: _disabledBorder(context),

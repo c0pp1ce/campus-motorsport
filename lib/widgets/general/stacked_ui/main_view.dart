@@ -7,6 +7,18 @@ import 'package:flutter/material.dart';
 /// In order to connect this view to the [ContextDrawer] a state management solution
 /// like Provider or BloC is recommended.
 class MainView extends StatelessWidget {
+  const MainView({
+    this.title,
+    this.flexibleSpace,
+    this.leading,
+    this.appBarColor,
+    this.appBarShadowColor,
+    this.backgroundColor,
+    this.backgroundElevation = SizeConfig.baseBackgroundElevation,
+    required this.child,
+    Key? key,
+  }) : super(key: key);
+
   /// The Appbar title.
   final Widget? title;
 
@@ -31,23 +43,11 @@ class MainView extends StatelessWidget {
   /// Elevation of the body. Higher == lighter color.
   final double backgroundElevation;
 
-  const MainView({
-    this.title,
-    this.flexibleSpace,
-    this.leading,
-    this.appBarColor,
-    this.appBarShadowColor,
-    this.backgroundColor,
-    this.backgroundElevation = SizeConfig.baseBackgroundElevation,
-    required this.child,
-    Key? key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final RoundedRectangleBorder shape = RoundedRectangleBorder(
       borderRadius: const BorderRadius.vertical(
-        top: const Radius.circular(SizeConfig.baseBorderRadius),
+        top: Radius.circular(SizeConfig.baseBorderRadius),
       ),
     );
 
@@ -71,11 +71,7 @@ class MainView extends StatelessWidget {
             color: backgroundColor ?? Theme.of(context).colorScheme.surface,
             elevation: backgroundElevation,
             shadowColor: Colors.transparent,
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              child: child,
-            ),
+            child: child,
           ),
         ),
       ),

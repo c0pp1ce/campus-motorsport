@@ -12,7 +12,7 @@ import 'package:flutter/widgets.dart';
 /// Based on : https://medium.com/flutter-community/flutter-effectively-scale-ui-according-to-different-screen-sizes-2cb7c115ea0a
 /// (last visited 02.04.2021).
 class SizeConfig {
-  static MediaQueryData? _mediaQueryData;
+  static late MediaQueryData _mediaQueryData;
 
   static double screenWidth = 0;
   static double screenHeight = 0;
@@ -29,24 +29,24 @@ class SizeConfig {
   /// Global style variables
   static const double basePadding = 10.0;
   static const double baseBorderRadius = 15.0;
-  static const double baseBackgroundElevation = 5.0;
+  static const double baseBackgroundElevation = 5.0; // TODO: Adjust.
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
 
-    screenWidth = _mediaQueryData!.size.width;
-    screenHeight = _mediaQueryData!.size.height;
+    screenWidth = _mediaQueryData.size.width;
+    screenHeight = _mediaQueryData.size.height;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
 
     _safeAreaHorizontal =
-        _mediaQueryData!.padding.left + _mediaQueryData!.padding.right;
+        _mediaQueryData.padding.left + _mediaQueryData.padding.right;
     _safeAreaVertical =
-        _mediaQueryData!.padding.top + _mediaQueryData!.padding.bottom;
+        _mediaQueryData.padding.top + _mediaQueryData.padding.bottom;
 
     safeBlockHorizontal = (screenWidth - _safeAreaHorizontal) / 100;
     safeBlockVertical = (screenHeight - _safeAreaVertical) / 100;
 
-    orientation = _mediaQueryData!.orientation;
+    orientation = _mediaQueryData.orientation;
   }
 }
