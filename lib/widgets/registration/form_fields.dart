@@ -1,4 +1,3 @@
-import 'package:campus_motorsport/models/user.dart';
 import 'package:campus_motorsport/repositories/cm_auth.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
@@ -133,7 +132,7 @@ class _FormFieldsState extends State<FormFields> {
                     setState(() {
                       _loading = true;
                     });
-                    final User? _user = await CMAuth().register(
+                    final bool success = await CMAuth().register(
                       email: _email!,
                       password: _password!,
                       firstname: _firstname!,
@@ -142,7 +141,7 @@ class _FormFieldsState extends State<FormFields> {
                     setState(() {
                       _loading = false;
                     });
-                    if (_user == null) {
+                    if (!success) {
                       _showErrorDialog();
                     } else {
                       _showSuccessDialog();

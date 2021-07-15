@@ -6,33 +6,25 @@ class User {
     required this.uid,
     required this.firstname,
     required this.lastname,
-    required this.role,
-    this.docId,
+    this.accepted = false,
+    this.isAdmin = false,
   });
 
+  /// Doc id is the same as the uid.
   String uid;
-  String? docId;
   String firstname;
   String lastname;
-  UserRole role;
+  bool accepted;
+  bool isAdmin;
 
-  static User fromJson(Map<String, dynamic> json, [String? docId]) {
-    /// Convert the user role from String to enum value.
-    final String roleValue = json['role'];
-    late UserRole userRole;
-    for (final role in UserRole.values) {
-      if (roleValue == role.value) {
-        userRole = role;
-      }
-    }
-    assert(userRole != null, 'Could not find a matching user role.');
-
+  /// verified is handled by Firebase auth and therefore not part of the user data entry.
+  static User fromJson(Map<String, dynamic> json) {
     return User(
       uid: json['uid'],
       firstname: json['firstname'],
       lastname: json['lastname'],
-      role: userRole,
-      docId: docId,
+      accepted: json['accepted'] ?? false,
+      isAdmin: json['isAdmin'] ?? false,
     );
   }
 
@@ -42,37 +34,15 @@ class User {
       'uid': uid,
       'firstname': firstname,
       'lastname': lastname,
-      'role': role.value,
+      'accepted': accepted,
+      'isAdmin': isAdmin,
     };
   }
 
   @override
   String toString() {
-    return '$firstname $lastname\n$uid\n$role';
-  }
-}
-
-/// A user can only have one role at a time.
-/// [UserRole.accepted] is the first role which grants access to the app.
-enum UserRole {
-  unverified,
-  verified,
-  accepted,
-  admin,
-}
-
-/// Used to have easy to read values stored in the database.
-extension UserRolesExtension on UserRole {
-  String get value {
-    switch (this) {
-      case UserRole.unverified:
-        return 'unverified';
-      case UserRole.verified:
-        return 'verified';
-      case UserRole.accepted:
-        return 'accepted';
-      case UserRole.admin:
-        return 'admin';
-    }
+    return '$firstname $lastname\n'
+        '$uid\n'
+        '(verified, accepted, isAdmin) : ($accepted, $isAdmin)';
   }
 }
