@@ -33,7 +33,7 @@ class _MainNavigatorState extends State<MainNavigator> {
 
   /// The context menus of the main navigation.
   /// Length must be equal to [_pages].
-  late final List<Widget> _contextMenus;
+  late final List<Widget?> _contextMenus;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _MainNavigatorState extends State<MainNavigator> {
     ];
     _contextMenus = [
       HomeContext(),
-      if (user.isAdmin) Container(),
+      if (user.isAdmin) null, // user management
     ];
   }
 
@@ -68,9 +68,21 @@ class _MainNavigatorState extends State<MainNavigator> {
           navigationDrawer: _buildDrawer(context),
           mainView: _pages[_currentIndex],
           contextDrawer: _contextMenus[_currentIndex],
+          allowSlideToContext: _allowContextSlide(context),
         );
       },
     );
+  }
+
+  /// Determines if a context drawer should be visible.
+  bool _allowContextSlide(BuildContext context) {
+    if(_currentIndex == 0) {
+      return context.watch<HomeProvider>().allowContextDrawer;
+    } else if(_currentIndex == 1) {
+      // User management
+      return false;
+    }
+    return false;
   }
 
   /// Contains the main navigation items as well as the matching secondary items

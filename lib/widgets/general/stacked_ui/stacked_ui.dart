@@ -11,7 +11,8 @@ class StackedUI extends StatefulWidget {
     this.slidedWidth = 50,
     required this.mainView,
     required this.navigationDrawer,
-    required this.contextDrawer,
+    this.contextDrawer,
+    this.allowSlideToContext = true,
     Key? key,
   }) : super(key: key);
 
@@ -32,7 +33,10 @@ class StackedUI extends StatefulWidget {
   /// Right view of the [StackedUI].
   ///
   /// Only tested for usage with [ContextDrawer].
-  final Widget contextDrawer;
+  final Widget? contextDrawer;
+
+  /// Manually set this to avoid slides if there are subpages without context drawer.
+  final bool allowSlideToContext;
 
   @override
   StackedUIState createState() => StackedUIState();
@@ -126,6 +130,24 @@ class StackedUIState extends State<StackedUI>
         child: Stack(
           children: <Widget>[
             widget.mainView,
+            if (mainViewOpen &&
+                widget.contextDrawer != null &&
+                widget.allowSlideToContext)
+              Positioned(
+                width: 30,
+                height: 30,
+                right: -15,
+                top: SizeConfig.screenHeight / 2,
+                child: Material(
+                  color: Theme.of(context).colorScheme.surface,
+                  elevation: SizeConfig.baseBackgroundElevation,
+                  borderRadius: BorderRadius.circular(30),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
             if (!mainViewOpen)
               Container(
                 decoration: BoxDecoration(
@@ -146,7 +168,8 @@ class StackedUIState extends State<StackedUI>
       index: _index,
       children: <Widget>[
         widget.navigationDrawer,
-        widget.contextDrawer,
+        if (widget.contextDrawer != null && widget.allowSlideToContext)
+          widget.contextDrawer!,
       ],
     );
   }
@@ -181,7 +204,9 @@ class StackedUIState extends State<StackedUI>
     if (mainViewOpen && slideDirection == null) {
       final double delta = details.primaryDelta ?? 0;
       setState(() {
-        if (delta < 0) {
+        if (delta < 0 &&
+            widget.contextDrawer != null &&
+            widget.allowSlideToContext) {
           slideDirection = SlideDirection.left;
           if (maxSlide > 0) {
             maxSlide = -maxSlide;
