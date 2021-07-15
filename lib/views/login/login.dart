@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/user.dart';
+import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/repositories/cm_auth.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/color_services.dart';
@@ -12,6 +13,7 @@ import 'package:campus_motorsport/widgets/login/cm_divider.dart';
 import 'package:campus_motorsport/widgets/login/cm_logo.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -168,6 +170,7 @@ class _LoginState extends State<Login> {
                               if (user == null) {
                                 _showErrorDialog();
                               } else {
+                                context.read<CurrentUser>().user = user;
                                 Navigator.of(context)
                                     .pushReplacementNamed(mainRoute);
                               }

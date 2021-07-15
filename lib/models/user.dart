@@ -17,6 +17,10 @@ class User {
   bool accepted;
   bool isAdmin;
 
+  String get name {
+    return '$firstname $lastname';
+  }
+
   /// verified is handled by Firebase auth and therefore not part of the user data entry.
   static User fromJson(Map<String, dynamic> json) {
     return User(

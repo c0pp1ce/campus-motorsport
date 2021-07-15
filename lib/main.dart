@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +9,7 @@ import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/themes/text_theme.dart';
 import 'package:campus_motorsport/widgets/general/background/background_gradient.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +34,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyMaterialApp();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CurrentUser()),
+      ],
+      child: MyMaterialApp(),
+    );
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/provider/home/home_provider.dart';
+import 'package:campus_motorsport/repositories/cm_auth.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/views/main/pages/home/home.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/navigation_drawer.dart';
@@ -92,9 +93,7 @@ class _MainNavigatorState extends State<MainNavigator> {
 
   /// Reset user specific providers on logout.
   Future<void> _logout(BuildContext context) async {
-    // TODO : Logout.
-    //Provider.of<TokenController>(context, listen: false).add(DeleteToken());
-    //CMAuth auth = CMAuth();
-    //await auth.signOut();
+    final CMAuth auth = CMAuth();
+    await auth.signOut();
   }
 }
