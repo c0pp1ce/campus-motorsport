@@ -28,13 +28,7 @@ class Registration extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: WillPopScope(
-                  onWillPop: () async {
-                    // TODO : If loading return false.
-                    return true;
-                  },
-                  child: FormFields(),
-                ),
+                child: FormFields(),
               ),
             ),
           ),

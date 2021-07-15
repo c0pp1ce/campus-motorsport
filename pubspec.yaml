@@ -32,6 +32,10 @@ dependencies:
   google_fonts: ^2.0.0
   transparent_image: ^2.0.0
   line_icons: ^2.0.1
+  cool_alert:
+    git:
+      url: https://github.com/c0pp1ce/flutter_cool_alert.git
+      ref: master
 
   # Connect to firebase project
   firebase_core: ^1.1.1

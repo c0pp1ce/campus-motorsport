@@ -1,3 +1,5 @@
+import 'package:campus_motorsport/models/user.dart';
+import 'package:campus_motorsport/repositories/cm_auth.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
@@ -8,6 +10,7 @@ import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:campus_motorsport/widgets/login/cm_divider.dart';
 import 'package:campus_motorsport/widgets/login/cm_logo.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -34,6 +37,13 @@ class _LoginState extends State<Login> {
   /// The background image of the view.
   final ImageProvider _image = AssetImage('assets/images/designer_edited.jpg');
   late bool _precached;
+
+  // User data.
+  String? _email;
+  String? _password;
+
+  /// Used when performing login.
+  bool _loading = false;
 
   @override
   void initState() {
@@ -110,7 +120,7 @@ class _LoginState extends State<Login> {
                                 validate: (value) =>
                                     Validators().validateEmail(value),
                                 onSaved: (value) {
-                                  // TODO : Save email.
+                                  _email = value;
                                 },
                               ),
                               const SizedBox(
@@ -129,7 +139,7 @@ class _LoginState extends State<Login> {
                                 validate: (value) => Validators()
                                     .validateNotEmpty(value, 'Passwort'),
                                 onSaved: (value) {
-                                  // TODO : Save password.
+                                  _password = value;
                                 },
                               ),
                             ],
@@ -138,26 +148,44 @@ class _LoginState extends State<Login> {
                         const SizedBox(height: 50),
                         CMTextButton(
                           child: const Text('LOGIN'),
-                          loading: false, // TODO : Loading state
-                          onPressed: () {
+                          loading: _loading,
+                          onPressed: () async {
                             if (_formKey.currentState?.validate() ?? false) {
                               /// Save inputs and perform http request.
                               _formKey.currentState?.save();
-                              // TODO : Perform login.
+                              assert(
+                                _email != null && _password != null,
+                                'Validator did not check for null.',
+                              );
+                              setState(() {
+                                _loading = true;
+                              });
+                              final User? user = await CMAuth()
+                                  .login(email: _email!, password: _password!);
+                              setState(() {
+                                _loading = false;
+                              });
+                              if (user == null) {
+                                _showErrorDialog();
+                              } else {
+                                Navigator.of(context)
+                                    .pushReplacementNamed(mainRoute);
+                              }
                             }
                           },
                         ),
                         CMDivider(),
                         CMTextButton(
                           child: const Text('ACCOUNT ERSTELLEN'),
-                          loading: false, // TODO : Loading state
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              registerRoute,
-                              arguments: _image,
-                            );
-                          },
+                          onPressed: _loading
+                              ? null
+                              : () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    registerRoute,
+                                    arguments: _image,
+                                  );
+                                },
                           primary: Theme.of(context).colorScheme.onSurface,
                           gradient: LinearGradient(
                             colors: <Color>[
@@ -184,6 +212,33 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showErrorDialog() {
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.error,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      title: 'Login fehlgeschlagen.',
+      text: 'Bitte überprüfe die eigegebenen Daten.\n'
+          'Beachte zudem, dass du deine E-Mail verifizieren und durch einen Administrator bestätigt werden muss.',
+      confirmButton: Expanded(
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: SizeConfig.basePadding * 2,
+          ),
+          child: CMTextButton(
+            child: const Text(
+              'VERSTANDEN',
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      ),
+      loopAnimation: false,
     );
   }
 }
