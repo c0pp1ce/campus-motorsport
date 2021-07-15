@@ -47,6 +47,6 @@ class User {
   String toString() {
     return '$firstname $lastname\n'
         '$uid\n'
-        '(verified, accepted, isAdmin) : ($accepted, $isAdmin)';
+        '(accepted, isAdmin) : ($accepted, $isAdmin)';
   }
 }
