@@ -13,7 +13,9 @@ import 'package:provider/provider.dart';
 
 /// Main view.
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +97,9 @@ class HomeContext extends StatelessWidget {
 
 /// Left drawer.
 class HomeSecondary extends StatelessWidget {
-  const HomeSecondary({Key? key}) : super(key: key);
+  const HomeSecondary({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
