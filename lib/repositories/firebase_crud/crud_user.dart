@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/models/user.dart' as app;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// Create, Read, Update, Delete users in firebase.
 class CrudUser {
@@ -28,6 +29,7 @@ class CrudUser {
     required String uid,
     required String firstname,
     required String lastname,
+    required String email,
   }) async {
     try {
       /// Check if the uid is already taken to avoid overwriting data.
@@ -43,6 +45,7 @@ class CrudUser {
           'uid': uid,
           'firstname': firstname,
           'lastname': lastname,
+          'email': email,
         },
       );
       return true;
@@ -53,9 +56,15 @@ class CrudUser {
   }
 
   /// Attempts to delete the user from firebase auth.
-  Future<bool> deleteUser({required String uid}) async {
+  Future<bool> deleteUser({required String uid, bool deleteSelf = false}) async {
+    if(uid == FirebaseAuth.instance.currentUser?.uid && !deleteSelf) {
+      return false;
+    }
+    // TODO
+    return false;
     try {
       await _firestore.collection('users').doc(uid).delete();
+      // TODO : Delete from auth. (Trigger cloud function).
       return true;
     } on Exception catch (e) {
       print(e.toString());
@@ -93,6 +102,25 @@ class CrudUser {
       print('Tried to update ${data.keys}. Failed because of:\n');
       print(e.toString());
       return false;
+    }
+  }
+
+  Future<List<app.User>?> getUsers() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> result =
+          await _firestore.collection('users').orderBy('firstname').get();
+
+      final List<app.User> resultList = List.empty(growable: true);
+      for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+          in result.docs) {
+        resultList.add(app.User.fromJson(doc.data()));
+      }
+
+      return resultList;
+    } on Exception catch (e) {
+      print('Tried to get all users. Failed because of:\n');
+      print(e.toString());
+      return null;
     }
   }
 }

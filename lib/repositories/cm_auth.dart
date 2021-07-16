@@ -43,6 +43,7 @@ class CMAuth {
         uid: registeredUser.uid,
         firstname: firstname,
         lastname: lastname,
+        email: email,
       )) {
         print('Could not create the user entry.');
 
@@ -87,6 +88,7 @@ class CMAuth {
       /// Get the users data.
       final app.User? currentUser = await _crudUser.getUser(authUser.uid);
       if (currentUser == null) {
+        await signOut();
         return null;
       }
 
@@ -98,8 +100,9 @@ class CMAuth {
         currentUser.verified = true;
       }
 
-      if (!currentUser.accepted || !currentUser.verified) {
+      if (!currentUser.accepted || !authUser.emailVerified) {
         /// User does not possess the required role to login.
+        await signOut();
         return null;
       }
 

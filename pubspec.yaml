@@ -28,6 +28,7 @@ dependencies:
   dio: ^4.0.0
   email_validator: ^2.0.1
   pinput: ^1.2.0
+  shimmer: ^2.0.0
 
   google_fonts: ^2.0.0
   transparent_image: ^2.0.0

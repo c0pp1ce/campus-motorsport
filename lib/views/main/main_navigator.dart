@@ -2,6 +2,7 @@ import 'package:campus_motorsport/models/user.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/provider/home/home_provider.dart';
 import 'package:campus_motorsport/provider/user_management/user_management_provider.dart';
+import 'package:campus_motorsport/provider/user_management/users_provider.dart';
 import 'package:campus_motorsport/repositories/cm_auth.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/views/main/pages/home/home.dart';
@@ -56,12 +57,9 @@ class _MainNavigatorState extends State<MainNavigator> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => HomeProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => UserManagementProvider(),
-        ),
+        ChangeNotifierProvider(create: (context) => HomeProvider()),
+        ChangeNotifierProvider(create: (context) => UserManagementProvider()),
+        ChangeNotifierProvider(create: (context) => UsersProvider()),
       ],
       builder: (context, child) {
         return StackedUI(
@@ -76,9 +74,9 @@ class _MainNavigatorState extends State<MainNavigator> {
 
   /// Determines if a context drawer should be visible.
   bool _allowContextSlide(BuildContext context) {
-    if(_currentIndex == 0) {
+    if (_currentIndex == 0) {
       return context.watch<HomeProvider>().allowContextDrawer;
-    } else if(_currentIndex == 1) {
+    } else if (_currentIndex == 1) {
       // User management
       return false;
     }

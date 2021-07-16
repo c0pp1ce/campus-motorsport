@@ -13,6 +13,8 @@ class ExpandedAppBar extends StatefulWidget {
     this.body = const SizedBox(),
     this.expandedHeight = 150,
     this.offsetBeforeTitleShown = 20,
+    this.onRefresh,
+    this.loadingListener,
     Key? key,
   }) : super(key: key);
 
@@ -24,6 +26,12 @@ class ExpandedAppBar extends StatefulWidget {
 
   /// Main content of the view.
   final Widget body;
+
+  /// If given pull to refresh will be enabled.
+  final Future<void> Function()? onRefresh;
+
+  /// To make the loading state available.
+  final void Function(bool)? loadingListener;
 
   final double expandedHeight;
   final double offsetBeforeTitleShown;
@@ -51,30 +59,17 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
       if (!_scrollController.hasClients) {
         return;
       }
-
       final double newHeight =
           max<double>(0, widget.expandedHeight - _scrollController.offset);
-
-      if (_showAppbarTitle != _appbarCollapsed) {
-        setState(() {
-          _showAppbarTitle = _appbarCollapsed;
-        });
-
-        /// Scroll down && scroll distance large enough
-      } else if (newHeight > currentExpandedHeight &&
-          newHeight - (widget.expandedHeight - 3) > currentExpandedHeight) {
-        setState(() {
-          currentExpandedHeight = newHeight;
-        });
-
-        /// Scroll up
-      } else if (newHeight < currentExpandedHeight) {
-        setState(() {
-          currentExpandedHeight = newHeight;
-        });
-      }
+      _scrollListener(newHeight);
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,20 +82,43 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
         fit: StackFit.expand,
         children: <Widget>[
           _buildHeaderBackground(context),
-          SingleChildScrollView(
-            padding: EdgeInsets.zero,
-            physics: BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
+          if (widget.onRefresh != null)
+            RefreshIndicator(
+              strokeWidth: 3,
+              edgeOffset: -40,
+              onRefresh: () async {
+                if(widget.loadingListener != null) {
+                  widget.loadingListener!(true);
+                }
+                await Future.delayed(Duration(milliseconds: 500));
+                await widget.onRefresh!();
+                if(widget.loadingListener != null) {
+                  widget.loadingListener!(false);
+                }
+              },
+              child: _buildContent(context, true),
             ),
-            controller: _scrollController,
-            child: Column(
-              children: <Widget>[
-                _buildAppBarChild(context),
-                widget.body,
-              ],
-            ),
-          ),
+          if (widget.onRefresh == null) _buildContent(context, false),
         ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, bool refresh) {
+    return SizedBox(
+      height: refresh ? double.infinity : null,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.zero,
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        controller: _scrollController,
+        child: Column(
+          children: <Widget>[
+            _buildAppBarChild(context),
+            widget.body,
+          ],
+        ),
       ),
     );
   }
@@ -150,6 +168,27 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
         ),
       ),
     );
+  }
+
+  void _scrollListener(double newHeight) {
+    if (_showAppbarTitle != _appbarCollapsed) {
+      setState(() {
+        _showAppbarTitle = _appbarCollapsed;
+      });
+
+      /// Scroll down && scroll distance large enough
+    } else if (newHeight > currentExpandedHeight &&
+        newHeight - (widget.expandedHeight - 3) > currentExpandedHeight) {
+      setState(() {
+        currentExpandedHeight = newHeight;
+      });
+
+      /// Scroll up
+    } else if (newHeight < currentExpandedHeight) {
+      setState(() {
+        currentExpandedHeight = newHeight;
+      });
+    }
   }
 
   bool get _appbarCollapsed {
