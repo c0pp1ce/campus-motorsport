@@ -8,6 +8,7 @@ class User {
     required this.lastname,
     this.accepted = false,
     this.isAdmin = false,
+    this.verified = false,
   });
 
   /// Doc id is the same as the uid.
@@ -16,6 +17,7 @@ class User {
   String lastname;
   bool accepted;
   bool isAdmin;
+  bool verified;
 
   String get name {
     return '$firstname $lastname';
@@ -29,6 +31,7 @@ class User {
       lastname: json['lastname'],
       accepted: json['accepted'] ?? false,
       isAdmin: json['isAdmin'] ?? false,
+      verified: json['verified'] ?? false,
     );
   }
 
@@ -40,6 +43,7 @@ class User {
       'lastname': lastname,
       'accepted': accepted,
       'isAdmin': isAdmin,
+      'verified': verified,
     };
   }
 
@@ -47,6 +51,6 @@ class User {
   String toString() {
     return '$firstname $lastname\n'
         '$uid\n'
-        '(accepted, isAdmin) : ($accepted, $isAdmin)';
+        '(verified, accepted, isAdmin) : ($verified, $accepted, $isAdmin)';
   }
 }

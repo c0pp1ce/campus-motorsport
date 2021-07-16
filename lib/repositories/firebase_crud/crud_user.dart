@@ -57,7 +57,40 @@ class CrudUser {
     try {
       await _firestore.collection('users').doc(uid).delete();
       return true;
-    } on Exception catch(e) {
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  /// Updates the content of a specific field of the user.
+  Future<bool> updateField({
+    required String uid,
+    required String key,
+    required dynamic data,
+  }) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        key: data,
+      });
+      return true;
+    } on Exception catch (e) {
+      print('Tried to update $key. Failed because of:\n');
+      print(e.toString());
+      return false;
+    }
+  }
+
+  /// Updates multiple fields of the user.
+  Future<bool> updateMultipleFields({
+    required String uid,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      await _firestore.collection('users').doc(uid).update(data);
+      return true;
+    } on Exception catch (e) {
+      print('Tried to update ${data.keys}. Failed because of:\n');
       print(e.toString());
       return false;
     }

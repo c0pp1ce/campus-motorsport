@@ -90,7 +90,15 @@ class CMAuth {
         return null;
       }
 
-      if (!currentUser.accepted) {
+      /// Update verification state.
+      /// TODO : Change to firebase function if they add an onVerification event.
+      if (!currentUser.verified && authUser.emailVerified) {
+        await _crudUser.updateField(
+            uid: currentUser.uid, key: 'verified', data: true);
+        currentUser.verified = true;
+      }
+
+      if (!currentUser.accepted || !currentUser.verified) {
         /// User does not possess the required role to login.
         return null;
       }
@@ -99,10 +107,6 @@ class CMAuth {
       return currentUser;
     } on FirebaseAuthException catch (e) {
       print(e.message);
-      return null;
-    } on Exception catch (e) {
-      print('Update of verified failed.\n');
-      print(e.toString());
       return null;
     }
   }
