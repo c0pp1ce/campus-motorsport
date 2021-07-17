@@ -127,7 +127,7 @@ class _AdminsState extends State<Admins> {
                               confirmedWhenTrue: ConfirmedWhenTrue.never,
                               confirmButton: false,
                               declineButton: false,
-                              showEmailState: true,
+                              showEmailState: false,
                               showRoles: true,
                             );
                           },
