@@ -7,15 +7,14 @@ class UsersProvider extends BaseProvider {
   final CrudUser _crudUser = CrudUser();
 
   Future<List<User>> get users async {
-    if(_users == null) {
+    if (_users == null) {
       await reload();
     }
     return _users!;
   }
-  
+
   Future<void> reload() async {
     _users = await _crudUser.getUsers() ?? [];
     notify();
   }
-
 }

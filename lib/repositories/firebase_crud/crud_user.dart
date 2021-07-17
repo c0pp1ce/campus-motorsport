@@ -56,8 +56,9 @@ class CrudUser {
   }
 
   /// Attempts to delete the user from firebase auth.
-  Future<bool> deleteUser({required String uid, bool deleteSelf = false}) async {
-    if(uid == FirebaseAuth.instance.currentUser?.uid && !deleteSelf) {
+  Future<bool> deleteUser(
+      {required String uid, bool deleteSelf = false}) async {
+    if (uid == FirebaseAuth.instance.currentUser?.uid && !deleteSelf) {
       return false;
     }
     // TODO

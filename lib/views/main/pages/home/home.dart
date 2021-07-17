@@ -26,12 +26,12 @@ class Home extends StatelessWidget {
       case HomePage.attendanceList:
         return ExpandedAppBar(
           offsetBeforeTitleShown: 35,
-          appbarTitle: Text('Anwesenheitsliste'),
+          appbarTitle: const Text('Anwesenheitsliste'),
           appbarChild: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              ExpandedTitle(
+              const ExpandedTitle(
                 title: 'Anwesenheitsliste',
                 margin: EdgeInsets.zero,
               ),

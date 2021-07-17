@@ -1,11 +1,9 @@
 import 'package:campus_motorsport/models/user.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
-import 'package:campus_motorsport/utilities/size_config.dart';
-import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
-import 'package:campus_motorsport/widgets/general/layout/loading_item.dart';
-import 'package:campus_motorsport/widgets/user_management/pending_user_card.dart';
+import 'package:campus_motorsport/widgets/general/layout/loading_list.dart';
+import 'package:campus_motorsport/widgets/user_management/user_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +25,8 @@ class _AcceptUsersState extends State<AcceptUsers> {
     final UsersProvider provider = context.watch<UsersProvider>();
 
     return ExpandedAppBar(
-      appbarTitle: Text('Ausstehende Bestätigungen'),
-      appbarChild: Center(
+      appbarTitle: const Text('Ausstehende Bestätigungen'),
+      appbarChild: const Center(
         child: ExpandedTitle(
           title: 'Ausstehende Bestätigungen',
         ),
@@ -41,7 +39,7 @@ class _AcceptUsersState extends State<AcceptUsers> {
         });
       },
       body: _loading
-          ? _buildLoadingView(context)
+          ? const LoadingList()
           : FutureBuilder(
               future: provider.users,
               builder: (context, AsyncSnapshot<List<User>> snapshot) {
@@ -73,9 +71,26 @@ class _AcceptUsersState extends State<AcceptUsers> {
                     itemCount: pendingUsers.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return PendingUserCard(
+                      return UserCard(
                         user: pendingUsers[index],
                         key: ValueKey<String>(pendingUsers[index].uid),
+                        confirmedWhenTrue: ConfirmedWhenTrue.accepted,
+                        confirmButton: true,
+                        onConfirm: (crudUser) async {
+                          return crudUser.updateField(
+                            uid: pendingUsers[index].uid,
+                            key: 'accepted',
+                            data: true,
+                          );
+                        },
+                        confirmErrorTitle: 'Fehler beim Ändern der Rolle.',
+                        declineButton: true,
+                        onDecline: (crudUser) async {
+                          return crudUser.deleteUser(
+                            uid: pendingUsers[index].uid,
+                          );
+                        },
+                        declineErrorTitle: 'Fehler beim Löschen des Benutzers.',
                       );
                     },
                   );
@@ -83,23 +98,6 @@ class _AcceptUsersState extends State<AcceptUsers> {
                 return const SizedBox();
               },
             ),
-    );
-  }
-
-  Widget _buildLoadingView(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 5,
-      itemExtent: 140,
-      itemBuilder: (context, index) {
-        return const LoadingItem(
-          child: SimpleCard(
-            margin: EdgeInsets.all(SizeConfig.basePadding),
-            child: SizedBox(),
-          ),
-        );
-      },
     );
   }
 }

@@ -5,7 +5,7 @@ class UserManagementProvider extends BaseProvider {
   UMPage currentPage = UMPage.acceptUsers;
 
   void switchTo(UMPage page) {
-    if(page != currentPage) {
+    if (page != currentPage) {
       currentPage = page;
       notify();
     }

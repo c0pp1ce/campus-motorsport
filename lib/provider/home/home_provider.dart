@@ -8,7 +8,7 @@ class HomeProvider extends BaseProvider {
   void switchTo(HomePage page) {
     if (page != currentPage) {
       currentPage = page;
-      if(currentPage == HomePage.attendanceList) {
+      if (currentPage == HomePage.attendanceList) {
         allowContextDrawer = true;
       } else {
         allowContextDrawer = false;

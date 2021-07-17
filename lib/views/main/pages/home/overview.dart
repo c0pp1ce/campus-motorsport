@@ -17,11 +17,11 @@ class Overview extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpandedAppBar(
       expandedHeight: 150,
-      appbarTitle: Text('Übersicht'),
+      appbarTitle: const Text('Übersicht'),
       appbarChild: FutureBuilder<List<User>?>(
         future: context.watch<UsersProvider>().users,
         builder: (context, snapshot) {
-          if(snapshot.connectionState != ConnectionState.done) {
+          if (snapshot.connectionState != ConnectionState.done) {
             return AppStatistics(
               loading: true,
               vehicleCount: 0,
@@ -30,7 +30,7 @@ class Overview extends StatelessWidget {
             );
           }
 
-          if(snapshot.hasError || !snapshot.hasData) {
+          if (snapshot.hasError || !snapshot.hasData) {
             return AppStatistics(
               loading: false,
               vehicleCount: 0,

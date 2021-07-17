@@ -84,15 +84,16 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
           _buildHeaderBackground(context),
           if (widget.onRefresh != null)
             RefreshIndicator(
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
               strokeWidth: 3,
               edgeOffset: -40,
               onRefresh: () async {
-                if(widget.loadingListener != null) {
+                if (widget.loadingListener != null) {
                   widget.loadingListener!(true);
                 }
                 await Future.delayed(Duration(milliseconds: 500));
                 await widget.onRefresh!();
-                if(widget.loadingListener != null) {
+                if (widget.loadingListener != null) {
                   widget.loadingListener!(false);
                 }
               },
