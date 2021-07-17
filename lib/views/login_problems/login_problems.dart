@@ -38,68 +38,75 @@ class _LoginProblemsState extends State<LoginProblems> {
           automaticallyImplyLeading: !_loading,
           title: Text('Problembehandlung'),
           elevation: SizeConfig.baseBackgroundElevation,
+          backgroundColor: Theme.of(context).colorScheme.surface.withOpacity(
+                0.3,
+              ),
         ),
+        extendBodyBehindAppBar: true,
         body: BackgroundImage(
           image: widget.backgroundImage,
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            padding: const EdgeInsets.all(SizeConfig.basePadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildSectionTitle('E-Mail Verifikation'),
-                const SizedBox(
-                  height: SizeConfig.basePadding,
-                ),
-                const Text(
-                  'Damit dir eine weitere E-Mail zur Verifizierung gesendet werden kann '
-                  'musst du hier deine Anmeldedaten eingeben.',
-                ),
-                const SizedBox(
-                  height: SizeConfig.basePadding,
-                ),
-                _buildAuthLogin(),
-                const SizedBox(
-                  height: SizeConfig.basePadding,
-                ),
-                CMTextButton(
-                  loading: _loading,
-                  child: Text(
-                    'E-MAIL SENDEN',
+          child: SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(SizeConfig.basePadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildSectionTitle('E-Mail Verifikation'),
+                  const SizedBox(
+                    height: SizeConfig.basePadding,
                   ),
-                  onPressed: () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      _formKey.currentState?.save();
-                      assert(
-                        _email != null && _password != null,
-                        'Validator did not check for null.',
-                      );
-                      final CMAuth auth = CMAuth();
+                  const Text(
+                    'Damit dir eine weitere E-Mail zur Verifizierung gesendet werden kann '
+                    'musst du hier deine Anmeldedaten eingeben.',
+                  ),
+                  const SizedBox(
+                    height: SizeConfig.basePadding,
+                  ),
+                  _buildAuthLogin(),
+                  const SizedBox(
+                    height: SizeConfig.basePadding,
+                  ),
+                  CMTextButton(
+                    loading: _loading,
+                    child: Text(
+                      'E-MAIL SENDEN',
+                    ),
+                    onPressed: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        _formKey.currentState?.save();
+                        assert(
+                          _email != null && _password != null,
+                          'Validator did not check for null.',
+                        );
+                        final CMAuth auth = CMAuth();
 
-                      /// Perform auth login
-                      setState(() {
-                        _loading = true;
-                      });
-                      final bool loggedIn =
-                          await auth.loginToAuth(_email!, _password!);
-                      bool emailSent = false;
-                      if (loggedIn) {
-                        /// Resend email
-                        emailSent = await auth.sendVerificationEmail();
-                        await auth.signOut();
+                        /// Perform auth login
+                        setState(() {
+                          _loading = true;
+                        });
+                        final bool loggedIn =
+                            await auth.loginToAuth(_email!, _password!);
+                        bool emailSent = false;
+                        if (loggedIn) {
+                          /// Resend email
+                          emailSent = await auth.sendVerificationEmail();
+                          await auth.signOut();
+                        }
+                        setState(() {
+                          _loading = false;
+                        });
+                        if (!loggedIn || !emailSent) {
+                          _showErrorDialog();
+                        } else {
+                          _showSuccessDialog();
+                        }
                       }
-                      setState(() {
-                        _loading = false;
-                      });
-                      if (!loggedIn || !emailSent) {
-                        _showErrorDialog();
-                      } else {
-                        _showSuccessDialog();
-                      }
-                    }
-                  },
-                ),
-              ],
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
