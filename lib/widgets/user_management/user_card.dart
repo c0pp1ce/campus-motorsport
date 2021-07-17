@@ -56,7 +56,7 @@ class _UserCardState extends State<UserCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 160,
+      height: widget.showRoles ? 160 : 140,
       child: SimpleCard(
         margin: const EdgeInsets.all(SizeConfig.basePadding),
         child: Row(
