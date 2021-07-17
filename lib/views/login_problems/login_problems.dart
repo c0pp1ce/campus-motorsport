@@ -86,11 +86,11 @@ class _LoginProblemsState extends State<LoginProblems> {
                   'musst du hier deine Anmeldedaten eingeben.',
                 ),
                 const SizedBox(
-                  height: SizeConfig.basePadding,
+                  height: SizeConfig.basePadding * 2,
                 ),
                 _buildAuthLogin(),
                 const SizedBox(
-                  height: SizeConfig.basePadding,
+                  height: SizeConfig.basePadding * 2,
                 ),
                 CMTextButton(
                   loading: _loading,
