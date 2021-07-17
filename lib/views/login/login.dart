@@ -99,13 +99,15 @@ class _LoginState extends State<Login> {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
-                    padding: const EdgeInsets.all(30.0),
+                    padding: const EdgeInsets.all(SizeConfig.basePadding * 2),
                     child: Column(
                       children: <Widget>[
                         RepaintBoundary(
                           child: CMLogo(),
                         ),
-                        const SizedBox(height: 50),
+                        const SizedBox(
+                          height: SizeConfig.basePadding * 4,
+                        ),
                         Form(
                           key: _formKey,
                           child: Column(
@@ -126,7 +128,7 @@ class _LoginState extends State<Login> {
                                 },
                               ),
                               const SizedBox(
-                                height: 20,
+                                height: SizeConfig.basePadding * 2,
                               ),
                               CMTextField(
                                 hint: 'Gib dein Passwort ein',
@@ -147,7 +149,9 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 50),
+                        const SizedBox(
+                          height: SizeConfig.basePadding * 4,
+                        ),
                         CMTextButton(
                           child: const Text('LOGIN'),
                           loading: _loading,
@@ -178,33 +182,34 @@ class _LoginState extends State<Login> {
                           },
                         ),
                         CMDivider(),
-                        CMTextButton(
+                        _buildGreyButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              registerRoute,
+                              arguments: _image,
+                            );
+                          },
                           child: const Text('ACCOUNT ERSTELLEN'),
-                          onPressed: _loading
-                              ? null
-                              : () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    registerRoute,
-                                    arguments: _image,
-                                  );
-                                },
-                          primary: Theme.of(context).colorScheme.onSurface,
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              ColorServices.brighten(
-                                Theme.of(context)
-                                    .colorScheme
-                                    .surface
-                                    .withOpacity(0.7),
-                                25,
-                              ),
-                              Theme.of(context)
-                                  .colorScheme
-                                  .surface
-                                  .withOpacity(0.9),
-                            ],
-                          ),
+                        ),
+                        const SizedBox(
+                          height: SizeConfig.basePadding,
+                        ),
+                        _buildGreyButton(
+                          child: const Text('OFFLINE MODUS'),
+                          disabled: true,
+                        ),
+                        const SizedBox(
+                          height: SizeConfig.basePadding,
+                        ),
+                        _buildGreyButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                              loginProblemsRoute,
+                              arguments: _image,
+                            );
+                          },
+                          child: const Text('PROBLEME BEI DER ANMELDUNG'),
                         ),
                       ],
                     ),
@@ -214,6 +219,27 @@ class _LoginState extends State<Login> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildGreyButton({
+    void Function()? onPressed,
+    required Widget child,
+    bool disabled = false,
+  }) {
+    return CMTextButton(
+      child: child,
+      onPressed: _loading ? null : onPressed,
+      primary: !disabled ? Theme.of(context).colorScheme.onSurface : null,
+      gradient: LinearGradient(
+        colors: <Color>[
+          ColorServices.brighten(
+            Theme.of(context).colorScheme.surface.withOpacity(0.7),
+            25,
+          ),
+          Theme.of(context).colorScheme.surface.withOpacity(0.9),
+        ],
       ),
     );
   }

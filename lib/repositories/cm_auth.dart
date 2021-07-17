@@ -114,6 +114,28 @@ class CMAuth {
     }
   }
 
+  /// Used to be able to resend the verification email.
+  ///
+  /// Dont use this for the actual login as this method only checks Firebase auth
+  /// and not the custom role system.
+  Future<bool> loginToAuth(String email, String password) async {
+    try {
+      /// Perform auth login.
+      final UserCredential credential =
+          await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (credential.user != null) {
+        return true;
+      }
+      return false;
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   /// Returns true if the signOut is successful or false otherwise.
   Future<bool> signOut() async {
     try {
@@ -121,6 +143,16 @@ class CMAuth {
       return true;
     } on Exception catch (e) {
       print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> sendVerificationEmail() async {
+    try {
+      await _firebaseAuth.currentUser?.sendEmailVerification();
+      return true;
+    } on Exception catch (e) {
+      print(e);
       return false;
     }
   }

@@ -9,6 +9,7 @@ class SimpleCard extends StatelessWidget {
     this.color,
     this.shadowColor,
     this.margin = EdgeInsets.zero,
+    this.padding = const EdgeInsets.all(SizeConfig.basePadding),
     Key? key,
   }) : super(key: key);
 
@@ -17,6 +18,7 @@ class SimpleCard extends StatelessWidget {
   final Color? color;
   final Color? shadowColor;
   final EdgeInsets margin;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class SimpleCard extends StatelessWidget {
       margin: margin,
       shadowColor: shadowColor,
       child: Padding(
-        padding: const EdgeInsets.all(SizeConfig.basePadding),
+        padding: padding,
         child: child,
       ),
     );

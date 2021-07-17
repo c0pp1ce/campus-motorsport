@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/views/login/login.dart';
+import 'package:campus_motorsport/views/login_problems/login_problems.dart';
 import 'package:campus_motorsport/views/main/main_navigator.dart';
 import 'package:campus_motorsport/views/registration/registration.dart';
 import 'package:campus_motorsport/main.dart';
@@ -48,6 +49,19 @@ class CustomRouter {
         } else {
           print('Missing route arguments.');
           return routeNotFound(settings.name ?? 'Registration');
+        }
+
+      case loginProblemsRoute:
+        if (settings.arguments != null) {
+          return MaterialPageRoute(
+            builder: (_) => LoginProblems(
+              backgroundImage: settings.arguments! as ImageProvider,
+            ),
+            settings: settings,
+          );
+        } else {
+          print('Missing route arguments.');
+          return routeNotFound(settings.name ?? 'Login problems');
         }
 
       default:

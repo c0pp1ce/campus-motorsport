@@ -38,6 +38,7 @@ class _FormFieldsState extends State<FormFields> {
         return true;
       },
       child: SimpleCard(
+        padding: EdgeInsets.zero,
         color: Colors.transparent,
         shadowColor: Colors.transparent,
         elevation: 0,
@@ -73,7 +74,7 @@ class _FormFieldsState extends State<FormFields> {
                 },
               ),
               const SizedBox(
-                height: 20,
+                height: SizeConfig.basePadding * 2,
               ),
               CMTextField(
                 label: 'Vorname',
@@ -86,7 +87,7 @@ class _FormFieldsState extends State<FormFields> {
                 },
               ),
               const SizedBox(
-                height: 20,
+                height: SizeConfig.basePadding * 2,
               ),
               CMTextField(
                 label: 'Nachname',
@@ -99,7 +100,7 @@ class _FormFieldsState extends State<FormFields> {
                 },
               ),
               const SizedBox(
-                height: 20,
+                height: SizeConfig.basePadding * 2,
               ),
               CMTextField(
                 label: 'Passwort',
@@ -112,7 +113,7 @@ class _FormFieldsState extends State<FormFields> {
                 },
               ),
               const SizedBox(
-                height: 50,
+                height: SizeConfig.basePadding * 4,
               ),
               CMTextButton(
                 onPressed: () async {
@@ -152,7 +153,7 @@ class _FormFieldsState extends State<FormFields> {
                 loading: _loading,
               ),
               const SizedBox(
-                height: 10,
+                height: SizeConfig.basePadding,
               ),
               CMTextButton(
                 primary: Theme.of(context).colorScheme.onSurface,
