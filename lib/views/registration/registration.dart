@@ -27,8 +27,8 @@ class Registration extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: SizeConfig.basePadding * 2,
+                padding: const EdgeInsets.all(
+                  SizeConfig.basePadding * 2,
                 ),
                 child: FormFields(),
               ),

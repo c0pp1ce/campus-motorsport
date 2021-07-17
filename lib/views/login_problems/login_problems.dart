@@ -65,13 +65,12 @@ class _LoginProblemsState extends State<LoginProblems> {
           image: widget.backgroundImage,
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(
-              horizontal: SizeConfig.basePadding,
+            padding: const EdgeInsets.all(
+              SizeConfig.basePadding * 2,
             ).add(
               EdgeInsets.only(
                 top: appBar.preferredSize.height +
-                    MediaQuery.of(context).padding.top +
-                    SizeConfig.basePadding,
+                    MediaQuery.of(context).padding.top,
               ),
             ),
             child: Column(
