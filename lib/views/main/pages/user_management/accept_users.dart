@@ -45,13 +45,20 @@ class _AcceptUsersState extends State<AcceptUsers> {
           : FutureBuilder(
               future: provider.users,
               builder: (context, AsyncSnapshot<List<User>> snapshot) {
+                /// hasData/hasError are not reset if the future changes. But since
+                /// the _loading flag is used above there is no need to adjust
+                /// the FutureBuilder.
                 if (snapshot.hasData ||
                     snapshot.connectionState == ConnectionState.done) {
+                  /// Future done but no data.
                   if (snapshot.data?.isEmpty ?? true) {
                     return Center(
                       child: Text('Keine Benutzer gefunden.'),
                     );
                   }
+
+                  /// Get all the users who have not been accepted and display
+                  /// them.
                   final List<User> pendingUsers = snapshot.data!
                       .where((element) => !element.accepted)
                       .toList();
@@ -72,11 +79,8 @@ class _AcceptUsersState extends State<AcceptUsers> {
                       );
                     },
                   );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
                 }
+                return const SizedBox();
               },
             ),
     );
@@ -89,10 +93,10 @@ class _AcceptUsersState extends State<AcceptUsers> {
       itemCount: 5,
       itemExtent: 140,
       itemBuilder: (context, index) {
-        return LoadingItem(
+        return const LoadingItem(
           child: SimpleCard(
-            margin: const EdgeInsets.all(SizeConfig.basePadding),
-            child: const SizedBox(),
+            margin: EdgeInsets.all(SizeConfig.basePadding),
+            child: SizedBox(),
           ),
         );
       },

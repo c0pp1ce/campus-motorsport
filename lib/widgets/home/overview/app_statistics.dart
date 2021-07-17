@@ -1,4 +1,6 @@
+import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
+import 'package:campus_motorsport/widgets/general/layout/loading_item.dart';
 
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -8,12 +10,14 @@ class AppStatistics extends StatelessWidget {
     required this.vehicleCount,
     required this.partCount,
     required this.userCount,
+    required this.loading,
     Key? key,
   }) : super(key: key);
 
   final int vehicleCount;
   final int partCount;
   final int userCount;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +89,25 @@ class AppStatistics extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                '$count',
-                style: Theme.of(context).textTheme.headline6?.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: color,
+              if (!loading)
+                Text(
+                  '$count',
+                  style: Theme.of(context).textTheme.headline6?.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                        color: color,
+                      ),
+                ),
+              if (loading)
+                LoadingItem(
+                  child: const SimpleCard(
+                    elevation: 0,
+                    child: SizedBox(
+                      width: 3,
+                      height: 7,
                     ),
-              ),
+                  ),
+                ),
             ],
           ),
           Text(
