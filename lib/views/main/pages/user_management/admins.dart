@@ -35,7 +35,7 @@ class _AdminsState extends State<Admins> {
           title: 'Administratoren-Verwaltung',
         ),
       ),
-      offsetBeforeTitleShown: 70,
+      offsetBeforeTitleShown: 50,
       onRefresh: provider.reload,
       loadingListener: (value) {
         setState(() {
@@ -127,7 +127,7 @@ class _AdminsState extends State<Admins> {
                               confirmedWhenTrue: ConfirmedWhenTrue.never,
                               confirmButton: false,
                               declineButton: false,
-                              showEmailState: false,
+                              showEmailState: true,
                               showRoles: true,
                             );
                           },

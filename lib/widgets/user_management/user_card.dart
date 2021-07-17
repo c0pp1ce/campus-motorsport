@@ -56,7 +56,7 @@ class _UserCardState extends State<UserCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 140,
+      height: 160,
       child: SimpleCard(
         margin: const EdgeInsets.all(SizeConfig.basePadding),
         child: Row(
@@ -92,6 +92,14 @@ class _UserCardState extends State<UserCard> {
                             color: Theme.of(context).colorScheme.primary,
                           ),
                     ),
+                  if (widget.showRoles)
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: _showRoles(),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -100,11 +108,6 @@ class _UserCardState extends State<UserCard> {
                 child: Center(
                   child: _buildButtons(context),
                 ),
-              ),
-            if (widget.showRoles)
-              Expanded(
-                flex: 2,
-                child: _showRoles(),
               ),
           ],
         ),
@@ -118,12 +121,12 @@ class _UserCardState extends State<UserCard> {
         );
 
     return Wrap(
-      spacing: 5,
+      spacing: SizeConfig.basePadding,
       children: [
         if (widget.user.verified)
           Chip(
             backgroundColor:
-                ColorServices.darken(Theme.of(context).colorScheme.primary, 50),
+                ColorServices.darken(Theme.of(context).colorScheme.primary, 70),
             label: Text(
               'Verifiziert',
               style: style,
@@ -132,7 +135,7 @@ class _UserCardState extends State<UserCard> {
         if (widget.user.accepted)
           Chip(
             backgroundColor:
-                ColorServices.darken(Theme.of(context).colorScheme.primary, 50),
+                ColorServices.darken(Theme.of(context).colorScheme.primary, 65),
             label: Text(
               'Bestätigt',
               style: style,
@@ -141,7 +144,7 @@ class _UserCardState extends State<UserCard> {
         if (widget.user.isAdmin)
           Chip(
             backgroundColor:
-                ColorServices.darken(Theme.of(context).colorScheme.primary, 50),
+                ColorServices.darken(Theme.of(context).colorScheme.primary, 60),
             label: Text(
               'Admin',
               style: style,
