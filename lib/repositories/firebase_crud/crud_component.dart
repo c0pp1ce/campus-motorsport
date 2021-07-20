@@ -1,0 +1,68 @@
+import 'package:campus_motorsport/models/vehicle_components/component.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+/// Create, Read, Update, Delete vehicle components in firebase.
+class CrudComponent {
+  CrudComponent() : _firestore = FirebaseFirestore.instance;
+
+  final FirebaseFirestore _firestore;
+
+  /// Creates a new entry in the components collection.
+  Future<bool> createComponent({
+    required BaseComponent component,
+  }) async {
+    try {
+      /// Create the new part.
+      //final DocumentReference doc =
+      await _firestore.collection('components').add(
+            component.toJson(),
+          );
+      return true;
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<BaseComponent?> getComponent(String docId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> componentData =
+          await _firestore.collection('components').doc(docId).get();
+      if (componentData.data() == null) {
+        return null;
+      }
+      if (componentData.data()!.containsKey('additionalData')) {
+        return ExtendedComponent.fromJson(componentData.data()!);
+      } else {
+        return BaseComponent.fromJson(componentData.data()!);
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<List<BaseComponent>?> getComponents() async {
+    try {
+      /// Get all documents of the collection.
+      final QuerySnapshot<Map<String, dynamic>> result =
+          await _firestore.collection('components').get();
+
+      /// Fill the list.
+      final List<BaseComponent> resultList = List.empty(growable: true);
+      for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+          in result.docs) {
+        if (doc.data().containsKey('additionalData')) {
+          resultList.add(ExtendedComponent.fromJson(doc.data()));
+        } else {
+          resultList.add(BaseComponent.fromJson(doc.data()));
+        }
+      }
+
+      return resultList;
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+}

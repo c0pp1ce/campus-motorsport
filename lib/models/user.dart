@@ -27,7 +27,6 @@ class User {
     return '$firstname $lastname';
   }
 
-  /// verified is handled by Firebase auth and therefore not part of the user data entry.
   static User fromJson(Map<String, dynamic> json) {
     return User(
       uid: json['uid'],
@@ -41,7 +40,6 @@ class User {
     );
   }
 
-  // TODO : Needed?
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,

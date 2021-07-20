@@ -8,23 +8,8 @@ class CrudUser {
 
   final FirebaseFirestore _firestore;
 
-  /// Returns the user data based on the uid or null if the request fails.
-  Future<app.User?> getUser(String uid) async {
-    try {
-      final DocumentSnapshot<Map<String, dynamic>> userData =
-          await _firestore.collection('users').doc(uid).get();
-      if (userData.data() == null) {
-        return null;
-      }
-      return app.User.fromJson(userData.data()!);
-    } on Exception catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
   /// Creates a new user entry based on the current uid.
-  /// the request fails if the document id is already taken.
+  /// The request fails if the document id is already taken.
   Future<bool> createUser({
     required String uid,
     required String firstname,
@@ -55,21 +40,37 @@ class CrudUser {
     }
   }
 
-  /// Attempts to delete the user from firebase auth.
-  Future<bool> deleteUser(
-      {required String uid, bool deleteSelf = false}) async {
-    if (uid == FirebaseAuth.instance.currentUser?.uid && !deleteSelf) {
-      return false;
-    }
-    // TODO
-    return false;
+  /// Returns the user data based on the uid or null if the request fails.
+  Future<app.User?> getUser(String uid) async {
     try {
-      await _firestore.collection('users').doc(uid).delete();
-      // TODO : Delete from auth. (Trigger cloud function).
-      return true;
+      final DocumentSnapshot<Map<String, dynamic>> userData =
+          await _firestore.collection('users').doc(uid).get();
+      if (userData.data() == null) {
+        return null;
+      }
+      return app.User.fromJson(userData.data()!);
     } on Exception catch (e) {
       print(e.toString());
-      return false;
+      return null;
+    }
+  }
+
+  Future<List<app.User>?> getUsers() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> result =
+          await _firestore.collection('users').orderBy('firstname').get();
+
+      final List<app.User> resultList = List.empty(growable: true);
+      for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+          in result.docs) {
+        resultList.add(app.User.fromJson(doc.data()));
+      }
+
+      return resultList;
+    } on Exception catch (e) {
+      print('Tried to get all users. Failed because of:\n');
+      print(e.toString());
+      return null;
     }
   }
 
@@ -106,22 +107,21 @@ class CrudUser {
     }
   }
 
-  Future<List<app.User>?> getUsers() async {
+  /// Attempts to delete the user from firebase auth.
+  Future<bool> deleteUser(
+      {required String uid, bool deleteSelf = false}) async {
+    if (uid == FirebaseAuth.instance.currentUser?.uid && !deleteSelf) {
+      return false;
+    }
+    // TODO
+    return false;
     try {
-      final QuerySnapshot<Map<String, dynamic>> result =
-          await _firestore.collection('users').orderBy('firstname').get();
-
-      final List<app.User> resultList = List.empty(growable: true);
-      for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-          in result.docs) {
-        resultList.add(app.User.fromJson(doc.data()));
-      }
-
-      return resultList;
+      await _firestore.collection('users').doc(uid).delete();
+      // TODO : Delete from auth. (Trigger cloud function).
+      return true;
     } on Exception catch (e) {
-      print('Tried to get all users. Failed because of:\n');
       print(e.toString());
-      return null;
+      return false;
     }
   }
 }
