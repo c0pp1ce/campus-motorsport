@@ -44,7 +44,7 @@ class BaseComponent {
   /// Ids of vehicles that use this component.
   final List<String>? vehicleIds;
 
-  static BaseComponent fromJson(Map<String, dynamic> json) {
+  static BaseComponent fromJson(Map<String, dynamic> json, [String? docId]) {
     final String stateName = json['state'];
     late ComponentState state;
     for(final ComponentState myState in ComponentState.values) {
@@ -56,7 +56,7 @@ class BaseComponent {
     assert(state != null, 'Invalid state stored in database: $stateName');
 
     return BaseComponent(
-      id: json['id'],
+      id: docId,
       name: json['name'],
       state: state,
       vehicleIds: json['vehicleIds'],
@@ -97,8 +97,8 @@ class ExtendedComponent extends BaseComponent {
   /// The additional data fields;
   List<DataInput> additionalData;
 
-  static ExtendedComponent fromJson(Map<String, dynamic> json) {
-    final BaseComponent baseComponent = BaseComponent.fromJson(json);
+  static ExtendedComponent fromJson(Map<String, dynamic> json, [String? docId]) {
+    final BaseComponent baseComponent = BaseComponent.fromJson(json, docId);
     final List<DataInput> additionalData = List.empty(growable: true);
 
     for (final Map<String, dynamic> dataInput in json['additionalData']) {

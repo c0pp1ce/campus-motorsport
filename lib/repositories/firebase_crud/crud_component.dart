@@ -53,9 +53,9 @@ class CrudComponent {
       for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
           in result.docs) {
         if (doc.data().containsKey('additionalData')) {
-          resultList.add(ExtendedComponent.fromJson(doc.data()));
+          resultList.add(ExtendedComponent.fromJson(doc.data(), doc.id));
         } else {
-          resultList.add(BaseComponent.fromJson(doc.data()));
+          resultList.add(BaseComponent.fromJson(doc.data(), doc.id));
         }
       }
 
