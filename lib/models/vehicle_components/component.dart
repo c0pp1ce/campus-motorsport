@@ -88,11 +88,16 @@ class BaseComponent {
       }
     }
 
+    List<String>? _vehicleIds;
+    if(json['vehicleIds'] != null) {
+      _vehicleIds = (json['vehicleIds'] as List).cast<String>();
+    }
+
     return BaseComponent(
       id: docId,
       name: json['name'],
       state: state,
-      vehicleIds: json['vehicleIds'],
+      vehicleIds: _vehicleIds,
       category: category,
     );
   }
@@ -101,7 +106,7 @@ class BaseComponent {
     return {
       'name': name,
       'state': state.name,
-      'vehicleIds': vehicleIds ?? [],
+      'vehicleIds': vehicleIds ?? <String>[],
       'category': category.name,
     };
   }
