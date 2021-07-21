@@ -9,9 +9,11 @@ import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/themes/text_theme.dart';
 import 'package:campus_motorsport/widgets/general/background/background_gradient.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Paint.enableDithering = true;
 
@@ -22,10 +24,12 @@ void main() {
     DeviceOrientation.portraitDown,
   ]);
 
-  Firebase.initializeApp().then(
-    (value) => runApp(MyApp()),
-    onError: (error) => print(error),
-  );
+  await Firebase.initializeApp();
+
+  Intl.defaultLocale = 'de';
+  await initializeDateFormatting('de', null);
+
+  runApp(MyApp());
 }
 
 /// Provider for controllers which need to be available globally should go here.

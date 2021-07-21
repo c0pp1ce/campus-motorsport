@@ -3,6 +3,7 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/components/component_date.dart';
 import 'package:campus_motorsport/widgets/general/components/component_image.dart';
 import 'package:campus_motorsport/widgets/general/components/component_number.dart';
 import 'package:campus_motorsport/widgets/general/components/create_data_input.dart';
@@ -257,7 +258,7 @@ class _AddComponentState extends State<AddComponent> {
       case InputTypes.date:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
-          child: ComponentText(
+          child: ComponentDate(
             dataInput: dataInput,
             enabled: false,
           ),
@@ -267,7 +268,7 @@ class _AddComponentState extends State<AddComponent> {
           padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
           child: ComponentImage(
             dataInput: dataInput,
-            enabled: false,
+            enabled: true,
           ),
         );
     }
