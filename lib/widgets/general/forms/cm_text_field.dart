@@ -16,6 +16,8 @@ class CMTextField extends StatefulWidget {
     this.toggleObscure = false,
     this.enabled = true,
     this.fillColor,
+    this.minLines = 1,
+    this.maxLines = 1,
     Key? key,
   }) : super(key: key);
 
@@ -34,6 +36,9 @@ class CMTextField extends StatefulWidget {
   /// If set to true, a suffix icon will be displayed which toggles obscureText.
   final bool toggleObscure;
   final bool enabled;
+
+  final int minLines;
+  final int maxLines;
 
   @override
   _CMTextFieldState createState() => _CMTextFieldState();
@@ -82,6 +87,8 @@ class _CMTextFieldState extends State<CMTextField> {
       cursorColor: Theme.of(context).colorScheme.secondary,
       obscureText: _obscure,
       keyboardAppearance: Theme.of(context).colorScheme.brightness,
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
     );
   }
 
@@ -176,7 +183,7 @@ class _CMTextFieldState extends State<CMTextField> {
       gapPadding: 3.0,
       borderSide: BorderSide(
         color: Theme.of(context).colorScheme.surface,
-        width: 1.0,
+        width: 2.0,
         style: BorderStyle.solid,
       ),
     );

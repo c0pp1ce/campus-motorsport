@@ -51,7 +51,7 @@ class _AcceptUsersState extends State<AcceptUsers> {
                   /// Future done but no data.
                   if (snapshot.data?.isEmpty ?? true) {
                     return Center(
-                      child: Text('Keine Benutzer gefunden.'),
+                      child: const Text('Keine Benutzer gefunden.'),
                     );
                   }
 
@@ -62,7 +62,7 @@ class _AcceptUsersState extends State<AcceptUsers> {
                       .toList();
                   if (pendingUsers.isEmpty) {
                     return Center(
-                      child: Text('Keine zu bestätigende Benutzer.'),
+                      child: const Text('Keine zu bestätigende Benutzer.'),
                     );
                   }
 

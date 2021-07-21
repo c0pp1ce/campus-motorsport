@@ -59,4 +59,9 @@ class DataInput {
     }
     return json;
   }
+
+  @override
+  String toString() {
+    return '${type.name} - $name\n$description';
+  }
 }

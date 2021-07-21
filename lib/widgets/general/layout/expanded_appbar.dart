@@ -15,6 +15,7 @@ class ExpandedAppBar extends StatefulWidget {
     this.offsetBeforeTitleShown = 20,
     this.onRefresh,
     this.loadingListener,
+    this.actions,
     Key? key,
   }) : super(key: key);
 
@@ -26,6 +27,8 @@ class ExpandedAppBar extends StatefulWidget {
 
   /// Main content of the view.
   final Widget body;
+
+  final List<Widget>? actions;
 
   /// If given pull to refresh will be enabled.
   final Future<void> Function()? onRefresh;
@@ -78,6 +81,7 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
       title: _showAppbarTitle ? widget.appbarTitle : null,
       appBarShadowColor: _showAppbarTitle ? null : Colors.transparent,
       backgroundElevation: elevation,
+      actions: widget.actions,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[

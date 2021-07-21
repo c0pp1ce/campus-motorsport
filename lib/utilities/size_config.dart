@@ -29,7 +29,8 @@ class SizeConfig {
   /// Global style variables
   static const double basePadding = 10.0;
   static const double baseBorderRadius = 15.0;
-  static const double baseBackgroundElevation = 5.0; // TODO: Adjust.
+  static const double baseBackgroundElevation = 5.0;
+  static const double iconButtonSplashRadius = 25;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);

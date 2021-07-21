@@ -16,6 +16,7 @@ class MainView extends StatelessWidget {
     this.backgroundColor,
     this.backgroundElevation = SizeConfig.baseBackgroundElevation,
     required this.child,
+    this.actions,
     Key? key,
   }) : super(key: key);
 
@@ -43,6 +44,8 @@ class MainView extends StatelessWidget {
   /// Elevation of the body. Higher == lighter color.
   final double backgroundElevation;
 
+  final List<Widget>? actions;
+
   @override
   Widget build(BuildContext context) {
     final RoundedRectangleBorder shape = RoundedRectangleBorder(
@@ -66,6 +69,7 @@ class MainView extends StatelessWidget {
             shape: shape,
             title: title,
             flexibleSpace: flexibleSpace,
+            actions: actions,
           ),
           body: Material(
             color: backgroundColor ?? Theme.of(context).colorScheme.surface,

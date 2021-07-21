@@ -1,10 +1,13 @@
 import 'package:campus_motorsport/models/user.dart';
+import 'package:campus_motorsport/provider/components/components_provider.dart';
+import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/provider/home/home_provider.dart';
 import 'package:campus_motorsport/provider/user_management/user_management_provider.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
 import 'package:campus_motorsport/repositories/cm_auth.dart';
 import 'package:campus_motorsport/routes/routes.dart';
+import 'package:campus_motorsport/views/main/pages/components/components_view.dart';
 import 'package:campus_motorsport/views/main/pages/home/home.dart';
 import 'package:campus_motorsport/views/main/pages/user_management/user_management.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/navigation_drawer.dart';
@@ -45,10 +48,12 @@ class _MainNavigatorState extends State<MainNavigator> {
     assert(user != null, 'Logged in users should never be null.');
     _pages = [
       Home(),
+      ComponentsView(),
       if (user!.isAdmin) UserManagement(),
     ];
     _contextMenus = [
       HomeContext(),
+      null, // components
       if (user.isAdmin) null, // user management
     ];
   }
@@ -60,6 +65,8 @@ class _MainNavigatorState extends State<MainNavigator> {
         ChangeNotifierProvider(create: (context) => HomeProvider()),
         ChangeNotifierProvider(create: (context) => UserManagementProvider()),
         ChangeNotifierProvider(create: (context) => UsersProvider()),
+        ChangeNotifierProvider(create: (context) => ComponentsViewProvider()),
+        ChangeNotifierProvider(create: (context) => ComponentsProvider()),
       ],
       builder: (context, child) {
         return StackedUI(
@@ -76,9 +83,6 @@ class _MainNavigatorState extends State<MainNavigator> {
   bool _allowContextSlide(BuildContext context) {
     if (_currentIndex == 0) {
       return context.watch<HomeProvider>().allowContextDrawer;
-    } else if (_currentIndex == 1) {
-      // User management
-      return false;
     }
     return false;
   }
@@ -102,14 +106,27 @@ class _MainNavigatorState extends State<MainNavigator> {
           secondaryItem: HomeSecondary(),
         ),
 
+        /// Components
+        NavigationItemData(
+          icon: LineIcons.boxes,
+          onPressed: () {
+            if (_currentIndex != 1) {
+              setState(() {
+                _currentIndex = 1;
+              });
+            }
+          },
+          secondaryItem: ComponentsViewSecondary(),
+        ),
+
         /// User management page. Only show to admins.
         if (context.read<CurrentUser>().user?.isAdmin ?? false)
           NavigationItemData(
             icon: LineIcons.users,
             onPressed: () {
-              if (_currentIndex != 1) {
+              if (_currentIndex != 2) {
                 setState(() {
-                  _currentIndex = 1;
+                  _currentIndex = 2;
                 });
               }
             },
