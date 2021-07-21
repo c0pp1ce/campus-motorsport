@@ -21,7 +21,6 @@ class ComponentCategory extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        //const CMLabel(label: 'Kategorie'),
         const SizedBox(
           height: SizeConfig.basePadding,
         ),

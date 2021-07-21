@@ -118,7 +118,7 @@ class _CMTextFieldState extends State<CMTextField> {
   InputDecoration _style(BuildContext context, String? hint, String? label) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: Theme.of(context).textTheme.subtitle2?.copyWith(
+      hintStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           ),
       labelText: label,
@@ -143,7 +143,7 @@ class _CMTextFieldState extends State<CMTextField> {
 
   /// Label color changes based on focus and error state.
   TextStyle? _labelStyle(BuildContext context) {
-    return Theme.of(context).textTheme.subtitle2?.copyWith(
+    return Theme.of(context).textTheme.subtitle1?.copyWith(
           color: _focusNode!.hasFocus
               ? _errorShown
                   ? Theme.of(context).colorScheme.error

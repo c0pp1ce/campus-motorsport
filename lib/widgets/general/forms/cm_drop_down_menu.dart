@@ -49,7 +49,7 @@ class CMDropDownMenuState extends State<CMDropDownMenu> {
           value: item,
           child: Text(
             item,
-            style: Theme.of(context).textTheme.subtitle2,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
         );
       }).toList(),
