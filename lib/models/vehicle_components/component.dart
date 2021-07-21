@@ -1,20 +1,21 @@
 import 'data_input.dart';
 
 /// Possible states of a component.
-enum ComponentState {
-  newComponent,
-  ok,
+/// Order matters!
+enum ComponentStates {
   bad,
+  ok,
+  newComponent,
 }
 
-extension ComponentStateNames on ComponentState {
+extension ComponentStateNames on ComponentStates {
   String get name {
     switch (this) {
-      case ComponentState.newComponent:
+      case ComponentStates.newComponent:
         return 'Neu';
-      case ComponentState.ok:
+      case ComponentStates.ok:
         return 'In Ordnung';
-      case ComponentState.bad:
+      case ComponentStates.bad:
         return 'Nicht in Ordnung';
     }
   }
@@ -58,7 +59,7 @@ class BaseComponent {
   /// Equals docId in the components collection.
   final String? id;
   final String name;
-  final ComponentState state;
+  final ComponentStates state;
 
   /// Ids of vehicles that use this component.
   final List<String>? vehicleIds;
@@ -68,8 +69,8 @@ class BaseComponent {
     final String stateName = json['state'];
 
     /// Get state.
-    late ComponentState state;
-    for (final ComponentState myState in ComponentState.values) {
+    late ComponentStates state;
+    for (final ComponentStates myState in ComponentStates.values) {
       if (myState.name == stateName) {
         state = myState;
         break;
@@ -111,7 +112,7 @@ class ExtendedComponent extends BaseComponent {
   ExtendedComponent({
     String? id,
     required String name,
-    required ComponentState state,
+    required ComponentStates state,
     required this.additionalData,
     required ComponentCategories category,
   }) : super(

@@ -7,6 +7,7 @@ import 'package:campus_motorsport/widgets/general/components/component_category.
 import 'package:campus_motorsport/widgets/general/components/component_date.dart';
 import 'package:campus_motorsport/widgets/general/components/component_image.dart';
 import 'package:campus_motorsport/widgets/general/components/component_number.dart';
+import 'package:campus_motorsport/widgets/general/components/component_state.dart';
 import 'package:campus_motorsport/widgets/general/components/create_data_input.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
@@ -112,43 +113,23 @@ class _AddComponentState extends State<AddComponent> {
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: Padding(
-        padding: const EdgeInsets.all(SizeConfig.basePadding),
+        padding: const EdgeInsets.symmetric(horizontal: SizeConfig.basePadding),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(
-                height: SizeConfig.basePadding * 2,
-              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text(
-                    '1. ',
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Komponenten haben immer einen generellen Zustand.',
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: SizeConfig.basePadding,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    '2. ',
+                    'Hinweis: ',
                   ),
                   Expanded(
                     child: Text(
                       'Datum und Durchführer einer Wartung werden nicht in der Komponente gespeichert. '
-                      'Ein Datenfeld dafür ist also nicht nötig.',
+                      'Ein Datenfeld ist dafür also nicht nötig.',
                     ),
                   ),
                 ],
@@ -177,6 +158,13 @@ class _AddComponentState extends State<AddComponent> {
                 onSaved: (value) {},
                 enabled: true,
                 dropDownKey: _categoryKey,
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding * 2,
+              ),
+              ComponentState(
+                onSaved: (_) {},
+                enabled: false,
               ),
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
