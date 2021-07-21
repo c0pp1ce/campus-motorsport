@@ -3,10 +3,12 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/components/component_category.dart';
 import 'package:campus_motorsport/widgets/general/components/component_date.dart';
 import 'package:campus_motorsport/widgets/general/components/component_image.dart';
 import 'package:campus_motorsport/widgets/general/components/component_number.dart';
 import 'package:campus_motorsport/widgets/general/components/create_data_input.dart';
+import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:campus_motorsport/widgets/general/components/component_text.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
@@ -23,6 +25,7 @@ class AddComponent extends StatefulWidget {
 
 class _AddComponentState extends State<AddComponent> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<CMDropDownMenuState> _categoryKey = GlobalKey();
   bool _loading = false;
 
   String? name;
@@ -170,6 +173,14 @@ class _AddComponentState extends State<AddComponent> {
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
               ),
+              ComponentCategory(
+                onSaved: (value) {},
+                enabled: true,
+                dropDownKey: _categoryKey,
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding * 2,
+              ),
               _buildAdditionalData(context),
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
@@ -200,12 +211,6 @@ class _AddComponentState extends State<AddComponent> {
         ),
       ),
     );
-  }
-
-  void _reset() {
-    name = null;
-    _nameController.clear();
-    additionalData = [];
   }
 
   Widget _buildAdditionalData(BuildContext context) {
@@ -260,7 +265,7 @@ class _AddComponentState extends State<AddComponent> {
           padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
           child: ComponentDate(
             dataInput: dataInput,
-            enabled: false,
+            enabled: true,
           ),
         );
       case InputTypes.image:
@@ -268,7 +273,7 @@ class _AddComponentState extends State<AddComponent> {
           padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
           child: ComponentImage(
             dataInput: dataInput,
-            enabled: true,
+            enabled: false,
           ),
         );
     }
@@ -297,5 +302,12 @@ class _AddComponentState extends State<AddComponent> {
         );
       },
     );
+  }
+
+  void _reset() {
+    name = null;
+    _nameController.clear();
+    additionalData = [];
+    _categoryKey.currentState?.reset();
   }
 }

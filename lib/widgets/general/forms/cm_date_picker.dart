@@ -76,8 +76,11 @@ class _CMDatePickerState extends State<CMDatePicker> {
               ),
               onPressed: () async {
                 final DateTime? time = await showDatePicker(
+                  helpText: 'Datum wählen',
+                  cancelText: 'ABBRECHEN',
                   context: context,
                   initialDate: DateTime.now(),
+                  currentDate: DateTime.now(),
                   firstDate: DateTime.now().subtract(
                     Duration(days: 360),
                   ),
