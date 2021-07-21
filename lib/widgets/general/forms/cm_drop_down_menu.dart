@@ -8,6 +8,7 @@ class CMDropDownMenu extends StatefulWidget {
     required this.onSelect,
     required this.label,
     this.enabled = true,
+    this.initialValue,
     Key? key,
   }) : super(key: key);
 
@@ -15,6 +16,7 @@ class CMDropDownMenu extends StatefulWidget {
   final void Function(String?) onSelect;
   final bool enabled;
   final String label;
+  final String? initialValue;
 
   @override
   CMDropDownMenuState createState() => CMDropDownMenuState();
@@ -22,6 +24,12 @@ class CMDropDownMenu extends StatefulWidget {
 
 class CMDropDownMenuState extends State<CMDropDownMenu> {
   String? currentValue;
+
+  @override
+  void initState() {
+    currentValue = widget.initialValue;
+    super.initState();
+  }
 
   void reset() {
     setState(() {

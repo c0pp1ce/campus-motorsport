@@ -59,11 +59,11 @@ class BaseComponent {
   /// Equals docId in the components collection.
   final String? id;
   final String name;
-  final ComponentStates state;
+  ComponentStates state;
 
   /// Ids of vehicles that use this component.
   final List<String>? vehicleIds;
-  final ComponentCategories category;
+  ComponentCategories category;
 
   static BaseComponent fromJson(Map<String, dynamic> json, [String? docId]) {
     final String stateName = json['state'];

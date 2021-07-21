@@ -8,12 +8,14 @@ class ComponentCategory extends StatelessWidget {
     required this.onSaved,
     this.enabled = true,
     this.dropDownKey,
+    this.initialValue,
     Key? key,
   }) : super(key: key);
 
   final void Function(String?) onSaved;
   final bool enabled;
   final GlobalKey<CMDropDownMenuState>? dropDownKey;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class ComponentCategory extends StatelessWidget {
           height: SizeConfig.basePadding,
         ),
         CMDropDownMenu(
+          initialValue: initialValue,
           key: dropDownKey,
           label: 'Kategorie',
           enabled: enabled,
