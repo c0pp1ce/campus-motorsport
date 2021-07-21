@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/layout/image_view.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,14 +14,18 @@ import 'package:line_icons/line_icons.dart';
 /// The picked image will be compressed and of type jpeg.
 class CMImagePicker extends StatefulWidget {
   const CMImagePicker({
-    required this.saveImage,
+    this.saveImage,
     required this.imageFile,
+    required this.heroTag,
+    this.enabled = true,
     Key? key,
   }) : super(key: key);
 
   ///Will be called after the image is picked & compressed or deleted.
-  final void Function(Uint8List?) saveImage;
+  final void Function(Uint8List?)? saveImage;
   final CMImage imageFile;
+  final bool enabled;
+  final String heroTag;
 
   @override
   _CMImagePickerState createState() => _CMImagePickerState();
@@ -32,51 +37,70 @@ class _CMImagePickerState extends State<CMImagePicker> {
     return Column(
       children: [
         SizedBox(
-          height: 140.0,
-          width: 140.0,
+          height: 180,
+
+          /// Align needs this to work as intended.
           child: Stack(
             children: <Widget>[
-              Center(
-                child: Container(
-                  height: 140,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: widget.imageFile.imageProvider ??
-                            AssetImage(
-                              'assets/images/profile_dummy_image.png',
-                            ),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.baseBorderRadius,
-                    ),
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: SizedBox(
-                  height: 52,
-                  width: 52,
-                  child: IconButton(
-                    icon: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.yellow, // TODO
-                      ),
-                      alignment: Alignment.center,
-                      child: Icon(LineIcons.camera),
-                    ),
-                    onPressed: () async {
-                      bool? success = await _showPicker(context);
-                      success ??= false;
-                      if (!success) {
-                        _showErrorDialog();
-                      }
+              Hero(
+                tag: ValueKey(widget.heroTag),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ImageView(
+                            heroTag: widget.heroTag,
+                          ),
+                        ),
+                      );
                     },
+                    child: Container(
+                      height: 180,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: widget.imageFile.imageProvider ??
+                                const AssetImage(
+                                  'assets/images/designer_edited.jpg',
+                                ),
+                            fit: BoxFit.cover),
+                        borderRadius: BorderRadius.circular(
+                          SizeConfig.baseBorderRadius,
+                        ),
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
                   ),
                 ),
               ),
+              if (widget.enabled)
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: IconButton(
+                      icon: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surface
+                              .withOpacity(0.6),
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(LineIcons.camera),
+                      ),
+                      onPressed: () async {
+                        bool? success = await _showPicker(context);
+                        success ??= false;
+                        if (!success) {
+                          _showErrorDialog();
+                        }
+                      },
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -94,7 +118,9 @@ class _CMImagePickerState extends State<CMImagePicker> {
   void _deleteImage() {
     setState(() {
       widget.imageFile.imageProvider = null;
-      widget.saveImage(null);
+      if (widget.saveImage != null) {
+        widget.saveImage!(null);
+      }
     });
   }
 
@@ -105,7 +131,9 @@ class _CMImagePickerState extends State<CMImagePicker> {
     }
     setState(() {
       widget.imageFile.imageProvider = MemoryImage(result);
-      widget.saveImage(result);
+      if (widget.saveImage != null) {
+        widget.saveImage!(result);
+      }
     });
   }
 
@@ -143,6 +171,13 @@ class _CMImagePickerState extends State<CMImagePicker> {
 
   Future<bool?> _showPicker(context) async {
     return showModalBottomSheet<bool>(
+      elevation: SizeConfig.baseBackgroundElevation,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(SizeConfig.baseBorderRadius),
+          topLeft: Radius.circular(SizeConfig.baseBorderRadius),
+        ),
+      ),
       context: context,
       builder: (BuildContext bc) {
         return SafeArea(
@@ -178,11 +213,10 @@ class _CMImagePickerState extends State<CMImagePicker> {
   void _showErrorDialog() {
     CoolAlert.show(
       context: context,
-      type: CoolAlertType.error,
+      type: CoolAlertType.warning,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      title: 'Speichern fehlgeschlagen.',
-      text: 'Das ausgewählte Bild konnte nicht gespeichert werden.\n'
-          'Bitte probiere es erneut.',
+      title: 'Auswahl fehlgeschlagen oder abgebrochen.',
+      text: '',
       confirmButton: Expanded(
         child: Container(
           margin: const EdgeInsets.symmetric(

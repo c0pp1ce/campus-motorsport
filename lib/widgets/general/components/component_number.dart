@@ -2,7 +2,7 @@ import 'package:campus_motorsport/models/vehicle_components/data_input.dart';
 import 'package:campus_motorsport/widgets/general/components/component_text.dart';
 import 'package:flutter/material.dart';
 
-/// used to display DataInput with type == number.
+/// Used to display DataInput with type == number.
 class ComponentNumber extends StatelessWidget {
   const ComponentNumber({
     required this.dataInput,
