@@ -3,6 +3,7 @@ enum InputTypes {
   text,
   number,
   date,
+  image,
 }
 
 extension InputTypesNames on InputTypes {
@@ -14,6 +15,8 @@ extension InputTypesNames on InputTypes {
         return 'Zahl';
       case InputTypes.date:
         return 'Datum';
+      case InputTypes.image:
+        return 'Bild';
     }
   }
 }
@@ -24,12 +27,13 @@ class DataInput {
     required this.type,
     required this.name,
     required this.description,
+    this.data,
   });
 
   InputTypes type;
   String name;
   String description;
-  dynamic input;
+  dynamic data;
 
   static DataInput fromJson(Map<String, dynamic> json) {
     final String typeName = json['type'];
@@ -45,6 +49,7 @@ class DataInput {
       type: type,
       name: json['name'],
       description: json['description'],
+      data: json['data'],
     );
   }
 
@@ -54,14 +59,14 @@ class DataInput {
       'type': type.name,
       'description': description,
     };
-    if (input != null) {
-      json['data'] = input;
+    if (data != null) {
+      json['data'] = data;
     }
     return json;
   }
 
   @override
   String toString() {
-    return '${type.name} - $name\n$description';
+    return '${type.name} - $name - $description - ${data ?? ''}';
   }
 }

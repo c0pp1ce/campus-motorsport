@@ -28,12 +28,30 @@ enum ComponentCategories {
   other,
 }
 
+extension ComponentCategoryNames on ComponentCategories {
+  String get name {
+    switch (this) {
+      case ComponentCategories.engine:
+        return 'Motor';
+      case ComponentCategories.undercarriage:
+        return 'Fahrwerk';
+      case ComponentCategories.aero:
+        return 'Aero';
+      case ComponentCategories.electrical:
+        return 'Elektrotechnik';
+      case ComponentCategories.other:
+        return 'Sonstiges';
+    }
+  }
+}
+
 /// The basic component.
 class BaseComponent {
   BaseComponent({
     this.id,
     required this.name,
     required this.state,
+    required this.category,
     this.vehicleIds,
   });
 
@@ -41,25 +59,40 @@ class BaseComponent {
   final String? id;
   final String name;
   final ComponentState state;
+
   /// Ids of vehicles that use this component.
   final List<String>? vehicleIds;
+  final ComponentCategories category;
 
   static BaseComponent fromJson(Map<String, dynamic> json, [String? docId]) {
     final String stateName = json['state'];
+
+    /// Get state.
     late ComponentState state;
-    for(final ComponentState myState in ComponentState.values) {
-      if(myState.name == stateName) {
+    for (final ComponentState myState in ComponentState.values) {
+      if (myState.name == stateName) {
         state = myState;
         break;
       }
     }
     assert(state != null, 'Invalid state stored in database: $stateName');
 
+    /// Get category
+    final String categoryName = json['category'];
+    late ComponentCategories category;
+    for (final ComponentCategories myCategory in ComponentCategories.values) {
+      if (myCategory.name == categoryName) {
+        category = myCategory;
+        break;
+      }
+    }
+
     return BaseComponent(
       id: docId,
       name: json['name'],
       state: state,
       vehicleIds: json['vehicleIds'],
+      category: category,
     );
   }
 
@@ -68,6 +101,7 @@ class BaseComponent {
       'name': name,
       'state': state.name,
       'vehicleIds': vehicleIds ?? [],
+      'category': category.name,
     };
   }
 }
@@ -79,10 +113,12 @@ class ExtendedComponent extends BaseComponent {
     required String name,
     required ComponentState state,
     required this.additionalData,
+    required ComponentCategories category,
   }) : super(
           id: id,
           name: name,
           state: state,
+          category: category,
         );
 
   ExtendedComponent.fromBaseComponent({
@@ -92,12 +128,14 @@ class ExtendedComponent extends BaseComponent {
           id: baseComponent.id,
           name: baseComponent.name,
           state: baseComponent.state,
+          category: baseComponent.category,
         );
 
   /// The additional data fields;
   List<DataInput> additionalData;
 
-  static ExtendedComponent fromJson(Map<String, dynamic> json, [String? docId]) {
+  static ExtendedComponent fromJson(Map<String, dynamic> json,
+      [String? docId]) {
     final BaseComponent baseComponent = BaseComponent.fromJson(json, docId);
     final List<DataInput> additionalData = List.empty(growable: true);
 

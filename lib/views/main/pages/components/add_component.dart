@@ -1,10 +1,12 @@
 import 'package:campus_motorsport/models/vehicle_components/data_input.dart';
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/components/component_number.dart';
 import 'package:campus_motorsport/widgets/general/components/create_data_input.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
-import 'package:campus_motorsport/widgets/general/forms/component_text.dart';
+import 'package:campus_motorsport/widgets/general/components/component_text.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,14 @@ class _AddComponentState extends State<AddComponent> {
   bool _loading = false;
 
   String? name;
+  final TextEditingController _nameController = TextEditingController();
   List<DataInput> additionalData = [];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +43,58 @@ class _AddComponentState extends State<AddComponent> {
         ),
       ),
       actions: _loading
-          ? []
+          ? [
+              Container(
+                height: 50,
+                width: 55,
+                padding: const EdgeInsets.all(SizeConfig.basePadding),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              )
+            ]
           : [
               IconButton(
                 onPressed: () {
-                  // TODO : Save
+                  setState(() {
+                    _reset();
+                  });
                 },
-                icon: Icon(LineIcons.save),
+                icon: Icon(
+                  LineIcons.trash,
+                  color: ColorServices.darken(
+                    Theme.of(context).colorScheme.secondary,
+                    20,
+                  ),
+                ),
+                splashRadius: SizeConfig.iconButtonSplashRadius,
+              ),
+              const SizedBox(
+                width: SizeConfig.basePadding,
+              ),
+              IconButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    _formKey.currentState!.save();
+                    setState(() {
+                      _loading = true;
+                    });
+                    await Future.delayed(Duration(seconds: 1));
+                    print(additionalData);
+                    setState(() {
+                      _loading = false;
+                    });
+                    if (true) {
+                      setState(() {
+                        _reset();
+                      });
+                    }
+                  }
+                },
+                icon: Icon(
+                  LineIcons.save,
+                  size: 30,
+                ),
                 splashRadius: SizeConfig.iconButtonSplashRadius,
               ),
             ],
@@ -59,7 +113,46 @@ class _AddComponentState extends State<AddComponent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              const SizedBox(
+                height: SizeConfig.basePadding * 2,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    '1. ',
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Komponenten haben immer einen generellen Zustand.',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    '2. ',
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Datum und Durchführer einer Wartung werden nicht in der Komponente gespeichert. '
+                      'Ein Datenfeld dafür ist also nicht nötig.',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding * 2,
+              ),
               CMTextField(
+                controller: _nameController,
                 label: 'Name',
                 maxLines: 1,
                 textInputType: TextInputType.text,
@@ -74,18 +167,6 @@ class _AddComponentState extends State<AddComponent> {
               ),
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
-              ),
-              // TODO Image picker
-              const SizedBox(
-                height: SizeConfig.basePadding * 2,
-              ),
-              ComponentText(
-                name: 'Anmerkungen',
-                description: '',
-                onSaved: (value) {},
-                enabled: false,
-                minLines: 2,
-                maxLines: 4,
               ),
               _buildAdditionalData(context),
               const SizedBox(
@@ -119,45 +200,76 @@ class _AddComponentState extends State<AddComponent> {
     );
   }
 
+  void _reset() {
+    name = null;
+    _nameController.clear();
+    additionalData = [];
+  }
+
   Widget _buildAdditionalData(BuildContext context) {
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: additionalData.map((dataInput) {
-        switch (dataInput.type) {
-          case InputTypes.text:
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
-              child: ComponentText(
-                name: dataInput.name,
-                description: dataInput.description,
-                onSaved: (_) {},
-                enabled: false,
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: _getDataInputWidget(dataInput),
+            ),
+            IconButton(
+              icon: Icon(
+                LineIcons.trash,
+                color: Theme.of(context).colorScheme.error,
               ),
-            );
-          case InputTypes.number:
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
-              child: ComponentText(
-                name: dataInput.name,
-                description: dataInput.description,
-                onSaved: (_) {},
-                enabled: false,
-              ),
-            );
-          case InputTypes.date:
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
-              child: ComponentText(
-                name: dataInput.name,
-                description: dataInput.description,
-                onSaved: (_) {},
-                enabled: false,
-              ),
-            );
-        }
+              onPressed: () {
+                setState(() {
+                  additionalData.remove(dataInput);
+                });
+              },
+            ),
+          ],
+        );
       }).toList(),
     );
+  }
+
+  Widget _getDataInputWidget(DataInput dataInput) {
+    switch (dataInput.type) {
+      case InputTypes.text:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          child: ComponentText(
+            dataInput: dataInput,
+            enabled: false,
+          ),
+        );
+      case InputTypes.number:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          child: ComponentNumber(
+            dataInput: dataInput,
+            enabled: false,
+          ),
+        );
+      case InputTypes.date:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          child: ComponentText(
+            dataInput: dataInput,
+            enabled: false,
+          ),
+        );
+      case InputTypes.image:
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          child: ComponentText(
+            dataInput: dataInput,
+            enabled: false,
+          ),
+        );
+    }
   }
 
   Future<DataInput?> _showTypeSelection(BuildContext context) {

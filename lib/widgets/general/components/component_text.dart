@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/models/vehicle_components/data_input.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_label.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
@@ -6,23 +7,19 @@ import 'package:flutter/material.dart';
 /// used to display DataInput with type == text.
 class ComponentText extends StatelessWidget {
   const ComponentText({
-    required this.name,
-    required this.description,
-    required this.onSaved,
-    this.initialValue,
+    required this.dataInput,
     this.minLines = 1,
-    this.maxLines = 1,
+    this.maxLines = 3,
     this.enabled = true,
+    this.textInputType = TextInputType.multiline,
     Key? key,
   }) : super(key: key);
 
-  final String name;
-  final String description;
-  final String? initialValue;
-  final void Function(String?) onSaved;
+  final DataInput dataInput;
   final bool enabled;
   final int minLines;
   final int maxLines;
+  final TextInputType textInputType;
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +27,22 @@ class ComponentText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        CMLabel(label: name),
-        if(description.isNotEmpty) ...[
-          Text(description),
+        CMLabel(label: dataInput.name),
+        if(dataInput.description.isNotEmpty) ...[
+          Text(dataInput.description),
         ],
         const SizedBox(
           height: SizeConfig.basePadding,
         ),
         CMTextField(
-          onSaved: onSaved,
+          initialValue: dataInput.data,
+          onSaved: (value) {
+            dataInput.data = value;
+          },
           minLines: minLines,
           maxLines: maxLines,
           enabled: enabled,
-          textInputType: TextInputType.text,
+          textInputType: textInputType,
         ),
       ],
     );

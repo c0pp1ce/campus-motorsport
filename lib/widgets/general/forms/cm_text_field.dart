@@ -18,6 +18,7 @@ class CMTextField extends StatefulWidget {
     this.fillColor,
     this.minLines = 1,
     this.maxLines = 1,
+    this.controller,
     Key? key,
   }) : super(key: key);
 
@@ -39,6 +40,8 @@ class CMTextField extends StatefulWidget {
 
   final int minLines;
   final int maxLines;
+
+  final TextEditingController? controller;
 
   @override
   _CMTextFieldState createState() => _CMTextFieldState();
@@ -75,6 +78,7 @@ class _CMTextFieldState extends State<CMTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       initialValue: widget.initialValue,
       enabled: widget.enabled,
       focusNode: _focusNode,
