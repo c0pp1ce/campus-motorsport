@@ -12,7 +12,7 @@ class CMDropDownMenu extends StatefulWidget {
   }) : super(key: key);
 
   final List<String> values;
-  final void Function(String) onSelect;
+  final void Function(String?) onSelect;
   final bool enabled;
   final String label;
 
@@ -40,6 +40,7 @@ class CMDropDownMenuState extends State<CMDropDownMenu> {
           : (value) {
               setState(() {
                 currentValue = value as String?;
+                widget.onSelect(value);
               });
             },
       validator: (value) =>

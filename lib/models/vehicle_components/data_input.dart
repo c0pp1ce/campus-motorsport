@@ -1,3 +1,5 @@
+import 'package:campus_motorsport/models/cm_image.dart';
+
 /// Possible input/data types
 enum InputTypes {
   text,
@@ -60,7 +62,14 @@ class DataInput {
       'description': description,
     };
     if (data != null) {
-      json['data'] = data;
+      if(type != InputTypes.image) {
+        json['data'] = data;
+      } else {
+        final String? url = (data as CMImage).url;
+        if(url != null) {
+          json['data'] = url;
+        }
+      }
     }
     return json;
   }

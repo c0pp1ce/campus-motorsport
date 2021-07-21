@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_initializing_formals
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -10,9 +11,10 @@ class CMImage {
     imageProvider = Image.memory(bytes).image;
   }
 
-  CMImage.fromUrl(String url) {
+  CMImage.fromUrl(String url) : url = url {
     imageProvider = Image.network(url).image;
   }
 
   ImageProvider? imageProvider;
+  String? url;
 }

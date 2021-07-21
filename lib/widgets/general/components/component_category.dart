@@ -11,7 +11,7 @@ class ComponentCategory extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final void Function(String) onSaved;
+  final void Function(String?) onSaved;
   final bool enabled;
   final GlobalKey<CMDropDownMenuState>? dropDownKey;
 

@@ -1,4 +1,6 @@
+import 'package:campus_motorsport/models/vehicle_components/component.dart';
 import 'package:campus_motorsport/models/vehicle_components/data_input.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_component.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
@@ -14,6 +16,7 @@ import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:campus_motorsport/widgets/general/components/component_text.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -30,6 +33,7 @@ class _AddComponentState extends State<AddComponent> {
   bool _loading = false;
 
   String? name;
+  ComponentCategories? category;
   final TextEditingController _nameController = TextEditingController();
   List<DataInput> additionalData = [];
 
@@ -85,15 +89,16 @@ class _AddComponentState extends State<AddComponent> {
                     setState(() {
                       _loading = true;
                     });
-                    await Future.delayed(Duration(seconds: 1));
-                    print(additionalData);
+                    final bool success = await _save();
                     setState(() {
                       _loading = false;
                     });
-                    if (true) {
+                    if (success) {
                       setState(() {
                         _reset();
                       });
+                    } else {
+                      _showErrorDialog();
                     }
                   }
                 },
@@ -155,7 +160,17 @@ class _AddComponentState extends State<AddComponent> {
                 height: SizeConfig.basePadding * 2,
               ),
               ComponentCategory(
-                onSaved: (value) {},
+                onSaved: (value) {
+                  for (final ComponentCategories c
+                      in ComponentCategories.values) {
+                    if (c.name == value) {
+                      setState(() {
+                        category = c;
+                      });
+                      break;
+                    }
+                  }
+                },
                 enabled: true,
                 dropDownKey: _categoryKey,
               ),
@@ -253,7 +268,7 @@ class _AddComponentState extends State<AddComponent> {
           padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
           child: ComponentDate(
             dataInput: dataInput,
-            enabled: true,
+            enabled: false,
           ),
         );
       case InputTypes.image:
@@ -297,5 +312,49 @@ class _AddComponentState extends State<AddComponent> {
     _nameController.clear();
     additionalData = [];
     _categoryKey.currentState?.reset();
+  }
+
+  /// Form is saved before.
+  Future<bool> _save() async {
+    BaseComponent baseComponent = BaseComponent(
+      name: name!,
+      state: ComponentStates.newComponent,
+      category: category!,
+    );
+
+    if (additionalData.isNotEmpty) {
+      baseComponent = ExtendedComponent.fromBaseComponent(
+          baseComponent: baseComponent, additionalData: additionalData);
+    }
+
+    final CrudComponent crudComponent = CrudComponent();
+    return crudComponent.createComponent(component: baseComponent);
+  }
+
+  void _showErrorDialog() {
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.error,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      title: 'Speichern fehlgeschlagen.',
+      text: 'Bitte überprüfe die Verbindung und versuche es erneut.\n'
+          'Bleibt der Fehler bestehen wende dich an die IT.',
+      confirmButton: Expanded(
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: SizeConfig.basePadding * 2,
+          ),
+          child: CMTextButton(
+            child: const Text(
+              'VERSTANDEN',
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      ),
+      loopAnimation: false,
+    );
   }
 }
