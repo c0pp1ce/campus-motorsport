@@ -65,4 +65,41 @@ class CrudComponent {
       return null;
     }
   }
+
+  /// Deletes the component from the components collection as well as removing it
+  /// from any vehicle/storage component list.
+  Future<bool> deleteComponent(BaseComponent component) async {
+    try {
+      return _firestore.runTransaction((transaction) async {
+        /// Get the component doc.
+        final DocumentReference componentDoc =
+            _firestore.collection('components').doc(component.id);
+        final DocumentSnapshot componentSnapshot =
+            await transaction.get(componentDoc);
+
+        /// Get the most recent data.
+        final Object? data = componentSnapshot.data();
+        if (data != null) {
+          final BaseComponent component = BaseComponent.fromJson(
+            data as Map<String, dynamic>,
+          );
+
+          /// Delete component from vehicles/storages.
+          if (component.vehicleIds?.isNotEmpty ?? false) {
+            // TODO : For each id get vehicle doc
+            // TODO : The for each doc delete component from it
+          }
+
+          /// Delete component doc
+          transaction.delete(componentDoc);
+          return true;
+        } else {
+          return false;
+        }
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 }
