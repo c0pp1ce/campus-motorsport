@@ -53,7 +53,7 @@ class _MainNavigatorState extends State<MainNavigator> {
     ];
     _contextMenus = [
       HomeContext(),
-      null, // components
+      ComponentsViewContext(), // components
       if (user.isAdmin) null, // user management
     ];
   }
@@ -83,6 +83,8 @@ class _MainNavigatorState extends State<MainNavigator> {
   bool _allowContextSlide(BuildContext context) {
     if (_currentIndex == 0) {
       return context.watch<HomeProvider>().allowContextDrawer;
+    } else if (_currentIndex == 1) {
+      return context.watch<ComponentsViewProvider>().allowContextDrawer;
     }
     return false;
   }

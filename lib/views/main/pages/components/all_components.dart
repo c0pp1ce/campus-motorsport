@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/models/vehicle_components/component.dart';
 import 'package:campus_motorsport/provider/components/components_provider.dart';
+import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_component.dart';
 import 'package:campus_motorsport/services/color_services.dart';
@@ -29,6 +30,9 @@ class _AllComponentsState extends State<AllComponents> {
   Widget build(BuildContext context) {
     final bool isAdmin = context.watch<CurrentUser>().user?.isAdmin ?? false;
     final ComponentsProvider provider = context.watch<ComponentsProvider>();
+    final ComponentsViewProvider viewProvider =
+        context.watch<ComponentsViewProvider>();
+
     return Theme(
       data: Theme.of(context).copyWith(
         dividerColor: Colors.transparent,
@@ -41,17 +45,13 @@ class _AllComponentsState extends State<AllComponents> {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: const [
               ExpandedTitle(
                 title: 'Alle Komponenten',
               ),
               Text(
                 'Aufklappen zum Einsehen der zusätzlichen Datenfelder.',
               ),
-              if (isAdmin)
-                Text(
-                  'Swipe nach links zum Löschen von Komponenten.',
-                ),
             ],
           ),
         ),
@@ -78,7 +78,12 @@ class _AllComponentsState extends State<AllComponents> {
                     }
 
                     /// Display the components
-                    final List<BaseComponent> components = snapshot.data!;
+                    /// Apply the filter.
+                    final List<BaseComponent> components = snapshot.data!
+                        .where((element) => viewProvider.allowedCategories
+                            .contains(element.category))
+                        .toList();
+
                     return ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: components.length,
@@ -118,7 +123,9 @@ class _AllComponentsState extends State<AllComponents> {
                 ),
                 Text(
                   baseComponent.category.name,
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                 ),
               ],
             ),
