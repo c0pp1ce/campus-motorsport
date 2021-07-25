@@ -89,7 +89,7 @@ class BaseComponent {
     }
 
     List<String>? _usedBy;
-    if(json['usedBy'] != null) {
+    if (json['usedBy'] != null) {
       _usedBy = (json['usedBy'] as List).cast<String>();
     }
 

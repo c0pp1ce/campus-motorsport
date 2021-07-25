@@ -62,11 +62,11 @@ class DataInput {
       'description': description,
     };
     if (data != null) {
-      if(type != InputTypes.image) {
+      if (type != InputTypes.image) {
         json['data'] = data;
       } else {
         final String? url = (data as CMImage).url;
-        if(url != null) {
+        if (url != null) {
           json['data'] = url;
         }
       }

@@ -28,7 +28,7 @@ class ComponentText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         CMLabel(label: dataInput.name),
-        if(dataInput.description.isNotEmpty) ...[
+        if (dataInput.description.isNotEmpty) ...[
           Text(dataInput.description),
         ],
         const SizedBox(

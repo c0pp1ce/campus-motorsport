@@ -26,7 +26,8 @@ class ImageView extends StatelessWidget {
             minScale: 0.5,
             maxScale: 2.5,
             child: Image(
-              image: image ?? const AssetImage('assets/images/designer_edited.jpg'),
+              image: image ??
+                  const AssetImage('assets/images/designer_edited.jpg'),
             ),
           ),
         ),

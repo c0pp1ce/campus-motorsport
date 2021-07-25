@@ -19,16 +19,16 @@ class ComponentsProvider extends BaseProvider {
   }
 
   void addComponent(BaseComponent component) {
-    if(_components != null) {
+    if (_components != null) {
       _components!.add(component);
       notify();
     }
   }
+
   void removeComponent(BaseComponent component) {
-    if(_components != null) {
+    if (_components != null) {
       _components!.remove(component);
       notify();
     }
   }
-
 }

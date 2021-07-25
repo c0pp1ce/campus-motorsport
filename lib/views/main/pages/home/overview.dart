@@ -31,7 +31,6 @@ class Overview extends StatelessWidget {
     context.watch<UsersProvider>();
     context.watch<ComponentsProvider>();
 
-
     return ExpandedAppBar(
       expandedHeight: 150,
       appbarTitle: const Text('Übersicht'),
