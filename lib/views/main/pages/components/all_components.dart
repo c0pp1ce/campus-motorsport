@@ -39,19 +39,13 @@ class _AllComponentsState extends State<AllComponents> {
           padding: const EdgeInsets.symmetric(
             horizontal: SizeConfig.basePadding,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              ExpandedTitle(
-                title: 'Alle Komponenten',
-              ),
-              Text(
-                'Aufklappen zum Einsehen der zusätzlichen Datenfelder.',
-              ),
-            ],
+          child: const Center(
+            child: ExpandedTitle(
+              title: 'Alle Komponenten',
+            ),
           ),
         ),
-        offsetBeforeTitleShown: 50,
+        offsetBeforeTitleShown: 60,
         onRefresh: provider.reload,
         loadingListener: (value) {
           setState(() {
