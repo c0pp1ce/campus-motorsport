@@ -53,7 +53,7 @@ class BaseComponent {
     required this.name,
     required this.state,
     required this.category,
-    this.vehicleIds,
+    this.usedBy,
   });
 
   /// Equals docId in the components collection.
@@ -62,7 +62,7 @@ class BaseComponent {
   ComponentStates state;
 
   /// Ids of vehicles that use this component.
-  final List<String>? vehicleIds;
+  final List<String>? usedBy;
   ComponentCategories category;
 
   static BaseComponent fromJson(Map<String, dynamic> json, [String? docId]) {
@@ -88,16 +88,16 @@ class BaseComponent {
       }
     }
 
-    List<String>? _vehicleIds;
-    if(json['vehicleIds'] != null) {
-      _vehicleIds = (json['vehicleIds'] as List).cast<String>();
+    List<String>? _usedBy;
+    if(json['usedBy'] != null) {
+      _usedBy = (json['usedBy'] as List).cast<String>();
     }
 
     return BaseComponent(
       id: docId,
       name: json['name'],
       state: state,
-      vehicleIds: _vehicleIds,
+      usedBy: _usedBy,
       category: category,
     );
   }
@@ -106,7 +106,7 @@ class BaseComponent {
     return {
       'name': name,
       'state': state.name,
-      'vehicleIds': vehicleIds ?? <String>[],
+      'usedBy': usedBy ?? <String>[],
       'category': category.name,
     };
   }

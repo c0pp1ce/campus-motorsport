@@ -85,7 +85,7 @@ class CrudComponent {
           );
 
           /// Delete component from vehicles/storages.
-          if (component.vehicleIds?.isNotEmpty ?? false) {
+          if (component.usedBy?.isNotEmpty ?? false) {
             // TODO : For each id get vehicle doc
             // TODO : The for each doc delete component from it
           }

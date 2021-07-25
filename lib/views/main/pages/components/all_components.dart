@@ -112,7 +112,7 @@ class _AllComponentsState extends State<AllComponents> {
           text: 'Die Komponente wird von ',
           children: <TextSpan>[
             TextSpan(
-              text: '${component.vehicleIds?.length ?? 0} ',
+              text: '${component.usedBy?.length ?? 0} ',
               style: Theme.of(context).textTheme.bodyText2?.copyWith(
                     color: Theme.of(context).colorScheme.error,
                     fontWeight: FontWeight.bold,
