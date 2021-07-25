@@ -110,7 +110,7 @@ class ComponentsViewContext extends StatelessWidget {
                 ),
                 _buildInfo(
                   context,
-                  'Wähle im Filter aus welche Arten von Aktivitäten angezeigt werden sollen.',
+                  'Wähle im Filter aus welche Arten von Komponenten angezeigt werden sollen.',
                   LineIcons.filter,
                 ),
                 const SizedBox(
@@ -118,7 +118,7 @@ class ComponentsViewContext extends StatelessWidget {
                 ),
                 _buildInfo(
                   context,
-                  'Tippe auf einen Eintrag im Feed um zur Detailansicht zu gelangen.',
+                  'Tippe auf eine Komponente um die Detailansicht zu öffnen.',
                   LineIcons.infoCircle,
                 ),
               ],

@@ -5,15 +5,13 @@ import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_component.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
-import 'package:campus_motorsport/widgets/components/vehicle_component.dart';
+import 'package:campus_motorsport/widgets/components/expansion_component.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
-import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
 import 'package:campus_motorsport/widgets/general/layout/loading_list.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 class AllComponents extends StatefulWidget {
@@ -30,8 +28,6 @@ class _AllComponentsState extends State<AllComponents> {
   Widget build(BuildContext context) {
     final bool isAdmin = context.watch<CurrentUser>().user?.isAdmin ?? false;
     final ComponentsProvider provider = context.watch<ComponentsProvider>();
-    final ComponentsViewProvider viewProvider =
-        context.watch<ComponentsViewProvider>();
 
     return Theme(
       data: Theme.of(context).copyWith(
@@ -79,6 +75,8 @@ class _AllComponentsState extends State<AllComponents> {
 
                     /// Display the components
                     /// Apply the filter.
+                    final ComponentsViewProvider viewProvider =
+                        context.watch<ComponentsViewProvider>();
                     final List<BaseComponent> components = snapshot.data!
                         .where((element) => viewProvider.allowedCategories
                             .contains(element.category))
@@ -89,9 +87,13 @@ class _AllComponentsState extends State<AllComponents> {
                       itemCount: components.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        return _buildComponentWidget(
-                          components[index],
-                          isAdmin,
+                        return ExpansionComponent(
+                          key: ValueKey(
+                            components[index].id ?? components[index].name,
+                          ),
+                          component: components[index],
+                          isAdmin: isAdmin,
+                          showDeleteDialog: _showDeleteDialog,
                         );
                       },
                     );
@@ -103,55 +105,7 @@ class _AllComponentsState extends State<AllComponents> {
     );
   }
 
-  Widget _buildComponentWidget(BaseComponent baseComponent, bool isAdmin) {
-    return SimpleCard(
-      margin: const EdgeInsets.all(SizeConfig.basePadding),
-      child: ExpansionTile(
-        tilePadding: const EdgeInsets.all(
-          SizeConfig.basePadding,
-        ),
-        childrenPadding: EdgeInsets.zero,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  baseComponent.name,
-                ),
-                Text(
-                  baseComponent.category.name,
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                ),
-              ],
-            ),
-            if (isAdmin)
-              IconButton(
-                onPressed: () {
-                  _showWarningDialog(baseComponent);
-                },
-                icon: Icon(
-                  LineIcons.trash,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-          ],
-        ),
-        children: [
-          VehicleComponent(
-            showBaseData: false,
-            component: baseComponent,
-          )
-        ],
-      ),
-    );
-  }
-
-  void _showWarningDialog(BaseComponent component) {
+  void _showDeleteDialog(BaseComponent component) {
     CoolAlert.show(
       barrierDismissible: false,
       context: context,
@@ -178,10 +132,8 @@ class _AllComponentsState extends State<AllComponents> {
           ],
         ),
       ),
-      confirmButton: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: SizeConfig.basePadding,
-        ),
+      confirmButton: Padding(
+        padding: const EdgeInsets.only(left: SizeConfig.basePadding / 2),
         child: CMTextButton(
           child: const Text(
             'VERSTANDEN',
@@ -215,10 +167,8 @@ class _AllComponentsState extends State<AllComponents> {
         ),
       ),
       showCancelBtn: true,
-      cancelButton: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: SizeConfig.basePadding,
-        ),
+      cancelButton: Padding(
+        padding: const EdgeInsets.only(right: SizeConfig.basePadding / 2),
         child: CMTextButton(
           primary: Theme.of(context).colorScheme.onSurface,
           child: const Text(
