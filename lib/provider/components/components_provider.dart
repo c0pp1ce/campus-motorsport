@@ -17,4 +17,18 @@ class ComponentsProvider extends BaseProvider {
     _components = await _crudComponent.getComponents() ?? [];
     notify();
   }
+
+  void addComponent(BaseComponent component) {
+    if(_components != null) {
+      _components!.add(component);
+      notify();
+    }
+  }
+  void removeComponent(BaseComponent component) {
+    if(_components != null) {
+      _components!.remove(component);
+      notify();
+    }
+  }
+
 }

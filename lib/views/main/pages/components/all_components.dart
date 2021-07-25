@@ -157,11 +157,7 @@ class _AllComponentsState extends State<AllComponents> {
               _showErrorDialog();
             } else {
               /// Remove component from the list.
-              await context.read<ComponentsProvider>().components.then(
-                    (value) => value.remove(
-                      component,
-                    ),
-                  );
+              context.read<ComponentsProvider>().removeComponent(component);
             }
           },
         ),

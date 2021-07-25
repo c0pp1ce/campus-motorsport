@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/vehicle_components/component.dart';
+import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_component.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
@@ -9,6 +10,7 @@ import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:line_icons/line_icons.dart';
 
 class AddComponent extends StatefulWidget {
@@ -79,7 +81,7 @@ class _AddComponentState extends State<AddComponent> {
                       _loading = true;
                       _vehicleKey.currentState?.loading = true;
                     });
-                    final bool success = await _save();
+                    final bool success = await _save(context);
                     setState(() {
                       _loading = false;
                       _vehicleKey.currentState?.loading = false;
@@ -120,7 +122,7 @@ class _AddComponentState extends State<AddComponent> {
   }
 
   /// Form is saved before.
-  Future<bool> _save() async {
+  Future<bool> _save(BuildContext context) async {
     BaseComponent baseComponent = BaseComponent(
       name: _vehicleKey.currentState!.name!,
       state: ComponentStates.newComponent,
@@ -135,7 +137,12 @@ class _AddComponentState extends State<AddComponent> {
     }
 
     final CrudComponent crudComponent = CrudComponent();
-    return crudComponent.createComponent(component: baseComponent);
+    final bool success =
+        await crudComponent.createComponent(component: baseComponent);
+    if (success) {
+      context.read<ComponentsProvider>().addComponent(baseComponent);
+    }
+    return success;
   }
 
   void _showErrorDialog() {
