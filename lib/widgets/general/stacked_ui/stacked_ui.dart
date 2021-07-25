@@ -133,18 +133,22 @@ class StackedUIState extends State<StackedUI>
             if (mainViewOpen &&
                 widget.contextDrawer != null &&
                 widget.allowSlideToContext)
-              Positioned(
-                width: 30,
-                height: 30,
-                right: -15,
-                top: SizeConfig.screenHeight / 2,
-                child: Material(
-                  color: Theme.of(context).colorScheme.surface,
-                  elevation: SizeConfig.baseBackgroundElevation,
-                  borderRadius: BorderRadius.circular(30),
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: Theme.of(context).colorScheme.primary,
+              Align(
+                alignment: Alignment.centerRight,
+                child: Transform.translate(
+                  offset: const Offset(13, 0),
+                  child: SizedBox(
+                    width: 26,
+                    height: 26,
+                    child: Material(
+                      color: Theme.of(context).colorScheme.surface,
+                      elevation: SizeConfig.baseBackgroundElevation,
+                      borderRadius: BorderRadius.circular(30),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ),
                 ),
               ),
