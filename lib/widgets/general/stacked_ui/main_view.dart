@@ -46,13 +46,14 @@ class MainView extends StatelessWidget {
 
   final List<Widget>? actions;
 
+  static const RoundedRectangleBorder shape = RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      top: Radius.circular(SizeConfig.baseBorderRadius),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
-    final RoundedRectangleBorder shape = RoundedRectangleBorder(
-      borderRadius: const BorderRadius.vertical(
-        top: Radius.circular(SizeConfig.baseBorderRadius),
-      ),
-    );
 
     return SafeArea(
       child: Material(
