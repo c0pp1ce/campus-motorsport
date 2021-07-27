@@ -108,6 +108,8 @@ class CMAuth {
           authUser.emailVerified &&
           (token.claims?['accepted'] != true)) {
         await addAcceptedRole(currentUser.email);
+        /// Refresh the token so the added claim is visible.
+        await authUser.getIdTokenResult(true);
       }
 
       if (!currentUser.accepted || !authUser.emailVerified) {
