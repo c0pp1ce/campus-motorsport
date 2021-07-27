@@ -22,7 +22,8 @@ class CMImagePicker extends StatefulWidget {
   }) : super(key: key);
 
   ///Will be called after the image is picked & compressed or deleted.
-  final void Function(Uint8List?)? saveImage;
+  /// Image bytes + path.
+  final void Function(Uint8List?, String?)? saveImage;
   final CMImage imageFile;
   final bool enabled;
   final String heroTag;
@@ -119,7 +120,7 @@ class _CMImagePickerState extends State<CMImagePicker> {
     setState(() {
       widget.imageFile.imageProvider = null;
       if (widget.saveImage != null) {
-        widget.saveImage!(null);
+        widget.saveImage!(null, null);
       }
     });
   }
@@ -129,10 +130,12 @@ class _CMImagePickerState extends State<CMImagePicker> {
     if (result == null) {
       return;
     }
+    final String path = File.fromRawPath(result).path;
     setState(() {
       widget.imageFile.imageProvider = MemoryImage(result);
+      widget.imageFile.path = path;
       if (widget.saveImage != null) {
-        widget.saveImage!(result);
+        widget.saveImage!(result, path);
       }
     });
   }

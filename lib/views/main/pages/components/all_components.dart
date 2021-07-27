@@ -188,7 +188,7 @@ class _AllComponentsState extends State<AllComponents> {
       type: CoolAlertType.error,
       backgroundColor: Theme.of(context).colorScheme.surface,
       title: 'Löschen fehlgeschlagen.',
-      text: 'Bitte probiere es erneut oder wende dich an die IT.',
+      text: 'Lade die Seite neu und probiere es erneut.',
       confirmButton: Expanded(
         child: Container(
           margin: const EdgeInsets.symmetric(
