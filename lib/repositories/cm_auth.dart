@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/user.dart' as app;
+import 'package:campus_motorsport/repositories/cloud_functions.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -98,6 +99,15 @@ class CMAuth {
         await _crudUser.updateField(
             uid: currentUser.uid, key: 'verified', data: true);
         currentUser.verified = true;
+      }
+
+      final IdTokenResult token = await authUser.getIdTokenResult();
+
+      /// Check if the claim has not been set yet.
+      if (currentUser.accepted &&
+          authUser.emailVerified &&
+          (token.claims?['accepted'] != true)) {
+        await addAcceptedRole(currentUser.email);
       }
 
       if (!currentUser.accepted || !authUser.emailVerified) {

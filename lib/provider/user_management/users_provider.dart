@@ -13,6 +13,12 @@ class UsersProvider extends BaseProvider {
     return _users!;
   }
 
+  void removeUser(User user) {
+    if(_users?.remove(user) ?? false) {
+      notify();
+    }
+  }
+
   Future<void> reload() async {
     _users = await _crudUser.getUsers() ?? [];
     notify();

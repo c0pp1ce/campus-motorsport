@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/models/user.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
+import 'package:campus_motorsport/repositories/cloud_functions.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
 import 'package:campus_motorsport/widgets/general/layout/loading_list.dart';
@@ -77,18 +78,27 @@ class _AcceptUsersState extends State<AcceptUsers> {
                         confirmedWhenTrue: ConfirmedWhenTrue.accepted,
                         confirmButton: true,
                         onConfirm: (crudUser) async {
-                          return crudUser.updateField(
+                          final bool success = await crudUser.updateField(
                             uid: pendingUsers[index].uid,
                             key: 'accepted',
                             data: true,
                           );
+                          if (success) {
+                            // Add custom claim to this user.
+                            await addAcceptedRole(pendingUsers[index].email);
+                          }
+                          return success;
                         },
                         confirmErrorTitle: 'Fehler beim Ändern der Rolle.',
                         declineButton: true,
                         onDecline: (crudUser) async {
-                          return crudUser.deleteUser(
+                          final bool success = await crudUser.deleteUser(
                             uid: pendingUsers[index].uid,
                           );
+                          if (success) {
+                            provider.removeUser(pendingUsers[index]);
+                          }
+                          return success;
                         },
                         declineErrorTitle: 'Fehler beim Löschen des Benutzers.',
                       );

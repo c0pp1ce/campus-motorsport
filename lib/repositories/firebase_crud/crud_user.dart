@@ -107,17 +107,14 @@ class CrudUser {
     }
   }
 
-  /// Attempts to delete the user from firebase auth.
+  /// Deletes the user document which will also remove the user from auth.
   Future<bool> deleteUser(
       {required String uid, bool deleteSelf = false}) async {
     if (uid == FirebaseAuth.instance.currentUser?.uid && !deleteSelf) {
       return false;
     }
-    // TODO
-    return false;
     try {
       await _firestore.collection('users').doc(uid).delete();
-      // TODO : Delete from auth. (Trigger cloud function).
       return true;
     } on Exception catch (e) {
       print(e.toString());
