@@ -11,7 +11,7 @@ Future<void> addAcceptedRole(String email) async {
   try {
     final HttpsCallable callable = functions.httpsCallable('addAcceptedRole');
     await callable.call({'email': email});
-  } on Exception catch(e) {
+  } on Exception catch (e) {
     print(e.toString());
   }
 }

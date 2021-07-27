@@ -14,7 +14,7 @@ class UsersProvider extends BaseProvider {
   }
 
   void removeUser(User user) {
-    if(_users?.remove(user) ?? false) {
+    if (_users?.remove(user) ?? false) {
       notify();
     }
   }
