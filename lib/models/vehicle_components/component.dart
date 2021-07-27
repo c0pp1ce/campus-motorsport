@@ -102,7 +102,7 @@ class BaseComponent {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Future<Map<String, dynamic>> toJson() async {
     return {
       'name': name,
       'state': state.name,
@@ -156,12 +156,12 @@ class ExtendedComponent extends BaseComponent {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Future<Map<String, dynamic>> toJson() async {
     /// Base info.
-    final Map<String, dynamic> json = super.toJson();
+    final Map<String, dynamic> json = await super.toJson();
     final List<Map<String, dynamic>> fields = List.empty(growable: true);
     for (final DataInput dataInput in additionalData) {
-      fields.add(dataInput.toJson());
+      fields.add(await dataInput.toJson());
     }
     json['additionalData'] = fields;
     return json;

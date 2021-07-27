@@ -15,7 +15,7 @@ class CrudComponent {
       /// Create the new part.
       //final DocumentReference doc =
       await _firestore.collection('components').add(
-            component.toJson(),
+            await component.toJson(),
           );
       return true;
     } on Exception catch (e) {

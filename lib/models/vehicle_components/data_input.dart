@@ -24,6 +24,8 @@ extension InputTypesNames on InputTypes {
 }
 
 /// Defines a data input field.
+///
+/// [InputTypes.image] --> data needs to be of type [CMImage].
 class DataInput {
   DataInput({
     required this.type,
@@ -47,24 +49,41 @@ class DataInput {
       }
     }
     assert(type != null, 'Invalid type stored in database: $typeName');
+    dynamic data;
+
+    if (type == InputTypes.image && json['data'] != null) {
+      data = CMImage.fromUrl(json['data']);
+    } else {
+      data = json['data'];
+    }
+
     return DataInput(
       type: type,
       name: json['name'],
       description: json['description'],
-      data: json['data'],
+      data: data,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  /// If of type [InputTypes.image] upload function of [CMImage] is called if its
+  /// url is null.
+  Future<Map<String, dynamic>> toJson() async {
     final Map<String, dynamic> json = {
       'name': name,
       'type': type.name,
       'description': description,
     };
+
+    /// Check if there is data to be stored.
     if (data != null) {
       if (type != InputTypes.image) {
+        /// Generic types that can be stored inside of the db.
         json['data'] = data;
       } else {
+        /// Only store URL of the image inside the db.
+        if ((data as CMImage).url == null) {
+          await (data as CMImage).uploadImageToFirebaseStorage();
+        }
         final String? url = (data as CMImage).url;
         if (url != null) {
           json['data'] = url;
