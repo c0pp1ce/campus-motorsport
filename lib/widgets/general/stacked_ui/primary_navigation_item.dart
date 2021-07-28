@@ -9,12 +9,14 @@ class PrimaryNavigationItem extends StatelessWidget {
     required this.isSelected,
     required this.icon,
     required this.onPressed,
+    this.active = true,
     Key? key,
   }) : super(key: key);
 
   final bool isSelected;
   final IconData icon;
   final void Function() onPressed;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class PrimaryNavigationItem extends StatelessWidget {
       child: CMTextButton(
         width: 50,
         height: 50,
-        onPressed: onPressed,
+        onPressed: active ? onPressed : null,
         child: Icon(icon),
         noGradient: true,
         radius: BorderRadius.circular(50.0),
@@ -36,9 +38,11 @@ class PrimaryNavigationItem extends StatelessWidget {
             context,
             Theme.of(context).colorScheme.surface,
             SizeConfig.baseBackgroundElevation),
-        primary: isSelected
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.secondary,
+        primary: active
+            ? isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.surface,
       ),
     );
   }
@@ -51,6 +55,7 @@ class NavigationItemData {
     required this.icon,
     required this.onPressed,
     required this.secondaryItem,
+    this.active = true,
   });
 
   /// The [IconData] displayed on the circular navigation item.
@@ -61,4 +66,6 @@ class NavigationItemData {
 
   /// Will be placed inside the second layer of navigation..
   final Widget secondaryItem;
+
+  final bool active;
 }

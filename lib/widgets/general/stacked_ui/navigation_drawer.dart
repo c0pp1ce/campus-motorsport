@@ -51,6 +51,7 @@ class NavigationDrawer extends StatelessWidget {
         itemCount: navigationItems.length,
         itemBuilder: (context, index) {
           return PrimaryNavigationItem(
+            active: navigationItems[index].active,
             isSelected: index == selected,
             icon: navigationItems[index].icon,
             onPressed: navigationItems[index].onPressed,

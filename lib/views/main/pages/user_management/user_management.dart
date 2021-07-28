@@ -36,6 +36,7 @@ class UserManagementSecondary extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: ListView(
+        physics: const BouncingScrollPhysics(),
         children: UMPage.values.map((page) {
           return ListTile(
             title: Text(

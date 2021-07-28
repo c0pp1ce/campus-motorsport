@@ -1,4 +1,7 @@
+import 'package:campus_motorsport/models/component_containers/component_container.dart';
 import 'package:campus_motorsport/models/user.dart';
+import 'package:campus_motorsport/provider/component_containers/cc_provider.dart';
+import 'package:campus_motorsport/provider/component_containers/cc_view_provider.dart';
 import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
@@ -7,12 +10,16 @@ import 'package:campus_motorsport/provider/user_management/user_management_provi
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
 import 'package:campus_motorsport/repositories/cm_auth.dart';
 import 'package:campus_motorsport/routes/routes.dart';
+import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/component_containers.dart';
 import 'package:campus_motorsport/views/main/pages/components/components_view.dart';
 import 'package:campus_motorsport/views/main/pages/home/home.dart';
 import 'package:campus_motorsport/views/main/pages/user_management/user_management.dart';
+import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/navigation_drawer.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/primary_navigation_item.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/stacked_ui.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
@@ -48,11 +55,13 @@ class _MainNavigatorState extends State<MainNavigator> {
     assert(user != null, 'Logged in users should never be null.');
     _pages = [
       Home(),
+      Scaffold(), // vehicles
       ComponentsView(),
       if (user!.isAdmin) UserManagement(),
     ];
     _contextMenus = [
       HomeContext(),
+      Scaffold(), // vehicles
       ComponentsViewContext(), // components
       if (user.isAdmin) null, // user management
     ];
@@ -67,6 +76,22 @@ class _MainNavigatorState extends State<MainNavigator> {
         ChangeNotifierProvider(create: (context) => UsersProvider()),
         ChangeNotifierProvider(create: (context) => ComponentsViewProvider()),
         ChangeNotifierProvider(create: (context) => ComponentsProvider()),
+        ChangeNotifierProvider(create: (context) => VehiclesProvider()),
+        ChangeNotifierProvider(create: (context) => StocksProvider()),
+        ChangeNotifierProxyProvider2<VehiclesProvider, StocksProvider,
+            CCViewProvider>(
+          create: (context) => CCViewProvider(
+            vehicles: Provider.of<VehiclesProvider>(context, listen: false)
+                .getContainersBuildSafe(),
+            stocks: Provider.of<StocksProvider>(context, listen: false)
+                .getContainersBuildSafe(),
+            isAdmin: Provider.of<CurrentUser>(context, listen: false)
+                    .user
+                    ?.isAdmin ??
+                false,
+          ),
+          update: _updateCCViewProvider,
+        ),
       ],
       builder: (context, child) {
         return StackedUI(
@@ -84,6 +109,8 @@ class _MainNavigatorState extends State<MainNavigator> {
     if (_currentIndex == 0) {
       return context.watch<HomeProvider>().allowContextDrawer;
     } else if (_currentIndex == 1) {
+      return context.watch<CCViewProvider>().allowContextDrawer;
+    } else if (_currentIndex == 2) {
       return context.watch<ComponentsViewProvider>().allowContextDrawer;
     }
     return false;
@@ -108,13 +135,28 @@ class _MainNavigatorState extends State<MainNavigator> {
           secondaryItem: HomeSecondary(),
         ),
 
-        /// Components
+        /// Vehicles
         NavigationItemData(
-          icon: LineIcons.boxes,
+          active: context.watch<CCViewProvider>().currentPage !=
+              ComponentContainerPage.noContainers,
+          icon: LineIcons.car,
           onPressed: () {
             if (_currentIndex != 1) {
               setState(() {
                 _currentIndex = 1;
+              });
+            }
+          },
+          secondaryItem: ComponentContainersSecondary(),
+        ),
+
+        /// Components
+        NavigationItemData(
+          icon: LineIcons.boxes,
+          onPressed: () {
+            if (_currentIndex != 2) {
+              setState(() {
+                _currentIndex = 2;
               });
             }
           },
@@ -126,9 +168,9 @@ class _MainNavigatorState extends State<MainNavigator> {
           NavigationItemData(
             icon: LineIcons.users,
             onPressed: () {
-              if (_currentIndex != 2) {
+              if (_currentIndex != 3) {
                 setState(() {
-                  _currentIndex = 2;
+                  _currentIndex = 3;
                 });
               }
             },
@@ -152,6 +194,115 @@ class _MainNavigatorState extends State<MainNavigator> {
           ),
         ),
       ],
+    );
+  }
+
+  /// Update function for the proxy provider which is needed to react to changes
+  /// inside of the vehicle or stocks providers.
+  CCViewProvider _updateCCViewProvider(
+    BuildContext context,
+    VehiclesProvider vehicleProvider,
+    StocksProvider stocksProvider,
+    CCViewProvider? viewProvider,
+  ) {
+    final bool isAdmin =
+        Provider.of<CurrentUser>(context, listen: false).user?.isAdmin ?? false;
+
+    /// No CCViewProvider or on placeholder page.
+    if (viewProvider == null ||
+        viewProvider.currentPage == ComponentContainerPage.noContainers) {
+      return CCViewProvider(
+        vehicles: vehicleProvider.containers,
+        stocks: stocksProvider.containers,
+        isAdmin: isAdmin,
+      );
+    }
+
+    /// User somehow lost his admin rights.
+    if (viewProvider.isAdmin == true && isAdmin == false) {
+      setState(() {
+        _currentIndex = 0;
+        _showRedirectInfo('Admin-Rechte', context);
+      });
+      return CCViewProvider(
+        vehicles: vehicleProvider.containers,
+        stocks: stocksProvider.containers,
+        isAdmin: isAdmin,
+      );
+    }
+
+    /// Check if currently open container was removed.
+    if (viewProvider.currentlyOpen != null && _currentIndex == 1) {
+      switch (viewProvider.currentlyOpen!.type) {
+        case ComponentContainerTypes.stock:
+          if (!stocksProvider.containers.contains(viewProvider.currentlyOpen)) {
+            WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+              setState(() {
+                _currentIndex = 0;
+                _showRedirectInfo('Lager', context);
+              });
+            });
+            return CCViewProvider(
+              vehicles: vehicleProvider.containers,
+              stocks: stocksProvider.containers,
+              isAdmin: isAdmin,
+            );
+          } else {
+            break;
+          }
+        case ComponentContainerTypes.vehicle:
+          if (!vehicleProvider.containers
+              .contains(viewProvider.currentlyOpen)) {
+            WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+              setState(() {
+                _currentIndex = 0;
+                _showRedirectInfo('Fahrzeug', context);
+              });
+            });
+            return CCViewProvider(
+              vehicles: vehicleProvider.containers,
+              stocks: stocksProvider.containers,
+              isAdmin: isAdmin,
+            );
+          } else {
+            break;
+          }
+      }
+    }
+
+    /// Return provider with updated lists.
+    viewProvider.vehicles = vehicleProvider.containers;
+    viewProvider.stocks = stocksProvider.containers;
+    return viewProvider;
+  }
+
+  /// Shown if a vehicle or stock is deleted while a user is viewing it (if the
+  /// data is reloaded by the user at some point).
+  void _showRedirectInfo(String type, BuildContext context) {
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.info,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      title: '$type nicht gefunden.',
+      text:
+          'Umleitung zum Homescreen da die betrachteten Daten nicht mehr gefunden wurden.\n'
+          'Eventuell wurden sie gelöscht.',
+      confirmButton: Expanded(
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: SizeConfig.basePadding * 2,
+          ),
+          child: CMTextButton(
+            child: const Text(
+              'VERSTANDEN',
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      ),
+      loopAnimation: false,
     );
   }
 

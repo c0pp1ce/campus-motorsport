@@ -72,6 +72,7 @@ class ComponentsViewSecondary extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: ListView(
+        physics: const BouncingScrollPhysics(),
         children: children,
       ),
     );

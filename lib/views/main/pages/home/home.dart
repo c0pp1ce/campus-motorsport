@@ -108,6 +108,7 @@ class HomeSecondary extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: ListView(
+        physics: const BouncingScrollPhysics(),
         children: HomePage.values.map((page) {
           return ListTile(
             title: Text(
