@@ -1,5 +1,5 @@
 import 'package:campus_motorsport/models/cm_image.dart';
-import 'package:campus_motorsport/models/vehicle_components/data_input.dart';
+import 'package:campus_motorsport/models/components/data_input.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_label.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_image_picker.dart';

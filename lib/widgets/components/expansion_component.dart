@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/models/vehicle_components/component.dart';
+import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/components/vehicle_component.dart';
 import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';

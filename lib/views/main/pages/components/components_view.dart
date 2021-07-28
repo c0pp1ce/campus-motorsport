@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/models/vehicle_components/component.dart';
+import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';

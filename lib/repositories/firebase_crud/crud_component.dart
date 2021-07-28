@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/models/vehicle_components/component.dart';
+import 'package:campus_motorsport/models/components/component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Create, Read, Update, Delete vehicle components in firebase.

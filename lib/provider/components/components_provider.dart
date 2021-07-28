@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/models/vehicle_components/component.dart';
+import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/provider/base_provider.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_component.dart';
 

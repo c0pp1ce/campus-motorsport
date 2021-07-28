@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/models/vehicle_components/component.dart';
+import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
@@ -52,51 +52,55 @@ class _AllComponentsState extends State<AllComponents> {
             _loading = value;
           });
         },
-        body: _loading
-            ? LoadingList()
-            : FutureBuilder(
-                future: provider.components,
-                builder:
-                    (context, AsyncSnapshot<List<BaseComponent>> snapshot) {
-                  if (snapshot.hasData ||
-                      snapshot.connectionState == ConnectionState.done) {
-                    /// Future done but no data.
-                    if (snapshot.data?.isEmpty ?? true) {
-                      return Center(
-                        child: const Text('Keine Komponenten gefunden.'),
-                      );
-                    }
-
-                    /// Display the components
-                    /// Apply the filter.
-                    final ComponentsViewProvider viewProvider =
-                        context.watch<ComponentsViewProvider>();
-                    final List<BaseComponent> components = snapshot.data!
-                        .where((element) => viewProvider.allowedCategories
-                            .contains(element.category))
-                        .toList();
-
-                    return ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: components.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return ExpansionComponent(
-                          key: ValueKey(
-                            components[index].id ?? components[index].name,
-                          ),
-                          component: components[index],
-                          isAdmin: isAdmin,
-                          showDeleteDialog: _showDeleteDialog,
-                        );
-                      },
-                    );
-                  }
-                  return const SizedBox();
-                },
-              ),
+        body: _buildBody(context, isAdmin, provider),
       ),
     );
+  }
+
+  Widget _buildBody(
+      BuildContext context, bool isAdmin, ComponentsProvider provider) {
+    return _loading
+        ? LoadingList()
+        : FutureBuilder(
+            future: provider.components,
+            builder: (context, AsyncSnapshot<List<BaseComponent>> snapshot) {
+              if (snapshot.hasData ||
+                  snapshot.connectionState == ConnectionState.done) {
+                /// Future done but no data.
+                if (snapshot.data?.isEmpty ?? true) {
+                  return Center(
+                    child: const Text('Keine Komponenten gefunden.'),
+                  );
+                }
+
+                /// Display the components
+                /// Apply the filter.
+                final ComponentsViewProvider viewProvider =
+                    context.watch<ComponentsViewProvider>();
+                final List<BaseComponent> components = snapshot.data!
+                    .where((element) => viewProvider.allowedCategories
+                        .contains(element.category))
+                    .toList();
+
+                return ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: components.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return ExpansionComponent(
+                      key: ValueKey(
+                        components[index].id ?? components[index].name,
+                      ),
+                      component: components[index],
+                      isAdmin: isAdmin,
+                      showDeleteDialog: _showDeleteDialog,
+                    );
+                  },
+                );
+              }
+              return const SizedBox();
+            },
+          );
   }
 
   void _showDeleteDialog(BaseComponent component) {

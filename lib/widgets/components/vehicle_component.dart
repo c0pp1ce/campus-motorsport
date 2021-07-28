@@ -1,5 +1,5 @@
-import 'package:campus_motorsport/models/vehicle_components/component.dart';
-import 'package:campus_motorsport/models/vehicle_components/data_input.dart';
+import 'package:campus_motorsport/models/components/component.dart';
+import 'package:campus_motorsport/models/components/data_input.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
