@@ -3,6 +3,7 @@ import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
 import 'package:flutter/material.dart';
 
+/// Select and/or display the category of a component.
 class ComponentCategory extends StatelessWidget {
   const ComponentCategory({
     required this.onSaved,

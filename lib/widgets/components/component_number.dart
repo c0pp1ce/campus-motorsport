@@ -1,5 +1,5 @@
 import 'package:campus_motorsport/models/components/data_input.dart';
-import 'package:campus_motorsport/widgets/general/components/component_text.dart';
+import 'package:campus_motorsport/widgets/components/component_text.dart';
 import 'package:flutter/material.dart';
 
 /// Used to display DataInput with type == number.
