@@ -232,10 +232,27 @@ class _MainNavigatorState extends State<MainNavigator> {
     }
 
     /// Check if currently open container was removed.
-    if (viewProvider.currentlyOpen != null && _currentIndex == 1) {
+    if (viewProvider.currentlyOpen != null &&
+        _currentIndex == 1 &&
+        CCViewProvider.containerSpecificPages
+            .contains(viewProvider.currentPage)) {
       switch (viewProvider.currentlyOpen!.type) {
         case ComponentContainerTypes.stock:
-          if (!stocksProvider.containers.contains(viewProvider.currentlyOpen)) {
+          late final bool objectNotFound;
+          final o = stocksProvider.containers.firstWhere(
+              (element) => element.id == viewProvider.currentlyOpen!.id,
+              orElse: () {
+            return ComponentContainer(
+              name: '',
+              type: ComponentContainerTypes.vehicle,
+            );
+          });
+          if (o.name.isEmpty) {
+            objectNotFound = true;
+          } else {
+            objectNotFound = false;
+          }
+          if (objectNotFound || viewProvider.currentlyOpen!.id == null) {
             WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
               setState(() {
                 _currentIndex = 0;
@@ -251,8 +268,21 @@ class _MainNavigatorState extends State<MainNavigator> {
             break;
           }
         case ComponentContainerTypes.vehicle:
-          if (!vehicleProvider.containers
-              .contains(viewProvider.currentlyOpen)) {
+          late final bool objectNotFound;
+          final o = stocksProvider.containers.firstWhere(
+              (element) => element.id == viewProvider.currentlyOpen!.id,
+              orElse: () {
+            return ComponentContainer(
+              name: '',
+              type: ComponentContainerTypes.vehicle,
+            );
+          });
+          if (o.name.isEmpty) {
+            objectNotFound = true;
+          } else {
+            objectNotFound = false;
+          }
+          if (objectNotFound || viewProvider.currentlyOpen!.id == null) {
             WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
               setState(() {
                 _currentIndex = 0;
@@ -273,6 +303,7 @@ class _MainNavigatorState extends State<MainNavigator> {
     /// Return provider with updated lists.
     viewProvider.vehicles = vehicleProvider.containers;
     viewProvider.stocks = stocksProvider.containers;
+    viewProvider.notify();
     return viewProvider;
   }
 

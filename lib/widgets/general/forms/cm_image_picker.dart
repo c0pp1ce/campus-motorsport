@@ -18,6 +18,7 @@ class CMImagePicker extends StatefulWidget {
     required this.imageFile,
     required this.heroTag,
     this.enabled = true,
+    this.roundedBottom = true,
     Key? key,
   }) : super(key: key);
 
@@ -27,6 +28,7 @@ class CMImagePicker extends StatefulWidget {
   final CMImage imageFile;
   final bool enabled;
   final String heroTag;
+  final bool roundedBottom;
 
   @override
   _CMImagePickerState createState() => _CMImagePickerState();
@@ -66,9 +68,15 @@ class _CMImagePickerState extends State<CMImagePicker> {
                                   'assets/images/designer_edited.jpg',
                                 ),
                             fit: BoxFit.cover),
-                        borderRadius: BorderRadius.circular(
-                          SizeConfig.baseBorderRadius,
-                        ),
+                        borderRadius: widget.roundedBottom
+                            ? BorderRadius.circular(
+                                SizeConfig.baseBorderRadius,
+                              )
+                            : const BorderRadius.vertical(
+                                top: Radius.circular(
+                                  SizeConfig.baseBorderRadius,
+                                ),
+                              ),
                         color: Theme.of(context).colorScheme.surface,
                       ),
                     ),
@@ -106,7 +114,7 @@ class _CMImagePickerState extends State<CMImagePicker> {
             ],
           ),
         ),
-        if (widget.imageFile.imageProvider != null)
+        if (widget.imageFile.imageProvider != null && widget.enabled)
           CMTextButton(
             primary: Theme.of(context).colorScheme.primary,
             backgroundColor: Colors.transparent,
@@ -120,6 +128,7 @@ class _CMImagePickerState extends State<CMImagePicker> {
   void _deleteImage() {
     setState(() {
       widget.imageFile.imageProvider = null;
+      widget.imageFile.url = null;
       if (widget.saveImage != null) {
         widget.saveImage!(null, null);
       }
@@ -135,6 +144,7 @@ class _CMImagePickerState extends State<CMImagePicker> {
     setState(() {
       widget.imageFile.imageProvider = MemoryImage(result);
       widget.imageFile.path = img.path;
+      widget.imageFile.url = null;
       if (widget.saveImage != null) {
         widget.saveImage!(result, img.path);
       }
@@ -142,11 +152,13 @@ class _CMImagePickerState extends State<CMImagePicker> {
   }
 
   Future<Uint8List?> _compressImage(File file) async {
+    final double size = getFileSize(file);
+    print(size);
     final result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
       minWidth: 400,
       minHeight: 400,
-      quality: 90,
+      quality: size > 2 ? 90 : 100,
     );
     return result;
   }
@@ -238,5 +250,10 @@ class _CMImagePickerState extends State<CMImagePicker> {
       ),
       loopAnimation: false,
     );
+  }
+
+  double getFileSize(File file)  {
+    final int bytes =  file.lengthSync();
+    return bytes / (1024 * 1024);
   }
 }

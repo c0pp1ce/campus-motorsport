@@ -19,6 +19,8 @@ class CMTextField extends StatefulWidget {
     this.minLines = 1,
     this.maxLines = 1,
     this.controller,
+    this.noBorders = false,
+    this.style,
     Key? key,
   }) : super(key: key);
 
@@ -40,6 +42,9 @@ class CMTextField extends StatefulWidget {
 
   final int minLines;
   final int maxLines;
+  final bool noBorders;
+
+  final TextStyle? style;
 
   final TextEditingController? controller;
 
@@ -78,6 +83,7 @@ class _CMTextFieldState extends State<CMTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: widget.style,
       controller: widget.controller,
       initialValue: widget.initialValue,
       enabled: widget.enabled,
@@ -130,11 +136,15 @@ class _CMTextFieldState extends State<CMTextField> {
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       filled: widget.fillColor != null,
       fillColor: widget.fillColor,
-      enabledBorder: _enabledBorder(context),
-      disabledBorder: _disabledBorder(context),
-      errorBorder: _errorBorder(context),
-      focusedBorder: _focusedBorder(context),
-      focusedErrorBorder: _focusedErrorBorder(context),
+      enabledBorder:
+          widget.noBorders ? InputBorder.none : _enabledBorder(context),
+      disabledBorder:
+          widget.noBorders ? InputBorder.none : _disabledBorder(context),
+      errorBorder: widget.noBorders ? InputBorder.none : _errorBorder(context),
+      focusedBorder:
+          widget.noBorders ? InputBorder.none : _focusedBorder(context),
+      focusedErrorBorder:
+          widget.noBorders ? InputBorder.none : _focusedErrorBorder(context),
 
       /// Only show eye-icon when toggleObscure is set to true.
       suffixIcon: !widget.toggleObscure ? null : _switchObscure(context),

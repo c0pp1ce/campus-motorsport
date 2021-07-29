@@ -1,6 +1,7 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
 import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/provider/base_provider.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 
 /// Determines which subpage of Component Containers(Vehicles and stock) should
 /// be shown.
@@ -84,6 +85,32 @@ class CCViewProvider extends BaseProvider {
     }
   }
 
+  Future<void> reloadCurrentlyOpen() async {
+    if (currentlyOpen?.id == null) {
+      return;
+    }
+    late final List list;
+    if (currentlyOpen!.type == ComponentContainerTypes.vehicle) {
+      list = vehicles;
+    } else {
+      list = stocks;
+    }
+
+    final int index = list.indexOf(currentlyOpen);
+    if (index == -1) {
+      print('vehicle not found');
+      return;
+    } else {
+      final ComponentContainer? c =
+          await CrudCompContainer().getContainer(currentlyOpen!.id!);
+      if (c != null) {
+        list[index] = c;
+        currentlyOpen = list[index];
+      }
+    }
+    notify();
+  }
+
   // Filter logic --------------------------------------------------------------
   void allowCategory(ComponentCategories c) {
     if (!_allowedCategories.contains(c)) {
@@ -101,7 +128,7 @@ class CCViewProvider extends BaseProvider {
   void resetAllowedCategories([bool notifyListeners = true]) {
     _allowedCategories.clear();
     _addAllCategories();
-    if(notifyListeners) {
+    if (notifyListeners) {
       notify();
     }
   }

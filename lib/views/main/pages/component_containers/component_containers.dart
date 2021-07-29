@@ -4,6 +4,7 @@ import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_container.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/context_drawer.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,8 @@ class ComponentContainersView extends StatelessWidget {
     final CCViewProvider ccViewProvider = context.watch<CCViewProvider>();
     switch (ccViewProvider.currentPage) {
       case ComponentContainerPage.currentState:
-        return ExpandedAppBar(
-          appbarTitle: Text('TODO'),
-          appbarChild: Container(),
+        return CurrentState(
+          key: ValueKey(ccViewProvider.currentlyOpen?.id),
         );
       case ComponentContainerPage.updates:
         return ExpandedAppBar(
@@ -150,7 +150,7 @@ class ComponentContainersSecondary extends StatelessWidget {
 
         /// Determine if the opened container is this container.
         final bool selected =
-            containerOpened && ccViewProvider.currentlyOpen == container;
+            containerOpened && ccViewProvider.currentlyOpen?.id == container.id;
 
         /// Unselected containers only as simple list entries.
         if (!selected) {

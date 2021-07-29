@@ -33,7 +33,7 @@ class ComponentContainer {
   });
 
   /// Document id.
-  String? id;
+  final String? id;
   String name;
   ComponentContainerTypes type;
   CMImage? image;
@@ -73,7 +73,9 @@ class ComponentContainer {
       id: id,
       name: json['name'],
       type: type,
-      image: json['image'] != null ? CMImage.fromUrl(json['image']) : null,
+      image: (json['image'] as String?)?.isNotEmpty ?? false
+          ? CMImage.fromUrl(json['image'])
+          : null,
       updates: updates,
       currentState: currentState,
       components: components,

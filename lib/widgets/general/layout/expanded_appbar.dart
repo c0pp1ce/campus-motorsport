@@ -13,6 +13,7 @@ class ExpandedAppBar extends StatefulWidget {
     this.body = const SizedBox(),
     this.expandedHeight = 150,
     this.offsetBeforeTitleShown = 20,
+    this.titleAlwaysVisible = false,
     this.onRefresh,
     this.loadingListener,
     this.actions,
@@ -21,6 +22,8 @@ class ExpandedAppBar extends StatefulWidget {
 
   /// The title is shown when the appbars expanded space is not visible.
   final Widget appbarTitle;
+
+  final bool titleAlwaysVisible;
 
   /// The child is placed inside the expanded appbar space.
   final Widget appbarChild;
@@ -48,13 +51,14 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
   late double currentExpandedHeight;
 
   /// Stores the latest appbar state to avoid unnecessary rebuilds.
-  bool _showAppbarTitle = false;
+  late bool _showAppbarTitle;
 
   // Static configurations.
   static const double elevation = SizeConfig.baseBackgroundElevation - 3;
 
   @override
   void initState() {
+    _showAppbarTitle = widget.titleAlwaysVisible;
     currentExpandedHeight = widget.expandedHeight;
 
     _scrollController = ScrollController();
@@ -78,7 +82,9 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
   @override
   Widget build(BuildContext context) {
     return MainView(
-      title: _showAppbarTitle ? widget.appbarTitle : null,
+      title: _showAppbarTitle || widget.titleAlwaysVisible
+          ? widget.appbarTitle
+          : null,
       appBarShadowColor: _showAppbarTitle ? null : Colors.transparent,
       backgroundElevation: elevation,
       actions: widget.actions,

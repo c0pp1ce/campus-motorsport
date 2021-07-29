@@ -23,6 +23,26 @@ class CMImage {
   String? url;
   String? path;
 
+  CMImage? cloneNetworkImage() {
+    if (imageProvider is NetworkImage) {
+      return CMImage.fromUrl(url!);
+    }
+  }
+
+  Future<bool> deleteFromFirebase() async {
+    if (url == null) {
+      return false;
+    }
+
+    try {
+      await FirebaseStorage.instance.refFromURL(url!).delete();
+      return true;
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<bool> uploadImageToFirebaseStorage() async {
     if (imageProvider is NetworkImage ||
         imageProvider == null ||
@@ -53,6 +73,9 @@ class CMImage {
       await taskSnapshot.ref.getDownloadURL().then((value) {
         url = value;
       });
+      final File tmpFile = File(path!);
+      await tmpFile.delete();
+      path = null;
       return true;
     } on Exception catch (e) {
       print(e);
