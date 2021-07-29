@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/provider/component_containers/cc_provider.dart';
 import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
@@ -22,6 +23,7 @@ class Overview extends StatelessWidget {
     await context.read<ComponentsProvider>().components.then(
           (value) => counts[1] = value.length,
         );
+    counts[2] = context.read<VehiclesProvider>().containers.length;
     return counts;
   }
 
@@ -30,6 +32,7 @@ class Overview extends StatelessWidget {
     /// Watch inside of the function not possible.
     context.watch<UsersProvider>();
     context.watch<ComponentsProvider>();
+    context.watch<VehiclesProvider>();
 
     return ExpandedAppBar(
       expandedHeight: 150,
@@ -57,7 +60,7 @@ class Overview extends StatelessWidget {
 
           return AppStatistics(
             loading: false,
-            vehicleCount: 0,
+            vehicleCount: snapshot.data![2],
             partCount: snapshot.data![1],
             userCount: snapshot.data![0],
           );
