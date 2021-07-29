@@ -48,6 +48,17 @@ class CCViewProvider extends BaseProvider {
   /// Used to filter components list.
   late List<ComponentCategories> _allowedCategories;
 
+  /// Used to be able to easier build menus.
+  static List<ComponentContainerPage> get containerSpecificPages {
+    return const [
+      ComponentContainerPage.currentState,
+      ComponentContainerPage.updates,
+      ComponentContainerPage.addUpdate,
+      ComponentContainerPage.addEvent,
+      ComponentContainerPage.addComponent,
+    ];
+  }
+
   /// Either switch pages of the current container or switch to another container.
   void switchTo(
     ComponentContainerPage page, {

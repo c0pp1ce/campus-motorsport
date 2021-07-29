@@ -57,12 +57,15 @@ class ComponentContainer {
     final List<Update> updates = List.empty(growable: true);
     final List<Update> currentState = List.empty(growable: true);
     final List<String> components =
-        json['components'] ?? List.empty(growable: true);
+        (json['components'] as List?)?.cast<String>() ??
+            List.empty(growable: true);
 
-    for (final update in json['updates'] as List<Map<String, dynamic>>) {
+    for (final update
+        in (json['updates'] as List).cast<Map<String, dynamic>>()) {
       updates.add(Update.fromJson(update));
     }
-    for (final update in json['current-state'] as List<Map<String, dynamic>>) {
+    for (final update
+        in (json['updates'] as List).cast<Map<String, dynamic>>()) {
       currentState.add(Update.fromJson(update));
     }
 

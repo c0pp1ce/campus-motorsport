@@ -1,10 +1,12 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
 import 'package:campus_motorsport/provider/base_provider.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 import 'package:flutter/cupertino.dart';
 
 class CCProvider extends BaseProvider {
   CCProvider({this.type});
 
+  final CrudCompContainer _crudCompContainer = CrudCompContainer();
   ComponentContainerTypes? type;
   List<ComponentContainer>? _containers;
 
@@ -25,18 +27,16 @@ class CCProvider extends BaseProvider {
   }
 
   Future<void> reload(bool buildSafe) async {
-    _containers = [];
-    //_containers = await _crudComponent.getComponents() ?? [];
-    switch (type) {
-      case ComponentContainerTypes.stock:
-        // TODO: Only stocks.
-        break;
-      case ComponentContainerTypes.vehicle:
-        // TODO : Only vehicles.
-        break;
-      case null:
-        // TODO : All containers.
-        break;
+    /// Get all containers.
+    final List<ComponentContainer> containers =
+        await _crudCompContainer.getContainers() ?? [];
+
+    /// Filter based on provider type.
+    if (type != null) {
+      _containers =
+          containers.where((element) => element.type == type).toList();
+    } else {
+      _containers = containers;
     }
     if (buildSafe) {
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {

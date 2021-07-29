@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
+import 'package:campus_motorsport/provider/component_containers/cc_provider.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
@@ -13,6 +14,7 @@ import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 class AddContainer extends StatefulWidget {
   const AddContainer({Key? key}) : super(key: key);
@@ -175,6 +177,14 @@ class _AddContainerState extends State<AddContainer> {
         _loading = false;
       });
       if (success) {
+        switch (type) {
+          case ComponentContainerTypes.stock:
+            context.read<StocksProvider>().reload(false);
+            break;
+          case ComponentContainerTypes.vehicle:
+            context.read<VehiclesProvider>().reload(false);
+            break;
+        }
         _reset();
       } else {
         _showErrorDialog();
