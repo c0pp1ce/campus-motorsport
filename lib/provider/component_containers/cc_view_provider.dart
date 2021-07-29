@@ -64,6 +64,7 @@ class CCViewProvider extends BaseProvider {
       currentPage = page;
       if (currentPage == ComponentContainerPage.currentState ||
           currentPage == ComponentContainerPage.updates) {
+        resetAllowedCategories(false);
         allowContextDrawer = true;
       } else {
         allowContextDrawer = false;
@@ -86,10 +87,12 @@ class CCViewProvider extends BaseProvider {
     }
   }
 
-  void resetAllowedCategories() {
+  void resetAllowedCategories([bool notifyListeners = true]) {
     _allowedCategories.clear();
     _addAllCategories();
-    notify();
+    if(notifyListeners) {
+      notify();
+    }
   }
 
   void _addAllCategories() {

@@ -2,8 +2,80 @@ import 'package:campus_motorsport/models/component_containers/component_containe
 import 'package:campus_motorsport/provider/component_containers/cc_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/add_container.dart';
+import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
+import 'package:campus_motorsport/widgets/general/stacked_ui/context_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+class ComponentContainersView extends StatelessWidget {
+  const ComponentContainersView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final CCViewProvider ccViewProvider = context.watch<CCViewProvider>();
+    switch (ccViewProvider.currentPage) {
+      case ComponentContainerPage.currentState:
+        return ExpandedAppBar(
+          appbarTitle: Text('TODO'),
+          appbarChild: Container(),
+        );
+      case ComponentContainerPage.updates:
+        return ExpandedAppBar(
+          appbarTitle: Text('TODO'),
+          appbarChild: Container(),
+        );
+      case ComponentContainerPage.addUpdate:
+        return ExpandedAppBar(
+          appbarTitle: Text('TODO'),
+          appbarChild: Container(),
+        );
+      case ComponentContainerPage.addEvent:
+        return ExpandedAppBar(
+          appbarTitle: Text('TODO'),
+          appbarChild: Container(),
+        );
+      case ComponentContainerPage.addComponent:
+        return ExpandedAppBar(
+          appbarTitle: Text('TODO'),
+          appbarChild: Container(),
+        );
+      case ComponentContainerPage.addContainer:
+        return AddContainer();
+      case ComponentContainerPage.noContainers:
+        return ExpandedAppBar(
+          appbarTitle: Text('TODO'),
+          appbarChild: Container(),
+        );
+    }
+  }
+}
+
+class ComponentContainersContext extends StatelessWidget {
+  const ComponentContainersContext({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final CCViewProvider ccViewProvider = context.watch<CCViewProvider>();
+    switch (ccViewProvider.currentPage) {
+      case ComponentContainerPage.currentState:
+        return ContextDrawer(); // TODO : Filter list
+      case ComponentContainerPage.updates:
+        return ContextDrawer(); // TODO : Filter list
+      case ComponentContainerPage.addUpdate:
+        break;
+      case ComponentContainerPage.addEvent:
+        break;
+      case ComponentContainerPage.addComponent:
+        break;
+      case ComponentContainerPage.addContainer:
+        break;
+      case ComponentContainerPage.noContainers:
+        break;
+    }
+    return const SizedBox();
+  }
+}
 
 class ComponentContainersSecondary extends StatelessWidget {
   const ComponentContainersSecondary({

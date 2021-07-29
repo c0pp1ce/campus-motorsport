@@ -55,13 +55,13 @@ class _MainNavigatorState extends State<MainNavigator> {
     assert(user != null, 'Logged in users should never be null.');
     _pages = [
       Home(),
-      Scaffold(), // vehicles
+      ComponentContainersView(), // vehicles, stocks
       ComponentsView(),
       if (user!.isAdmin) UserManagement(),
     ];
     _contextMenus = [
       HomeContext(),
-      Scaffold(), // vehicles
+      ComponentContainersContext(), // vehicles, stocks
       ComponentsViewContext(), // components
       if (user.isAdmin) null, // user management
     ];

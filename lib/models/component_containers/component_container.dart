@@ -23,7 +23,7 @@ extension ComponentContainerTypeNames on ComponentContainerTypes {
 /// update to each component.
 class ComponentContainer {
   ComponentContainer({
-    required this.id,
+    this.id,
     required this.name,
     required this.type,
     this.image,
@@ -33,7 +33,7 @@ class ComponentContainer {
   });
 
   /// Document id.
-  String id;
+  String? id;
   String name;
   ComponentContainerTypes type;
   CMImage? image;
@@ -84,10 +84,10 @@ class ComponentContainer {
       'type': type.name,
     };
 
-    if (image != null) {
+    if (image?.imageProvider != null) {
       await image!.uploadImageToFirebaseStorage();
       assert(image?.url != null, 'Upload failed or no URL stored');
-      json['image'] = image!.url!;
+      json['image'] = image!.url;
     }
 
     json['updates'] = List.empty(growable: true);

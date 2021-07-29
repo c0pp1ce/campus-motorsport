@@ -102,7 +102,7 @@ class _AddComponentState extends State<AddComponent> {
                 splashRadius: SizeConfig.iconButtonSplashRadius,
               ),
             ],
-      offsetBeforeTitleShown: 70,
+      offsetBeforeTitleShown: 60,
       body: VehicleComponent(
         key: _vehicleKey,
         create: true,

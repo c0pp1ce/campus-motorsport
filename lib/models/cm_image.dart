@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 /// Simple wrapper class used for image picker and displaying images.
 class CMImage {
@@ -33,11 +34,15 @@ class CMImage {
       final String uid = FirebaseAuth.instance.currentUser?.uid ?? 'NO-ID';
 
       /// File name is a mix of user id and upload time.
-      final Reference reference =
-          FirebaseStorage.instance.ref().child('images/$uid-${DateTime.now()}');
+      final format = DateFormat('yyyy-MM-dd-hh-mm');
+      final Reference reference = FirebaseStorage.instance
+          .ref()
+          .child('images/$uid-${format.format(DateTime.now())}');
 
       /// Upload the image
-      final TaskSnapshot taskSnapshot = await reference.putFile(File(path!));
+      final TaskSnapshot taskSnapshot = await reference.putFile(
+        File(path!),
+      );
 
       /// Check success
       if (taskSnapshot.state != TaskState.success) {

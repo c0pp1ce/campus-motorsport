@@ -52,6 +52,7 @@ class _CMImagePickerState extends State<CMImagePicker> {
                         MaterialPageRoute(
                           builder: (context) => ImageView(
                             heroTag: widget.heroTag,
+                            image: widget.imageFile.imageProvider,
                           ),
                         ),
                       );
@@ -130,12 +131,12 @@ class _CMImagePickerState extends State<CMImagePicker> {
     if (result == null) {
       return;
     }
-    final String path = File.fromRawPath(result).path;
+    img.writeAsBytesSync(result);
     setState(() {
       widget.imageFile.imageProvider = MemoryImage(result);
-      widget.imageFile.path = path;
+      widget.imageFile.path = img.path;
       if (widget.saveImage != null) {
-        widget.saveImage!(result, path);
+        widget.saveImage!(result, img.path);
       }
     });
   }
