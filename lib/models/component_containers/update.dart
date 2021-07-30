@@ -3,6 +3,8 @@ import 'package:campus_motorsport/models/components/component.dart';
 /// State update to one component. Stores the new component data as well as the
 /// date of the update. Furthermore it contains an identifier by whom this update
 /// has been made.
+///
+/// [date] needs to be as precise as possible.
 class Update {
   Update({
     required this.component,

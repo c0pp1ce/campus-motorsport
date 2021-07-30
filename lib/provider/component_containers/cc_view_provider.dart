@@ -85,6 +85,10 @@ class CCViewProvider extends BaseProvider {
     }
   }
 
+  /// Attention : If any widget is not listening to this provider but only
+  /// to one of the data providers [VehiclesProvider] / [StocksProvider] then this
+  /// widget will potentially not see any changes fetched by this reload.
+  /// TODO : Determine if the data providers should send a notify instead since this provider listens to them.
   Future<void> reloadCurrentlyOpen() async {
     if (currentlyOpen?.id == null) {
       return;

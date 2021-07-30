@@ -57,7 +57,7 @@ class BaseComponent {
   });
 
   /// Equals docId in the components collection.
-  final String? id;
+  String? id;
   final String name;
   ComponentStates state;
 
@@ -65,7 +65,7 @@ class BaseComponent {
   final List<String>? usedBy;
   ComponentCategories category;
 
-  static BaseComponent fromJson(Map<String, dynamic> json, [String? docId]) {
+  static BaseComponent fromJson(Map<String, dynamic> json) {
     final String stateName = json['state'];
 
     /// Get state.
@@ -94,7 +94,7 @@ class BaseComponent {
     }
 
     return BaseComponent(
-      id: docId,
+      id: json['id'],
       name: json['name'],
       state: state,
       usedBy: _usedBy,
@@ -104,6 +104,7 @@ class BaseComponent {
 
   Future<Map<String, dynamic>> toJson() async {
     return {
+      'id': id,
       'name': name,
       'state': state.name,
       'usedBy': usedBy ?? <String>[],
@@ -142,7 +143,7 @@ class ExtendedComponent extends BaseComponent {
 
   static ExtendedComponent fromJson(Map<String, dynamic> json,
       [String? docId]) {
-    final BaseComponent baseComponent = BaseComponent.fromJson(json, docId);
+    final BaseComponent baseComponent = BaseComponent.fromJson(json);
     final List<DataInput> additionalData = List.empty(growable: true);
 
     for (final Map<String, dynamic> dataInput in json['additionalData']) {

@@ -13,10 +13,13 @@ class CrudComponent {
   }) async {
     try {
       /// Create the new part.
-      //final DocumentReference doc =
-      await _firestore.collection('components').add(
+      final DocumentSnapshot<Map<String, dynamic>> document =
+          await _firestore.collection('users').doc().get();
+      component.id = document.id;
+      await _firestore.collection('components').doc(document.id).set(
             await component.toJson(),
           );
+
       return true;
     } on Exception catch (e) {
       print(e.toString());
@@ -45,8 +48,11 @@ class CrudComponent {
   Future<List<BaseComponent>?> getComponents() async {
     try {
       /// Get all documents of the collection.
-      final QuerySnapshot<Map<String, dynamic>> result =
-          await _firestore.collection('components').get();
+      final QuerySnapshot<Map<String, dynamic>> result = await _firestore
+          .collection('components')
+          .orderBy('category')
+          .orderBy('name')
+          .get();
 
       /// Fill the list.
       final List<BaseComponent> resultList = List.empty(growable: true);
@@ -55,7 +61,7 @@ class CrudComponent {
         if (doc.data().containsKey('additionalData')) {
           resultList.add(ExtendedComponent.fromJson(doc.data(), doc.id));
         } else {
-          resultList.add(BaseComponent.fromJson(doc.data(), doc.id));
+          resultList.add(BaseComponent.fromJson(doc.data()));
         }
       }
 
