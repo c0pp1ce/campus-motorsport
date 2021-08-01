@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/components/component.dart';
+import 'package:campus_motorsport/provider/component_containers/cc_provider.dart';
 import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
@@ -182,15 +183,17 @@ class _AllComponentsState extends State<AllComponents> {
             final bool success = await CrudComponent().deleteComponent(
               component,
             );
-            setState(() {
-              _loading = false;
-            });
             if (!success) {
               _showErrorDialog();
             } else {
               /// Remove component from the list.
-              context.read<ComponentsProvider>().removeComponent(component);
+              await context.read<ComponentsProvider>().reload();
+              await context.read<StocksProvider>().reload(false);
+              await context.read<VehiclesProvider>().reload(false);
             }
+            setState(() {
+              _loading = false;
+            });
           },
         ),
       ),

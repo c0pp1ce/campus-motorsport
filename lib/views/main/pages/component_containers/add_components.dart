@@ -241,12 +241,14 @@ class _AddComponentsState extends State<AddComponents> {
     );
 
     if (success) {
+      await context.read<ComponentsProvider>().reload();
       await context.read<CCViewProvider>().reloadCurrentlyOpen();
     } else {
       _showErrorDialog();
     }
 
     setState(() {
+      selected = [];
       loading = false;
     });
   }

@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/components/component.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Create, Read, Update, Delete vehicle components in firebase.
@@ -86,14 +87,20 @@ class CrudComponent {
         /// Get the most recent data.
         final Object? data = componentSnapshot.data();
         if (data != null) {
-          final BaseComponent component = BaseComponent.fromJson(
+          final BaseComponent _component = BaseComponent.fromJson(
             data as Map<String, dynamic>,
           );
 
           /// Delete component from vehicles/storages.
-          if (component.usedBy?.isNotEmpty ?? false) {
-            // TODO : For each id get vehicle doc
-            // TODO : The for each doc delete component from it
+          if (_component.usedBy?.isNotEmpty ?? false) {
+            final CrudCompContainer crudCompContainer = CrudCompContainer();
+
+            for (final id in _component.usedBy!) {
+              await crudCompContainer.deleteComponent(
+                docId: id,
+                componentId: _component.id!,
+              );
+            }
           }
 
           /// Delete component doc

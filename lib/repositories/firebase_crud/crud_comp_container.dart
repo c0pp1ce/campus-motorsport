@@ -127,7 +127,8 @@ class CrudCompContainer {
     }
   }
 
-  /// Adds the given components to the container.
+  /// Adds the given components to the container and updates the components usedBy
+  /// list.
   Future<bool> addComponents({
     required String docId,
     required List<String> data,
@@ -136,8 +137,24 @@ class CrudCompContainer {
       return true;
     }
     try {
-      await _firestore.collection('component-containers').doc(docId).update({
-        'components': FieldValue.arrayUnion(data),
+      _firestore.runTransaction((transaction) async {
+        /// Update component container.
+        transaction.update(
+          _firestore.collection('component-containers').doc(docId),
+          {
+            'components': FieldValue.arrayUnion(data),
+          },
+        );
+
+        /// Update each added component.
+        for (final id in data) {
+          transaction.update(
+            _firestore.collection('components').doc(id),
+            {
+              'usedBy': FieldValue.arrayUnion([docId]),
+            },
+          );
+        }
       });
       return true;
     } on Exception catch (e) {
@@ -210,7 +227,8 @@ class CrudCompContainer {
 
         bool componentFound = false;
         Map<String, dynamic>? matchingUpdate;
-        for (final update in data['updates'] as List<Map<String, dynamic>>) {
+        for (final update
+            in (data['updates'] as List).cast<Map<String, dynamic>>()) {
           if ((update['component'] as Map<String, dynamic>?)?['id'] ==
               componentId) {
             componentFound = true;
