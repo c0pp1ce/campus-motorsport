@@ -108,7 +108,7 @@ class ComponentContainersSecondary extends StatelessWidget {
                             ? Theme.of(context).colorScheme.primary
                             : ColorServices.darken(
                                 Theme.of(context).colorScheme.onSurface,
-                                40,
+                                SizeConfig.darkenTextColorBy,
                               ),
                       ),
                 ),
@@ -164,7 +164,7 @@ class ComponentContainersSecondary extends StatelessWidget {
               style: Theme.of(context).textTheme.headline6?.copyWith(
                     color: ColorServices.darken(
                       Theme.of(context).colorScheme.onSurface,
-                      40,
+                      SizeConfig.darkenTextColorBy,
                     ),
                   ),
             ),

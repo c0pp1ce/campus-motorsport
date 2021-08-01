@@ -11,6 +11,7 @@ import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_image_picker.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
+import 'package:campus_motorsport/widgets/unused_components.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -95,6 +96,18 @@ class _CurrentStateState extends State<CurrentState> {
         ],
       ),
       actions: isAdmin ? _buildActions(context, viewProvider) : null,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: SizeConfig.basePadding,
+        ),
+        child: Column(
+          children: <Widget>[
+            UnusedComponents(
+              key: ValueKey(viewProvider.currentlyOpen!.id!),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

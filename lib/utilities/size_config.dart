@@ -31,6 +31,7 @@ class SizeConfig {
   static const double baseBorderRadius = 15.0;
   static const double baseBackgroundElevation = 5.0;
   static const double iconButtonSplashRadius = 25;
+  static const int darkenTextColorBy = 40;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);

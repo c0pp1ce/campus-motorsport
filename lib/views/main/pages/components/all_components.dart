@@ -10,6 +10,7 @@ import 'package:campus_motorsport/widgets/components/expansion_component.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
+import 'package:campus_motorsport/widgets/general/layout/list_sub_header.dart';
 import 'package:campus_motorsport/widgets/general/layout/loading_list.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
@@ -104,12 +105,8 @@ class _AllComponentsState extends State<AllComponents> {
                 const SizedBox(
                   height: SizeConfig.basePadding,
                 ),
-              Text(
-                components[index].category.name,
-                style: Theme.of(context).textTheme.headline6?.copyWith(
-                      color: ColorServices.darken(
-                          Theme.of(context).colorScheme.onSurface, 40),
-                    ),
+              ListSubHeader(
+                header: components[index].category.name,
               ),
               const SizedBox(
                 height: SizeConfig.basePadding,
