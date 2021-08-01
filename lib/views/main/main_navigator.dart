@@ -269,7 +269,7 @@ class _MainNavigatorState extends State<MainNavigator> {
           }
         case ComponentContainerTypes.vehicle:
           late final bool objectNotFound;
-          final o = stocksProvider.containers.firstWhere(
+          final o = vehicleProvider.containers.firstWhere(
               (element) => element.id == viewProvider.currentlyOpen!.id,
               orElse: () {
             return ComponentContainer(

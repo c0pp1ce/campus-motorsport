@@ -60,6 +60,13 @@ class CCViewProvider extends BaseProvider {
     ];
   }
 
+  static List<ComponentContainerPage> get containerSpecificAdminOnlyPages {
+    return const [
+      ComponentContainerPage.addEvent,
+      ComponentContainerPage.addComponent,
+    ];
+  }
+
   /// Either switch pages of the current container or switch to another container.
   void switchTo(
     ComponentContainerPage page, {
@@ -169,7 +176,7 @@ extension ComponentsPageExtension on ComponentContainerPage {
       case ComponentContainerPage.updates:
         return 'Alle Wartungen';
       case ComponentContainerPage.addComponent:
-        return 'Komponente hinzufügen';
+        return 'Komponenten hinzufügen';
       case ComponentContainerPage.noContainers:
         return 'Nichts gefunden';
     }

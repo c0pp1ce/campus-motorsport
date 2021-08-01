@@ -20,9 +20,7 @@ class Overview extends StatelessWidget {
     await context.read<UsersProvider>().users.then(
           (value) => counts[0] = value.length,
         );
-    await context.read<ComponentsProvider>().components.then(
-          (value) => counts[1] = value.length,
-        );
+    counts[1] = context.read<ComponentsProvider>().components.length;
     counts[2] = context.read<VehiclesProvider>().containers.length;
     return counts;
   }

@@ -6,9 +6,10 @@ class ComponentsProvider extends BaseProvider {
   List<BaseComponent>? _components;
   final CrudComponent _crudComponent = CrudComponent();
 
-  Future<List<BaseComponent>> get components async {
+  List<BaseComponent> get components {
     if (_components == null) {
-      await reload();
+      _components = [];
+      reload();
     }
     return _components!;
   }

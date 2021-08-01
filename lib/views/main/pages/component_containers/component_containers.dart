@@ -3,6 +3,7 @@ import 'package:campus_motorsport/provider/component_containers/cc_view_provider
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/add_components.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_container.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
@@ -19,7 +20,7 @@ class ComponentContainersView extends StatelessWidget {
     switch (ccViewProvider.currentPage) {
       case ComponentContainerPage.currentState:
         return CurrentState(
-          key: ValueKey(ccViewProvider.currentlyOpen?.id),
+          key: ValueKey('currentState${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.updates:
         return ExpandedAppBar(
@@ -37,9 +38,8 @@ class ComponentContainersView extends StatelessWidget {
           appbarChild: Container(),
         );
       case ComponentContainerPage.addComponent:
-        return ExpandedAppBar(
-          appbarTitle: Text('TODO'),
-          appbarChild: Container(),
+        return AddComponents(
+          key: ValueKey('addComponents${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.addContainer:
         return AddContainer();
@@ -106,7 +106,10 @@ class ComponentContainersSecondary extends StatelessWidget {
                         color: ccViewProvider.currentPage ==
                                 ComponentContainerPage.addContainer
                             ? Theme.of(context).colorScheme.primary
-                            : null,
+                            : ColorServices.darken(
+                                Theme.of(context).colorScheme.onSurface,
+                                40,
+                              ),
                       ),
                 ),
                 onTap: () {
@@ -117,10 +120,10 @@ class ComponentContainersSecondary extends StatelessWidget {
             ],
 
             /// Stocks
-            ..._buildList(true, true, context, ccViewProvider),
+            ..._buildList(true, true, context, ccViewProvider, isAdmin),
 
             /// Vehicles
-            ..._buildList(false, false, context, ccViewProvider),
+            ..._buildList(false, false, context, ccViewProvider, isAdmin),
           ],
         ),
       ),
@@ -132,6 +135,7 @@ class ComponentContainersSecondary extends StatelessWidget {
     bool divider,
     BuildContext context,
     CCViewProvider ccViewProvider,
+    bool isAdmin,
   ) {
     if ((ccViewProvider.stocks.isEmpty && stocks) ||
         (ccViewProvider.vehicles.isEmpty && !stocks)) {
@@ -182,6 +186,11 @@ class ComponentContainersSecondary extends StatelessWidget {
                   ),
             ),
             children: CCViewProvider.containerSpecificPages.map((page) {
+              if (!isAdmin &&
+                  CCViewProvider.containerSpecificAdminOnlyPages
+                      .contains(page)) {
+                return const SizedBox();
+              }
               return ListTile(
                 contentPadding: EdgeInsets.only(
                   left: SizeConfig.basePadding * 4,

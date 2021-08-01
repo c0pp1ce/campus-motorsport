@@ -59,48 +59,82 @@ class _AllComponentsState extends State<AllComponents> {
 
   Widget _buildBody(
       BuildContext context, bool isAdmin, ComponentsProvider provider) {
-    return _loading
-        ? LoadingList()
-        : FutureBuilder(
-            future: provider.components,
-            builder: (context, AsyncSnapshot<List<BaseComponent>> snapshot) {
-              if (snapshot.hasData ||
-                  snapshot.connectionState == ConnectionState.done) {
-                /// Future done but no data.
-                if (snapshot.data?.isEmpty ?? true) {
-                  return Center(
-                    child: const Text('Keine Komponenten gefunden.'),
-                  );
-                }
+    return _loading ? LoadingList() : _buildList(context, provider, isAdmin);
+  }
 
-                /// Display the components
-                /// Apply the filter.
-                final ComponentsViewProvider viewProvider =
-                    context.watch<ComponentsViewProvider>();
-                final List<BaseComponent> components = snapshot.data!
-                    .where((element) => viewProvider.allowedCategories
-                        .contains(element.category))
-                    .toList();
+  Widget _buildList(
+      BuildContext context, ComponentsProvider provider, bool isAdmin) {
+    if (provider.components.isEmpty) {
+      /// Future done but no data.
+      return Center(
+        child: const Text('Keine Komponenten gefunden.'),
+      );
+    }
 
-                return ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: components.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return ExpansionComponent(
-                      key: ValueKey(
-                        components[index].id ?? components[index].name,
-                      ),
-                      component: components[index],
-                      isAdmin: isAdmin,
-                      showDeleteDialog: _showDeleteDialog,
-                    );
-                  },
-                );
-              }
-              return const SizedBox();
-            },
+    /// Display the components
+    /// Apply the filter.
+    final ComponentsViewProvider viewProvider =
+        context.watch<ComponentsViewProvider>();
+    final List<BaseComponent> components = provider.components
+        .where((element) =>
+            viewProvider.allowedCategories.contains(element.category))
+        .toList();
+
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: components.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        late final bool categoryChanged;
+        if (index == 0) {
+          categoryChanged = true;
+        } else {
+          if (components[index - 1].category != components[index].category) {
+            categoryChanged = true;
+          } else {
+            categoryChanged = false;
+          }
+        }
+
+        if (categoryChanged) {
+          return Column(
+            children: <Widget>[
+              if (index != 0)
+                const SizedBox(
+                  height: SizeConfig.basePadding,
+                ),
+              Text(
+                components[index].category.name,
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: ColorServices.darken(
+                          Theme.of(context).colorScheme.onSurface, 40),
+                    ),
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding,
+              ),
+              ExpansionComponent(
+                key: ValueKey(
+                  components[index].id ?? components[index].name,
+                ),
+                component: components[index],
+                isAdmin: isAdmin,
+                showDeleteDialog: _showDeleteDialog,
+              ),
+            ],
           );
+        } else {
+          return ExpansionComponent(
+            key: ValueKey(
+              components[index].id ?? components[index].name,
+            ),
+            component: components[index],
+            isAdmin: isAdmin,
+            showDeleteDialog: _showDeleteDialog,
+          );
+        }
+      },
+    );
   }
 
   void _showDeleteDialog(BaseComponent component) {
