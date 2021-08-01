@@ -106,26 +106,29 @@ class StackedUIState extends State<StackedUI>
           width: SizeConfig.screenWidth,
           height: SizeConfig.screenHeight,
           color: Theme.of(context).colorScheme.surface,
-          child: AnimatedBuilder(
-            animation: animationController,
-            builder: (context, _) {
-              final double slide = maxSlide * animationController.value;
-              return Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  _buildIndexedStack(context),
-                  BuildMainView(
-                    toggle: toggle,
-                    canToggle: animationController.isCompleted,
-                    slide: slide,
-                    hasContextDrawer: widget.contextDrawer != null &&
-                        widget.allowSlideToContext,
-                    mainView: widget.mainView,
-                    mainViewOpen: mainViewOpen,
-                  ),
-                ],
-              );
-            },
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              _buildIndexedStack(context),
+              AnimatedBuilder(
+                animation: animationController,
+                child: BuildMainView(
+                  toggle: toggle,
+                  canToggle: animationController.isCompleted,
+                  hasContextDrawer: widget.contextDrawer != null &&
+                      widget.allowSlideToContext,
+                  mainView: widget.mainView,
+                  mainViewOpen: mainViewOpen,
+                ),
+                builder: (context, child) {
+                  final double slide = maxSlide * animationController.value;
+                  return Transform(
+                    transform: Matrix4.identity()..translate(slide),
+                    child: child!,
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -247,7 +250,6 @@ class BuildMainView extends StatelessWidget {
   const BuildMainView({
     required this.toggle,
     required this.canToggle,
-    required this.slide,
     required this.hasContextDrawer,
     required this.mainView,
     required this.mainViewOpen,
@@ -255,7 +257,6 @@ class BuildMainView extends StatelessWidget {
   }) : super(key: key);
 
   final void Function() toggle;
-  final double slide;
   final bool canToggle;
   final bool hasContextDrawer;
   final bool mainViewOpen;
@@ -263,46 +264,45 @@ class BuildMainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Transform(
-      transform: Matrix4.identity()..translate(slide),
-      child: GestureDetector(
-        onTap: canToggle ? toggle : null,
-        child: Stack(
-          children: <Widget>[
-            mainView,
-            if (mainViewOpen && hasContextDrawer)
-              RepaintBoundary(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Transform.translate(
-                    offset: const Offset(13, 0),
-                    child: SizedBox(
-                      width: 26,
-                      height: 26,
-                      child: Material(
-                        color: Theme.of(context).colorScheme.surface,
-                        elevation: SizeConfig.baseBackgroundElevation,
-                        borderRadius: BorderRadius.circular(30),
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+    return GestureDetector(
+      onTap: canToggle ? toggle : null,
+      child: Stack(
+        children: <Widget>[
+          RepaintBoundary(
+            child: mainView,
+          ),
+          if (mainViewOpen && hasContextDrawer)
+            RepaintBoundary(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Transform.translate(
+                  offset: const Offset(13, 0),
+                  child: SizedBox(
+                    width: 26,
+                    height: 26,
+                    child: Material(
+                      color: Theme.of(context).colorScheme.surface,
+                      elevation: SizeConfig.baseBackgroundElevation,
+                      borderRadius: BorderRadius.circular(30),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
                 ),
               ),
-            if (!mainViewOpen)
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(SizeConfig.baseBorderRadius),
-                  ),
+            ),
+          if (!mainViewOpen)
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(SizeConfig.baseBorderRadius),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

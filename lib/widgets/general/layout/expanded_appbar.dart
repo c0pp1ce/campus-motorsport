@@ -117,18 +117,20 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
 
   Widget _buildContent(BuildContext context, bool refresh) {
     return SizedBox(
-      height:  double.infinity,
+      height: double.infinity,
       child: SingleChildScrollView(
         padding: EdgeInsets.zero,
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
         ),
         controller: _scrollController,
-        child: Column(
-          children: <Widget>[
-            _buildAppBarChild(context),
-            widget.body,
-          ],
+        child: RepaintBoundary(
+          child: Column(
+            children: <Widget>[
+              _buildAppBarChild(context),
+              widget.body,
+            ],
+          ),
         ),
       ),
     );
@@ -168,16 +170,14 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
 
         /// Padding to not clip shadow on the bottom side.
         padding: const EdgeInsets.only(bottom: 20),
-        child: RepaintBoundary(
-          child: Material(
-            /// Color of the header part == Color of the app bar.
-            /// Creates the shadow.
-            color: Theme.of(context).colorScheme.surface,
-            elevation: MainView.appBarElevation,
-            shadowColor:
-                ColorServices.brighten(Theme.of(context).shadowColor, 20),
-            child: widget.appbarChild,
-          ),
+        child: Material(
+          /// Color of the header part == Color of the app bar.
+          /// Creates the shadow.
+          color: Theme.of(context).colorScheme.surface,
+          elevation: MainView.appBarElevation,
+          shadowColor:
+              ColorServices.brighten(Theme.of(context).shadowColor, 20),
+          child: widget.appbarChild,
         ),
       ),
     );

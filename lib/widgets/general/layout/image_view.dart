@@ -20,14 +20,17 @@ class ImageView extends StatelessWidget {
       body: Center(
         child: Hero(
           tag: ValueKey(heroTag),
-          child: InteractiveViewer(
-            panEnabled: true,
-            boundaryMargin: EdgeInsets.zero,
-            minScale: 0.5,
-            maxScale: 2.5,
-            child: Image(
-              image: image ??
-                  const AssetImage('assets/images/designer_edited.jpg'),
+          child: SizedBox(
+            height: double.infinity,
+            child: InteractiveViewer(
+              panEnabled: true,
+              boundaryMargin: EdgeInsets.zero,
+              minScale: 0.5,
+              maxScale: 2.5,
+              child: Image(
+                image: image ??
+                    const AssetImage('assets/images/designer_edited.jpg'),
+              ),
             ),
           ),
         ),
