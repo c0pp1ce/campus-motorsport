@@ -37,7 +37,6 @@ class ContextDrawer extends StatelessWidget {
     return SafeArea(
       child: Container(
         height: double.infinity,
-        width: double.infinity,
         margin: const EdgeInsets.only(right: 5.0),
         padding: const EdgeInsets.all(SizeConfig.basePadding),
 
@@ -47,9 +46,10 @@ class ContextDrawer extends StatelessWidget {
             top: Radius.circular(SizeConfig.baseBorderRadius),
           ),
           color: ElevationOverlay.applyOverlay(
-              context,
-              Theme.of(context).colorScheme.surface,
-              SizeConfig.baseBackgroundElevation),
+            context,
+            Theme.of(context).colorScheme.surface,
+            SizeConfig.baseBackgroundElevation,
+          ),
         ),
         child: child,
       ),

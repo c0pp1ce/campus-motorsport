@@ -64,9 +64,8 @@ class NavigationDrawer extends StatelessWidget {
   /// Places the [secondaryItem] of each [NavigationItemData] in a predefined [Container]
   /// with maximum available height and width.
   Widget _buildSecondary(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        height: double.infinity,
+    return Container(
+      height: double.infinity,
 
         /// Should be the same as used in the other [StackedUI] widgets.
         decoration: BoxDecoration(
@@ -80,17 +79,18 @@ class NavigationDrawer extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.all(SizeConfig.basePadding),
-        child: AnimatedSwitcher(
-          child: navigationItems[selected].secondaryItem,
-          duration: const Duration(milliseconds: 300),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return ScaleTransition(
-              child: child,
-              scale: animation,
-            );
-          },
+        child: RepaintBoundary(
+          child: AnimatedSwitcher(
+            child: navigationItems[selected].secondaryItem,
+            duration: Duration.zero,
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(
+                child: child,
+                scale: animation,
+              );
+            },
+          ),
         ),
-      ),
-    );
+      );
   }
 }

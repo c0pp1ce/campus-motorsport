@@ -73,17 +73,19 @@ class StackedUIState extends State<StackedUI>
 
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 250),
+      duration: Duration(milliseconds: 300),
     );
     animationController.addStatusListener((status) {
       /// Used to apply the color overlay when main view is inactive.
-      setState(() {
-        if (status == AnimationStatus.dismissed) {
+      if (status == AnimationStatus.dismissed && !mainViewOpen) {
+        setState(() {
           mainViewOpen = true;
-        } else if (status == AnimationStatus.completed) {
+        });
+      } else if (status == AnimationStatus.completed && mainViewOpen) {
+        setState(() {
           mainViewOpen = false;
-        }
-      });
+        });
+      }
     });
   }
 
@@ -112,56 +114,19 @@ class StackedUIState extends State<StackedUI>
                 fit: StackFit.expand,
                 children: <Widget>[
                   _buildIndexedStack(context),
-                  _buildMainView(context, slide),
+                  BuildMainView(
+                    toggle: toggle,
+                    canToggle: animationController.isCompleted,
+                    slide: slide,
+                    hasContextDrawer: widget.contextDrawer != null &&
+                        widget.allowSlideToContext,
+                    mainView: widget.mainView,
+                    mainViewOpen: mainViewOpen,
+                  ),
                 ],
               );
             },
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMainView(BuildContext context, double slide) {
-    return Transform(
-      transform: Matrix4.identity()..translate(slide),
-      child: GestureDetector(
-        onTap: animationController.isCompleted ? toggle : null,
-        child: Stack(
-          children: <Widget>[
-            widget.mainView,
-            if (mainViewOpen &&
-                widget.contextDrawer != null &&
-                widget.allowSlideToContext)
-              Align(
-                alignment: Alignment.centerRight,
-                child: Transform.translate(
-                  offset: const Offset(13, 0),
-                  child: SizedBox(
-                    width: 26,
-                    height: 26,
-                    child: Material(
-                      color: Theme.of(context).colorScheme.surface,
-                      elevation: SizeConfig.baseBackgroundElevation,
-                      borderRadius: BorderRadius.circular(30),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            if (!mainViewOpen)
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(SizeConfig.baseBorderRadius),
-                  ),
-                ),
-              ),
-          ],
         ),
       ),
     );
@@ -275,5 +240,70 @@ class StackedUIState extends State<StackedUI>
 
     /// Reset slide direction, so that it will be set again on the next drag.
     slideDirection = null;
+  }
+}
+
+class BuildMainView extends StatelessWidget {
+  const BuildMainView({
+    required this.toggle,
+    required this.canToggle,
+    required this.slide,
+    required this.hasContextDrawer,
+    required this.mainView,
+    required this.mainViewOpen,
+    Key? key,
+  }) : super(key: key);
+
+  final void Function() toggle;
+  final double slide;
+  final bool canToggle;
+  final bool hasContextDrawer;
+  final bool mainViewOpen;
+  final Widget mainView;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform(
+      transform: Matrix4.identity()..translate(slide),
+      child: GestureDetector(
+        onTap: canToggle ? toggle : null,
+        child: Stack(
+          children: <Widget>[
+            mainView,
+            if (mainViewOpen && hasContextDrawer)
+              RepaintBoundary(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Transform.translate(
+                    offset: const Offset(13, 0),
+                    child: SizedBox(
+                      width: 26,
+                      height: 26,
+                      child: Material(
+                        color: Theme.of(context).colorScheme.surface,
+                        elevation: SizeConfig.baseBackgroundElevation,
+                        borderRadius: BorderRadius.circular(30),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            if (!mainViewOpen)
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(SizeConfig.baseBorderRadius),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
