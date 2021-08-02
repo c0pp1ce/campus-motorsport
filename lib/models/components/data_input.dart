@@ -82,6 +82,7 @@ class DataInput {
       } else {
         /// Only store URL of the image inside the db.
         if ((data as CMImage).url == null) {
+          print('attempt to upload image');
           await (data as CMImage).uploadImageToFirebaseStorage();
         }
         final String? url = (data as CMImage).url;

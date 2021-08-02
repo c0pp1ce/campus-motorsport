@@ -69,7 +69,7 @@ class _CurrentStateState extends State<CurrentState> {
     final bool isAdmin = context.watch<CurrentUser>().user?.isAdmin ?? false;
 
     return ExpandedAppBar(
-      offsetBeforeTitleShown: 10,
+      offsetBeforeTitleShown: 5,
       expandedHeight: edit ? 250 : 210,
       appbarTitle: CMTextField(
         style: Theme.of(context).textTheme.headline6?.copyWith(
@@ -102,6 +102,7 @@ class _CurrentStateState extends State<CurrentState> {
         ),
         child: Column(
           children: <Widget>[
+            // TODO : CurrentState updates
             UnusedComponents(
               key: ValueKey(viewProvider.currentlyOpen!.id!),
             ),

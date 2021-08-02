@@ -81,12 +81,13 @@ class CCViewProvider extends BaseProvider {
 
     if (page != currentPage) {
       currentPage = page;
-      if (currentPage == ComponentContainerPage.currentState ||
-          currentPage == ComponentContainerPage.updates) {
+      if (currentPage == ComponentContainerPage.addEvent ||
+          currentPage == ComponentContainerPage.noContainers ||
+          currentPage == ComponentContainerPage.addContainer) {
+        allowContextDrawer = false;
+      } else {
         resetAllowedCategories(false);
         allowContextDrawer = true;
-      } else {
-        allowContextDrawer = false;
       }
       notify();
     }
@@ -168,7 +169,7 @@ extension ComponentsPageExtension on ComponentContainerPage {
       case ComponentContainerPage.currentState:
         return 'Aktueller Zustand';
       case ComponentContainerPage.addUpdate:
-        return 'Wartung eintragen';
+        return 'Wartungen eintragen';
       case ComponentContainerPage.addEvent:
         return 'Event eintragen';
       case ComponentContainerPage.addContainer:

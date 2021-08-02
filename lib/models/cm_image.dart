@@ -47,6 +47,7 @@ class CMImage {
     if (imageProvider is NetworkImage ||
         imageProvider == null ||
         path == null) {
+      print('image upload not needed');
       return false;
     }
     try {

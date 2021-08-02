@@ -5,6 +5,7 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_components.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_container.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/add_updates.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/context_drawer.dart';
@@ -28,9 +29,8 @@ class ComponentContainersView extends StatelessWidget {
           appbarChild: Container(),
         );
       case ComponentContainerPage.addUpdate:
-        return ExpandedAppBar(
-          appbarTitle: Text('TODO'),
-          appbarChild: Container(),
+        return AddUpdates(
+          key: ValueKey('addUpdate${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.addEvent:
         return ExpandedAppBar(
@@ -64,11 +64,11 @@ class ComponentContainersContext extends StatelessWidget {
       case ComponentContainerPage.updates:
         return ContextDrawer(); // TODO : Filter list
       case ComponentContainerPage.addUpdate:
-        break;
+        return ContextDrawer(); // TODO : Filter
       case ComponentContainerPage.addEvent:
         break;
       case ComponentContainerPage.addComponent:
-        break;
+        return ContextDrawer(); // TODO : Filter
       case ComponentContainerPage.addContainer:
         break;
       case ComponentContainerPage.noContainers:

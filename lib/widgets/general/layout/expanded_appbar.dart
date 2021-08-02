@@ -58,7 +58,7 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
 
   @override
   void initState() {
-    _showAppbarTitle = widget.titleAlwaysVisible;
+    _showAppbarTitle = false;
     currentExpandedHeight = widget.expandedHeight;
 
     _scrollController = ScrollController();
