@@ -50,7 +50,9 @@ class _AddUpdatesState extends State<AddUpdates> {
 
     return ExpandedAppBar(
       offsetBeforeTitleShown: 50,
-      appbarTitle: const Text('Wartungen eintragen'),
+      appbarTitle: Text(
+        !selectionFinished ? 'Komponenten auswählen' : 'Wartungen eintragen',
+      ),
       appbarChild: Center(
         child: ExpandedTitle(
           title: !selectionFinished
@@ -81,6 +83,7 @@ class _AddUpdatesState extends State<AddUpdates> {
                 )
               : UpdateComponents(
                   // key: ValueKey('updateComponents${currentContainer.id}'),
+                  currentContainer: currentContainer,
                   selectedComponents: selectedForUpdate,
                   loadingListener: _loadingListener,
                 ),

@@ -48,6 +48,7 @@ class _ComponentStateState extends State<ComponentState> {
                   final int index = value.round();
                   setState(() {
                     currentState = ComponentStates.values[index];
+                    widget.onSaved(ComponentStates.values[index]);
                   });
                 },
         ),
