@@ -32,6 +32,7 @@ class UpdateComponents extends StatefulWidget {
 
 class _UpdateComponentsState extends State<UpdateComponents> {
   late final List<BaseComponent> copiedComponents;
+  late final List<int?> eventCounters;
   late final List<GlobalKey<FormState>> _formKeys;
   int index = 0;
   bool initialized = false;
@@ -44,6 +45,7 @@ class _UpdateComponentsState extends State<UpdateComponents> {
       (index) => GlobalKey(),
       growable: false,
     );
+    eventCounters = List.filled(widget.selectedComponents.length, null);
     super.initState();
   }
 
@@ -65,6 +67,9 @@ class _UpdateComponentsState extends State<UpdateComponents> {
             read: false,
             component: copiedComponents[index],
             previousData: _searchInCurrentState(copiedComponents[index]),
+            onEventCounterSave: (value) {
+              eventCounters[index] = value;
+            },
           ),
         ),
         Padding(
@@ -75,16 +80,18 @@ class _UpdateComponentsState extends State<UpdateComponents> {
             ),
             onPressed: () async {
               if (index < copiedComponents.length - 1) {
-                saveChanges(index);
-                setState(() {
-                  index++;
-                });
+                if (saveChanges(index)) {
+                  setState(() {
+                    index++;
+                  });
+                }
                 return;
               }
 
               /// last component. Save and upload changes.
-              saveChanges(index);
-              uploadUpdates();
+              if (saveChanges(index)) {
+                uploadUpdates();
+              }
             },
           ),
         ),
@@ -92,10 +99,12 @@ class _UpdateComponentsState extends State<UpdateComponents> {
     );
   }
 
-  void saveChanges(int index) {
+  bool saveChanges(int index) {
     if (_formKeys[index].currentState?.validate() ?? false) {
       _formKeys[index].currentState!.save();
+      return true;
     }
+    return false;
   }
 
   Future<void> uploadUpdates() async {
@@ -103,12 +112,15 @@ class _UpdateComponentsState extends State<UpdateComponents> {
     final DateTime updateTime = DateTime.now();
     final String updatedBy = context.read<CurrentUser>().user!.name;
     final List<Update> updates = List.empty(growable: true);
+    int index = 0;
     for (final component in copiedComponents) {
       updates.add(Update(
         component: component,
         date: updateTime,
         by: updatedBy,
+        eventCounter: eventCounters[index],
       ));
+      index++;
     }
 
     final bool success = await CrudCompContainer().addUpdates(
@@ -175,11 +187,10 @@ class _UpdateComponentsState extends State<UpdateComponents> {
     });
   }
 
-  BaseComponent? _searchInCurrentState(BaseComponent component) {
+  Update? _searchInCurrentState(BaseComponent component) {
     try {
       return widget.currentContainer.currentState
-          .firstWhere((element) => element.component.id == component.id)
-          .component;
+          .firstWhere((element) => element.component.id == component.id);
     } on StateError {
       return null;
     }

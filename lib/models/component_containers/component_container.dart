@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:campus_motorsport/models/component_containers/update.dart';
+import 'package:campus_motorsport/models/components/component.dart';
 
 enum ComponentContainerTypes {
   stock,
@@ -44,6 +45,8 @@ class ComponentContainer {
   /// List of component (document)ids by which each component can be retrieved.
   List<String> components;
 
+  /// Sorts the current-state list.
+  /// Reverts the updates list so that newer updates are first.
   static ComponentContainer fromJson(Map<String, dynamic> json, String id) {
     /// Get type.
     final String typeName = json['type'];
@@ -65,9 +68,11 @@ class ComponentContainer {
       updates.add(Update.fromJson(update));
     }
     for (final update
-        in (json['updates'] as List).cast<Map<String, dynamic>>()) {
+        in (json['current-state'] as List).cast<Map<String, dynamic>>()) {
       currentState.add(Update.fromJson(update));
     }
+
+    sortCurrentStateList(currentState);
 
     return ComponentContainer(
       id: id,
@@ -76,7 +81,7 @@ class ComponentContainer {
       image: (json['image'] as String?)?.isNotEmpty ?? false
           ? CMImage.fromUrl(json['image'])
           : null,
-      updates: updates,
+      updates: updates.reversed.toList(),
       currentState: currentState,
       components: components,
     );
@@ -108,5 +113,14 @@ class ComponentContainer {
     json['components'] = components;
 
     return json;
+  }
+
+  static void sortCurrentStateList(List<Update> currentState) {
+    if (currentState.isEmpty) {
+      return;
+    }
+    currentState.sort((a, b) {
+      return BaseComponent.compareComponents(a.component, b.component);
+    });
   }
 }

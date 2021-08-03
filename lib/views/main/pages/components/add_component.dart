@@ -123,10 +123,15 @@ class _AddComponentState extends State<AddComponent> {
 
   /// Form is saved before.
   Future<bool> _save(BuildContext context) async {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return false;
+    }
+
     BaseComponent baseComponent = BaseComponent(
       name: _vehicleKey.currentState!.name!,
       state: ComponentStates.newComponent,
       category: _vehicleKey.currentState!.category!,
+      baseEventCounter: _vehicleKey.currentState!.baseEventCounter,
     );
 
     if (_vehicleKey.currentState!.additionalData?.isNotEmpty ?? false) {

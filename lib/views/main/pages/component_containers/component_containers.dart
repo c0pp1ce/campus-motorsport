@@ -6,6 +6,7 @@ import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_components.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_container.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_updates.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/all_updates.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/context_drawer.dart';
@@ -24,9 +25,8 @@ class ComponentContainersView extends StatelessWidget {
           key: ValueKey('currentState${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.updates:
-        return ExpandedAppBar(
-          appbarTitle: Text('TODO'),
-          appbarChild: Container(),
+        return AllUpdates(
+          key: ValueKey('allUpdate${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.addUpdate:
         return AddUpdates(

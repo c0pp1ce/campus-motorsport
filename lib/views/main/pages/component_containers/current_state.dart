@@ -7,11 +7,14 @@ import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/widgets/component_containers/current_state_overview.dart';
+import 'package:campus_motorsport/widgets/component_containers/state_updates.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_image_picker.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
-import 'package:campus_motorsport/widgets/unused_components.dart';
+import 'package:campus_motorsport/widgets/general/layout/loading_list.dart';
+import 'package:campus_motorsport/widgets/component_containers/unused_components.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -22,6 +25,13 @@ class CurrentState extends StatefulWidget {
   const CurrentState({
     Key? key,
   }) : super(key: key);
+
+  static final Color notUpdated = Colors.grey;
+  static final Color badState = Colors.redAccent;
+  static final Color okState = Colors.yellowAccent;
+  static final Color newState = Colors.greenAccent;
+
+  static double tileStateColorOpacity = 0.05;
 
   @override
   _CurrentStateState createState() => _CurrentStateState();
@@ -69,6 +79,12 @@ class _CurrentStateState extends State<CurrentState> {
     final bool isAdmin = context.watch<CurrentUser>().user?.isAdmin ?? false;
 
     return ExpandedAppBar(
+      onRefresh: viewProvider.reloadCurrentlyOpen,
+      loadingListener: (value) {
+        setState(() {
+          loading = value;
+        });
+      },
       offsetBeforeTitleShown: 5,
       expandedHeight: edit ? 250 : 210,
       appbarTitle: CMTextField(
@@ -96,19 +112,31 @@ class _CurrentStateState extends State<CurrentState> {
         ],
       ),
       actions: isAdmin ? _buildActions(context, viewProvider) : null,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: SizeConfig.basePadding,
-        ),
-        child: Column(
-          children: <Widget>[
-            // TODO : CurrentState updates
-            UnusedComponents(
-              key: ValueKey(viewProvider.currentlyOpen!.id!),
+      body: loading
+          ? const LoadingList()
+          : Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SizeConfig.basePadding,
+              ),
+              child: Column(
+                children: <Widget>[
+                  CurrentStateOverview(),
+                  const SizedBox(
+                    height: SizeConfig.basePadding * 2,
+                  ),
+                  StateUpdates(
+                    updates: viewProvider.currentlyOpen!.currentState,
+                  ),
+                  const SizedBox(
+                    height: SizeConfig.basePadding * 2,
+                  ),
+                  UnusedComponents(
+                    isAdmin: isAdmin,
+                    key: ValueKey(viewProvider.currentlyOpen!.id!),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 

@@ -164,7 +164,7 @@ class CrudCompContainer {
   }
 
   /// Deletes the component as well as the corresponding entry inside the
-  /// current-state array.
+  /// current-state array as well as every occurrence in the updates entry.
   Future<bool> deleteComponent({
     required String docId,
     required String componentId,
@@ -182,6 +182,13 @@ class CrudCompContainer {
         }
 
         await deleteComponentFromCurrentState(
+          docId: docId,
+          componentId: componentId,
+          document: containerDoc,
+          snapshot: containerSnapshot,
+        );
+
+        await deleteComponentFromUpdates(
           docId: docId,
           componentId: componentId,
           document: containerDoc,
@@ -228,7 +235,7 @@ class CrudCompContainer {
         bool componentFound = false;
         Map<String, dynamic>? matchingUpdate;
         for (final update
-            in (data['updates'] as List).cast<Map<String, dynamic>>()) {
+            in (data['current-state'] as List).cast<Map<String, dynamic>>()) {
           if ((update['component'] as Map<String, dynamic>?)?['id'] ==
               componentId) {
             componentFound = true;
@@ -240,6 +247,56 @@ class CrudCompContainer {
         if (componentFound) {
           transaction.update(containerDoc, {
             'current-state': FieldValue.arrayRemove([matchingUpdate!]),
+          });
+          return true;
+        } else {
+          return false;
+        }
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deleteComponentFromUpdates({
+    required String docId,
+    required String componentId,
+    DocumentSnapshot? snapshot,
+    DocumentReference? document,
+  }) async {
+    assert(snapshot != null && document != null ||
+        snapshot == null && document == null);
+    try {
+      return _firestore.runTransaction((transaction) async {
+        /// Get the document.
+        final DocumentReference containerDoc = document ??
+            _firestore.collection('component-containers').doc(docId);
+        final DocumentSnapshot containerSnapshot =
+            snapshot ?? await transaction.get(containerDoc);
+
+        if (containerSnapshot.data() == null) {
+          return false;
+        }
+
+        final Map<String, dynamic> data =
+            containerSnapshot.data()! as Map<String, dynamic>;
+
+        bool componentFound = false;
+        final List<Map<String, dynamic>> matchingUpdates = [];
+        for (final update
+            in (data['updates'] as List).cast<Map<String, dynamic>>()) {
+          if ((update['component'] as Map<String, dynamic>?)?['id'] ==
+              componentId) {
+            componentFound = true;
+            matchingUpdates.add(update);
+            break;
+          }
+        }
+
+        if (componentFound) {
+          transaction.update(containerDoc, {
+            'current-state': FieldValue.arrayRemove(matchingUpdates),
           });
           return true;
         } else {

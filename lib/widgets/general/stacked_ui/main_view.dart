@@ -11,6 +11,7 @@ class MainView extends StatelessWidget {
     this.title,
     this.flexibleSpace,
     this.leading,
+    this.implyLeading = false,
     this.appBarColor,
     this.appBarShadowColor,
     this.backgroundColor,
@@ -27,6 +28,8 @@ class MainView extends StatelessWidget {
 
   /// The leading widget inside the Appbar.
   final Widget? leading;
+
+  final bool implyLeading;
 
   /// The main content of the view.
   final Widget child;
@@ -61,7 +64,7 @@ class MainView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           shadowColor: appBarShadowColor,
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: implyLeading,
           leading: leading,
           elevation: appBarElevation,
           backgroundColor: appBarColor,

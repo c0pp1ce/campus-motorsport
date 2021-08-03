@@ -21,25 +21,29 @@ extension ComponentStateNames on ComponentStates {
   }
 }
 
+/// Sorted by their names order. See extension for those.
+///
+/// Order needed for compare function - in order to match the ordering done by
+/// firebase (components collection).
 enum ComponentCategories {
-  engine,
-  undercarriage,
   aero,
   electrical,
+  undercarriage,
+  engine,
   other,
 }
 
 extension ComponentCategoryNames on ComponentCategories {
   String get name {
     switch (this) {
-      case ComponentCategories.engine:
-        return 'Motor';
-      case ComponentCategories.undercarriage:
-        return 'Fahrwerk';
       case ComponentCategories.aero:
         return 'Aero';
       case ComponentCategories.electrical:
         return 'Elektrotechnik';
+      case ComponentCategories.undercarriage:
+        return 'Fahrwerk';
+      case ComponentCategories.engine:
+        return 'Motor';
       case ComponentCategories.other:
         return 'Sonstiges';
     }
@@ -50,6 +54,7 @@ extension ComponentCategoryNames on ComponentCategories {
 class BaseComponent {
   BaseComponent({
     this.id,
+    this.baseEventCounter,
     required this.name,
     required this.state,
     required this.category,
@@ -64,6 +69,7 @@ class BaseComponent {
   /// Ids of vehicles that use this component.
   final List<String>? usedBy;
   ComponentCategories category;
+  int? baseEventCounter;
 
   static BaseComponent fromJson(Map<String, dynamic> json) {
     final String stateName = json['state'];
@@ -99,6 +105,7 @@ class BaseComponent {
       state: state,
       usedBy: _usedBy,
       category: category,
+      baseEventCounter: json['baseEventCounter'],
     );
   }
 
@@ -110,7 +117,18 @@ class BaseComponent {
       'state': state.name,
       if (!forUpdate) 'usedBy': usedBy ?? <String>[],
       'category': category.name,
+      if (baseEventCounter != null) 'baseEventCounter': baseEventCounter!,
     };
+  }
+
+  static int compareComponents(BaseComponent a, BaseComponent b) {
+    if (a.category != b.category) {
+      return ComponentCategories.values
+          .indexOf(a.category)
+          .compareTo(ComponentCategories.values.indexOf(b.category));
+    } else {
+      return a.name.compareTo(b.name);
+    }
   }
 }
 

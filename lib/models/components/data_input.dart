@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/cm_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Possible input/data types
 enum InputTypes {
@@ -53,6 +54,9 @@ class DataInput {
 
     if (type == InputTypes.image && json['data'] != null) {
       data = CMImage.fromUrl(json['data']);
+    } else if (type == InputTypes.date && json['data'] != null) {
+      final Timestamp timestamp = json['data'];
+      data = timestamp.toDate();
     } else {
       data = json['data'];
     }

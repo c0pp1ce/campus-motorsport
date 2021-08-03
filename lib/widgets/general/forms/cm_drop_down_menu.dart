@@ -65,6 +65,9 @@ class CMDropDownMenuState extends State<CMDropDownMenu> {
       decoration: InputDecoration(
         labelText: widget.label,
         enabled: widget.enabled,
+        labelStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
         enabledBorder: OutlineInputBorder(
           gapPadding: 3.0,
           borderSide: BorderSide(

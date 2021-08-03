@@ -26,6 +26,9 @@ class ComponentSelectionTile extends StatelessWidget {
       padding: EdgeInsets.zero,
       margin: const EdgeInsets.all(SizeConfig.basePadding),
       child: ListTile(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
         contentPadding: const EdgeInsets.all(SizeConfig.basePadding),
         tileColor: selected
             ? Theme.of(context).colorScheme.primary.withOpacity(0.2)

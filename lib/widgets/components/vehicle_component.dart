@@ -1,5 +1,7 @@
+import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/models/components/data_input.dart';
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
@@ -11,6 +13,7 @@ import 'package:campus_motorsport/widgets/components/component_state.dart';
 import 'package:campus_motorsport/widgets/components/component_text.dart';
 import 'package:campus_motorsport/widgets/components/create_data_input.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
+import 'package:campus_motorsport/widgets/general/forms/cm_label.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -27,6 +30,9 @@ class VehicleComponent extends StatefulWidget {
     this.categoryKey,
     this.formKey,
     this.showBaseData = true,
+    this.onEventCounterSave,
+    this.highlightInputs = false,
+    this.currentEventCounter,
     Key? key,
   })  : assert(
           (create && !fillWithData && !read) ||
@@ -42,18 +48,30 @@ class VehicleComponent extends StatefulWidget {
         super(key: key);
 
   final BaseComponent? component;
-  final BaseComponent? previousData;
+
+  /// Used to show the previous updates data when adding a new one.
+  final Update? previousData;
+  // Workaround to also use this widget as details view for updates.
+  final int? currentEventCounter;
 
   /// Create a component.
   final bool create;
   final bool fillWithData;
   final bool read;
 
+  /// Only tested for read mode.
+  final bool highlightInputs;
+
   /// Name, category, state
   final bool showBaseData;
   final TextEditingController? nameController;
   final GlobalKey<CMDropDownMenuState>? categoryKey;
   final GlobalKey<FormState>? formKey;
+  final void Function(int?)? onEventCounterSave;
+
+  /// Value by which titles and descriptions are darkened if inputs should be
+  /// highlighted.
+  static int darkenTextBy = SizeConfig.darkenTextColorBy ~/ 2;
 
   @override
   VehicleComponentState createState() => VehicleComponentState();
@@ -62,6 +80,7 @@ class VehicleComponent extends StatefulWidget {
 class VehicleComponentState extends State<VehicleComponent> {
   bool _loading = false;
   late final bool _previousDataFound;
+  TextEditingController? baseEventCounterController;
 
   set loading(bool value) {
     setState(() {
@@ -76,9 +95,13 @@ class VehicleComponentState extends State<VehicleComponent> {
   /// For component creation.
   String? name;
   ComponentCategories? category;
+  int? baseEventCounter;
 
   @override
   void initState() {
+    if (widget.create) {
+      baseEventCounterController = TextEditingController();
+    }
     if (widget.read || widget.fillWithData) {
       baseComponent = widget.component;
       category = widget.component!.category;
@@ -98,6 +121,8 @@ class VehicleComponentState extends State<VehicleComponent> {
   }
 
   void reset() {
+    baseEventCounter = null;
+    baseEventCounterController?.clear();
     name = null;
     category = null;
     additionalData = [];
@@ -174,8 +199,9 @@ class VehicleComponentState extends State<VehicleComponent> {
                   height: SizeConfig.basePadding * 2,
                 ),
                 ComponentState(
-                  initialState:
-                      widget.previousData?.state ?? widget.component?.state,
+                  highlightInput: widget.highlightInputs,
+                  initialState: widget.previousData?.component.state ??
+                      widget.component?.state,
                   enabled: widget.fillWithData,
                   onSaved: (value) {
                     baseComponent!.state = value;
@@ -185,6 +211,10 @@ class VehicleComponentState extends State<VehicleComponent> {
                   height: SizeConfig.basePadding * 2,
                 ),
               ],
+              ..._showEventPicker(context),
+              const SizedBox(
+                height: SizeConfig.basePadding,
+              ),
               _buildAdditionalData(context),
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
@@ -230,7 +260,7 @@ class VehicleComponentState extends State<VehicleComponent> {
       );
     }
 
-    if(additionalData!.isEmpty) {
+    if (additionalData!.isEmpty) {
       return const SizedBox();
     }
 
@@ -271,14 +301,17 @@ class VehicleComponentState extends State<VehicleComponent> {
   /// Used to map previous data to the right dataInput.
   Widget _getDataInputWidget(DataInput dataInput, int index) {
     final DataInput? previousDataInput = _previousDataFound
-        ? (widget.previousData! as ExtendedComponent).additionalData[index]
+        ? (widget.previousData!.component as ExtendedComponent)
+            .additionalData[index]
         : null;
+    const double padding = SizeConfig.basePadding * 2;
 
     switch (dataInput.type) {
       case InputTypes.text:
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentText(
+            highlightInput: widget.highlightInputs,
             dataInput: dataInput,
             previousData: previousDataInput,
             enabled: widget.fillWithData,
@@ -286,16 +319,19 @@ class VehicleComponentState extends State<VehicleComponent> {
         );
       case InputTypes.number:
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentNumber(
+            highlightInput: widget.highlightInputs,
             dataInput: dataInput,
             enabled: widget.fillWithData,
+            previousData: previousDataInput,
           ),
         );
       case InputTypes.date:
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentDate(
+            highlightInput: widget.highlightInputs,
             dataInput: dataInput,
             previousData: previousDataInput,
             enabled: widget.fillWithData,
@@ -303,8 +339,9 @@ class VehicleComponentState extends State<VehicleComponent> {
         );
       case InputTypes.image:
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
+          padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentImage(
+            highlightInput: widget.highlightInputs,
             dataInput: dataInput,
             enabled: widget.fillWithData,
           ),
@@ -335,5 +372,107 @@ class VehicleComponentState extends State<VehicleComponent> {
         );
       },
     );
+  }
+
+  /// In creation mode the matching component attribute is set.
+  ///
+  /// For updates the onEventCounterSave function needs to be provided.
+  List<Widget> _showEventPicker(BuildContext context) {
+    return [
+      CMLabel(
+        label: widget.create ? 'Fahrtenzähler Grundwert' : 'Fahrtenzähler',
+        darken: widget.highlightInputs,
+      ),
+      Text(
+        widget.fillWithData || widget.read
+            ? 'Anzahl an einzutragenden Fahrten bevor der Status automatisch geändert wird.\n\n'
+                'Kein Wert = keine automatische Änderung.\n'
+                'Kein Grundwert = Nach erreichen von 0 kein automatischer Reset.'
+            : 'Grundwert für den Fahrtenzähler, auf den zurückgesetzt wird nachdem er 0 erreicht hat.\n\n'
+                'Kein Grundwert = Nach erreichen von 0 kein automatischer Reset.',
+        style: widget.highlightInputs
+            ? Theme.of(context).textTheme.bodyText2?.copyWith(
+                  color: ColorServices.darken(
+                    Theme.of(context).colorScheme.onSurface,
+                    VehicleComponent.darkenTextBy,
+                  ),
+                )
+            : null,
+      ),
+      const SizedBox(
+        height: SizeConfig.basePadding,
+      ),
+      CMTextField(
+        controller: baseEventCounterController,
+        enabled: widget.create || widget.fillWithData,
+        initialValue: baseEventCounterController == null
+            ? (widget.previousData?.eventCounter ??
+                    widget.currentEventCounter ??
+                    '')
+                .toString()
+            : null,
+        onSaved: (value) {
+          value ??= '';
+          if (widget.onEventCounterSave != null) {
+            widget.onEventCounterSave!(int.tryParse(value));
+          }
+
+          if (widget.create) {
+            baseEventCounter = int.tryParse(value);
+          }
+        },
+        minLines: 1,
+        maxLines: 1,
+        textInputType: TextInputType.numberWithOptions(
+          decimal: false,
+        ),
+        textInputAction: TextInputAction.done,
+        validate: (value) => Validators().validateIntValue(value),
+      ),
+      if (_previousDataFound) ...[
+        const SizedBox(
+          height: SizeConfig.basePadding,
+        ),
+        Text(
+          'Vorheriger Wert',
+          style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                color: ColorServices.darken(
+                  Theme.of(context).colorScheme.onSurface,
+                  SizeConfig.darkenTextColorBy,
+                ),
+              ),
+        ),
+        Text(
+          widget.previousData?.eventCounter?.toString() ?? 'Nicht gesetzt.',
+          style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                color: ColorServices.darken(
+                  Theme.of(context).colorScheme.onSurface,
+                  SizeConfig.darkenTextColorBy,
+                ),
+              ),
+        ),
+      ],
+      const SizedBox(
+        height: SizeConfig.basePadding,
+      ),
+      Text(
+        'Grundwert',
+        style: Theme.of(context).textTheme.subtitle2?.copyWith(
+              color: ColorServices.darken(
+                Theme.of(context).colorScheme.onSurface,
+                SizeConfig.darkenTextColorBy,
+              ),
+            ),
+      ),
+      Text(
+        widget.component?.baseEventCounter?.toString() ?? 'Nicht gesetzt.',
+        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+              color: ColorServices.darken(
+                Theme.of(context).colorScheme.onSurface,
+                SizeConfig.darkenTextColorBy,
+              ),
+            ),
+      ),
+    ];
   }
 }

@@ -48,6 +48,18 @@ class Validators {
     }
   }
 
+  String? validateIntValue(String? value) {
+    if (value?.isEmpty ?? true) {
+      return null;
+    }
+
+    if (int.tryParse(value!) == null) {
+      return 'Nur natürliche Zahlen(inkl. 0) zulässig.';
+    } else {
+      return null;
+    }
+  }
+
   // TODO : Remove if not needed anymore.
   /// Returns null if [value] is a valid invitation code.
   String? validateInvitationCode(String? value) {

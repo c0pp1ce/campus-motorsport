@@ -2,6 +2,7 @@ import 'package:campus_motorsport/models/components/data_input.dart';
 import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/widgets/components/vehicle_component.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_label.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class ComponentText extends StatelessWidget {
     this.maxLines = 3,
     this.enabled = true,
     this.textInputType = TextInputType.multiline,
+    this.highlightInput = false,
     Key? key,
   }) : super(key: key);
 
@@ -24,6 +26,7 @@ class ComponentText extends StatelessWidget {
   final int minLines;
   final int maxLines;
   final TextInputType textInputType;
+  final bool highlightInput;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +34,22 @@ class ComponentText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        CMLabel(label: dataInput.name),
+        CMLabel(
+          label: dataInput.name,
+          darken: highlightInput,
+        ),
         if (dataInput.description.isNotEmpty) ...[
-          Text(dataInput.description),
+          Text(
+            dataInput.description,
+            style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                  color: highlightInput
+                      ? ColorServices.darken(
+                          Theme.of(context).colorScheme.onSurface,
+                          VehicleComponent.darkenTextBy,
+                        )
+                      : null,
+                ),
+          ),
         ],
         const SizedBox(
           height: SizeConfig.basePadding,

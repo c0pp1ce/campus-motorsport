@@ -11,7 +11,7 @@ class Update {
     required this.component,
     required this.date,
     required this.by,
-    this.automaticUpdateAfterRides,
+    this.eventCounter,
   });
 
   /// The data of the updated component.
@@ -26,7 +26,7 @@ class Update {
   /// Used to determine if a new state change should be done after this amount of
   /// rides. Only considered if this is set in the update which is part of the
   /// current-state of a [ComponentsContainer].
-  int? automaticUpdateAfterRides;
+  int? eventCounter;
 
   static Update fromJson(Map<String, dynamic> json) {
     bool extendedComponent = false;
@@ -43,6 +43,7 @@ class Update {
           : BaseComponent.fromJson(json['component']),
       date: timestamp.toDate().toLocal(),
       by: json['by'],
+      eventCounter: json['eventCounter'],
     );
   }
 
@@ -51,6 +52,7 @@ class Update {
       'component': await component.toJson(forUpdate: true),
       'date': date.toUtc(),
       'by': by,
+      if (eventCounter != null) 'eventCounter': eventCounter,
     };
   }
 }

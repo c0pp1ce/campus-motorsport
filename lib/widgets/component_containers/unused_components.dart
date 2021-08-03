@@ -7,10 +7,14 @@ import 'package:campus_motorsport/widgets/general/layout/list_sub_header.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// A widget which displays a list of unused(aka never updated) components
-/// if there are any for the currently opened container.
+/// A widget which displays a list of updates.
 class UnusedComponents extends StatefulWidget {
-  const UnusedComponents({Key? key}) : super(key: key);
+  const UnusedComponents({
+    this.isAdmin = false,
+    Key? key,
+  }) : super(key: key);
+
+  final bool isAdmin;
 
   @override
   _UnusedComponentsState createState() => _UnusedComponentsState();
@@ -18,6 +22,29 @@ class UnusedComponents extends StatefulWidget {
 
 class _UnusedComponentsState extends State<UnusedComponents> {
   late ComponentCategories previousCategory;
+  late List<String> unusedComponentIds;
+  late List<BaseComponent> unusedComponents;
+
+  @override
+  void didChangeDependencies() {
+    final CCViewProvider viewProvider = context.watch<CCViewProvider>();
+    unusedComponentIds = [];
+
+    /// Determine which components have not been updated at all.
+    viewProvider.currentlyOpen!.components.forEach(unusedComponentIds.add);
+    for (final update in viewProvider.currentlyOpen!.currentState) {
+      unusedComponentIds.remove(update.component.id);
+    }
+
+    /// Map never updated component ids to their components.
+    final List<BaseComponent> components =
+        context.watch<ComponentsProvider>().components;
+    unusedComponents = components
+        .where((element) => unusedComponentIds.contains(element.id))
+        .toList();
+    unusedComponents.sort(BaseComponent.compareComponents);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +59,6 @@ class _UnusedComponentsState extends State<UnusedComponents> {
         viewProvider.currentlyOpen!.currentState.length) {
       return const SizedBox();
     }
-
-    final List<String> unusedComponents = [];
-    viewProvider.currentlyOpen!.components.forEach(unusedComponents.add);
-    for (final update in viewProvider.currentlyOpen!.currentState) {
-      unusedComponents.remove(update.component.id);
-    }
-
-    final List<BaseComponent> components =
-        context.watch<ComponentsProvider>().components;
 
     return Column(
       children: <Widget>[
@@ -57,17 +75,14 @@ class _UnusedComponentsState extends State<UnusedComponents> {
           padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final BaseComponent component = components
-                .firstWhere((element) => element.id == unusedComponents[index]);
-
             late final bool categoryChanged;
             if (index == 0) {
               categoryChanged = true;
-              previousCategory = component.category;
+              previousCategory = unusedComponents[index].category;
             } else {
-              if (component.category != previousCategory) {
+              if (unusedComponents[index].category != previousCategory) {
                 categoryChanged = true;
-                previousCategory = component.category;
+                previousCategory = unusedComponents[index].category;
               } else {
                 categoryChanged = false;
               }
@@ -79,13 +94,16 @@ class _UnusedComponentsState extends State<UnusedComponents> {
                 vertical: SizeConfig.basePadding,
               ),
               child: ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
                 contentPadding: const EdgeInsets.all(SizeConfig.basePadding),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(component.name),
+                    Text(unusedComponents[index].name),
                     Text(
-                      component.category.name,
+                      unusedComponents[index].category.name,
                       style: Theme.of(context).textTheme.subtitle1?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -103,7 +121,7 @@ class _UnusedComponentsState extends State<UnusedComponents> {
                       height: SizeConfig.basePadding,
                     ),
                   ListSubHeader(
-                    header: component.category.name,
+                    header: unusedComponents[index].category.name,
                   ),
                   const SizedBox(
                     height: SizeConfig.basePadding,

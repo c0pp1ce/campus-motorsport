@@ -31,6 +31,9 @@ class _CMDatePickerState extends State<CMDatePicker> {
   void initState() {
     super.initState();
     selected = widget.initialValue;
+    if (selected != null) {
+      _textEditingController.text = DateFormat.yMMMMd().format(selected!);
+    }
   }
 
   @override

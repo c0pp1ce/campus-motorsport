@@ -42,6 +42,9 @@ class ExpandedAppBar extends StatefulWidget {
   final double expandedHeight;
   final double offsetBeforeTitleShown;
 
+  // Static configurations.
+  static const double elevation = SizeConfig.baseBackgroundElevation - 3;
+
   @override
   _ExpandedAppBarState createState() => _ExpandedAppBarState();
 }
@@ -52,9 +55,6 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
 
   /// Stores the latest appbar state to avoid unnecessary rebuilds.
   late bool _showAppbarTitle;
-
-  // Static configurations.
-  static const double elevation = SizeConfig.baseBackgroundElevation - 3;
 
   @override
   void initState() {
@@ -86,7 +86,7 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
           ? widget.appbarTitle
           : null,
       appBarShadowColor: _showAppbarTitle ? null : Colors.transparent,
-      backgroundElevation: elevation,
+      backgroundElevation: ExpandedAppBar.elevation,
       actions: widget.actions,
       child: Stack(
         fit: StackFit.expand,
@@ -165,7 +165,7 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
         color: ElevationOverlay.applyOverlay(
           context,
           Theme.of(context).colorScheme.surface,
-          elevation,
+          ExpandedAppBar.elevation,
         ),
 
         /// Padding to not clip shadow on the bottom side.
