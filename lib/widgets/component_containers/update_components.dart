@@ -1,15 +1,21 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
+import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
+import 'package:campus_motorsport/provider/global/current_user.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/components/vehicle_component.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// PageView where a user can add the updates to each selected component.
 class UpdateComponents extends StatefulWidget {
   const UpdateComponents({
     required this.selectedComponents,
     required this.loadingListener,
+    required this.successListener,
     required this.currentContainer,
     Key? key,
   })  : assert(selectedComponents.length != 0),
@@ -17,6 +23,7 @@ class UpdateComponents extends StatefulWidget {
 
   final List<BaseComponent> selectedComponents;
   final void Function(bool) loadingListener;
+  final void Function(bool) successListener;
   final ComponentContainer currentContainer;
 
   @override
@@ -25,13 +32,18 @@ class UpdateComponents extends StatefulWidget {
 
 class _UpdateComponentsState extends State<UpdateComponents> {
   late final List<BaseComponent> copiedComponents;
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  late final List<GlobalKey<FormState>> _formKeys;
   int index = 0;
   bool initialized = false;
 
   @override
   void initState() {
     _copyList();
+    _formKeys = List.generate(
+      widget.selectedComponents.length,
+      (index) => GlobalKey(),
+      growable: false,
+    );
     super.initState();
   }
 
@@ -47,11 +59,12 @@ class _UpdateComponentsState extends State<UpdateComponents> {
         AnimatedSwitcher(
           duration: Duration.zero,
           child: VehicleComponent(
-            //formKey: _formKey,  key per component if needed. NEEDED TODO
+            formKey: _formKeys[index],
             key: ValueKey(index),
             fillWithData: true,
             read: false,
             component: copiedComponents[index],
+            previousData: _searchInCurrentState(copiedComponents[index]),
           ),
         ),
         Padding(
@@ -61,15 +74,17 @@ class _UpdateComponentsState extends State<UpdateComponents> {
               index == copiedComponents.length - 1 ? 'SPEICHERN' : 'WEITER',
             ),
             onPressed: () async {
-              if(index < copiedComponents.length - 1) {
-                await saveChanges();
+              if (index < copiedComponents.length - 1) {
+                saveChanges(index);
                 setState(() {
                   index++;
                 });
                 return;
               }
-              await saveChanges();
-              // TODO : Upload updates.
+
+              /// last component. Save and upload changes.
+              saveChanges(index);
+              uploadUpdates();
             },
           ),
         ),
@@ -77,51 +92,82 @@ class _UpdateComponentsState extends State<UpdateComponents> {
     );
   }
 
-  Future<void> saveChanges() async {
-    print(await copiedComponents[index].toJson()); // TODO : Remove
-    if(_formKey.currentState?.validate() ?? false) {
-      _formKey.currentState!.save();
-      print(await copiedComponents[index].toJson());
+  void saveChanges(int index) {
+    if (_formKeys[index].currentState?.validate() ?? false) {
+      _formKeys[index].currentState!.save();
     }
   }
 
-  /// Copies the selected components from current-state list if found there or else from
-  /// the selected components itself so that their data can be changed without any
-  /// side effects.
+  Future<void> uploadUpdates() async {
+    widget.loadingListener(true);
+    final DateTime updateTime = DateTime.now();
+    final String updatedBy = context.read<CurrentUser>().user!.name;
+    final List<Update> updates = List.empty(growable: true);
+    for (final component in copiedComponents) {
+      updates.add(Update(
+        component: component,
+        date: updateTime,
+        by: updatedBy,
+      ));
+    }
+
+    final bool success = await CrudCompContainer().addUpdates(
+      docId: widget.currentContainer.id!,
+      updates: updates,
+    );
+    widget.loadingListener(false);
+    if (!success) {
+      widget.successListener(false);
+      _showErrorDialog();
+    } else {
+      widget.successListener(true);
+    }
+  }
+
+  void _showErrorDialog() {
+    CoolAlert.show(
+      context: context,
+      type: CoolAlertType.error,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      title: 'Speichern fehlgeschlagen.',
+      text: 'Bitte überprüfe deine Verbindung.\n'
+          'Bleibt der Fehler bestehen wende dich an die IT.',
+      confirmButton: Expanded(
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: SizeConfig.basePadding * 2,
+          ),
+          child: CMTextButton(
+            child: const Text(
+              'VERSTANDEN',
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      ),
+      loopAnimation: false,
+    );
+  }
+
+  /// Copies the selected components from
+  /// the selected components themselves(they taken form the global components list based on id)
+  /// so that their data can be changed without any side effects.
   Future<void> _copyList() async {
     // TODO : Switch to performant deep copy.
-    //final List<DateTime> times = [];
-    //times.add(DateTime.now());
     copiedComponents = List.empty(growable: true);
     for (final component in widget.selectedComponents) {
       if (component is ExtendedComponent) {
-        final ExtendedComponent? fromCurrentState =
-            _searchInCurrentState(component) as ExtendedComponent?;
-        if (fromCurrentState != null) {
-          copiedComponents.add(
-            ExtendedComponent.fromJson(await fromCurrentState.toJson()),
-          );
-        } else {
-          copiedComponents.add(
-            ExtendedComponent.fromJson(await component.toJson()),
-          );
-        }
+        copiedComponents.add(
+          ExtendedComponent.fromJson(await component.toJson()),
+        );
       } else {
-        final BaseComponent? fromCurrentState =
-            _searchInCurrentState(component);
-        if (fromCurrentState != null) {
-          copiedComponents.add(
-            BaseComponent.fromJson(await fromCurrentState.toJson()),
-          );
-        } else {
-          copiedComponents.add(
-            BaseComponent.fromJson(await component.toJson()),
-          );
-        }
+        copiedComponents.add(
+          BaseComponent.fromJson(await component.toJson()),
+        );
       }
     }
-    //times.add(DateTime.now());
-    //print('Copy timer: ${times[1].difference(times[0]).inMilliseconds} ms.');
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       setState(() {
         initialized = true;

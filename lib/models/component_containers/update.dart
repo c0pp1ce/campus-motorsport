@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/components/component.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// State update to one component. Stores the new component data as well as the
 /// date of the update. Furthermore it contains an identifier by whom this update
@@ -35,18 +36,19 @@ class Update {
       extendedComponent = true;
     }
 
+    final Timestamp timestamp = json['date'];
     return Update(
       component: extendedComponent
           ? ExtendedComponent.fromJson(json['component'])
           : BaseComponent.fromJson(json['component']),
-      date: DateTime.parse(json['date']).toLocal(),
+      date: timestamp.toDate().toLocal(),
       by: json['by'],
     );
   }
 
   Future<Map<String, dynamic>> toJson() async {
     return <String, dynamic>{
-      'component': await component.toJson(),
+      'component': await component.toJson(forUpdate: true),
       'date': date.toUtc(),
       'by': by,
     };

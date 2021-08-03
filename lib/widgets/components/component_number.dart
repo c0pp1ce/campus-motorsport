@@ -6,17 +6,20 @@ import 'package:flutter/material.dart';
 class ComponentNumber extends StatelessWidget {
   const ComponentNumber({
     required this.dataInput,
+    this.previousData,
     this.enabled = true,
     Key? key,
   }) : super(key: key);
 
   final DataInput dataInput;
+  final DataInput? previousData;
   final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return ComponentText(
       dataInput: dataInput,
+      previousData: previousData,
       minLines: 1,
       maxLines: 1,
       enabled: enabled,

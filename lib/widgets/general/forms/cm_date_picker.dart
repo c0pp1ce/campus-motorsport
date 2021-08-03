@@ -1,5 +1,8 @@
+import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
@@ -22,6 +25,7 @@ class CMDatePicker extends StatefulWidget {
 
 class _CMDatePickerState extends State<CMDatePicker> {
   DateTime? selected;
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -33,40 +37,28 @@ class _CMDatePickerState extends State<CMDatePicker> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
-          child: Container(
-            height: 60,
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(SizeConfig.basePadding),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Theme.of(context).colorScheme.surface,
-                width: 2.0,
-                style: BorderStyle.solid,
-              ),
-              borderRadius: BorderRadius.circular(5),
+          child: AbsorbPointer(
+            child: CMTextField(
+              maxLines: 1,
+              minLines: 1,
+              controller: _textEditingController,
+              enabled: widget.enabled,
+              validate: (value) =>
+                  Validators().validateNotEmpty(value, 'Datum'),
             ),
-            child: selected != null
-                ? Text(
-                    DateFormat.yMMMMd().format(selected!),
-                    style: Theme.of(context).textTheme.subtitle1,
-                  )
-                : Text(
-                    'Tag Monat Jahr',
-                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.6),
-                        ),
-                  ),
           ),
         ),
         if (widget.enabled)
           Container(
             padding: const EdgeInsets.symmetric(
               horizontal: SizeConfig.basePadding,
+            ).add(
+              /// Centers the button next to the TextField even when a validation
+              /// error is shown.
+              EdgeInsets.only(top: 7),
             ),
             width: 100,
             child: CMTextButton(
@@ -90,8 +82,10 @@ class _CMDatePickerState extends State<CMDatePicker> {
                 );
                 if (time != null) {
                   setState(() {
-                    widget.onSaved(time);
-                    selected = time;
+                    widget.onSaved(time.toUtc());
+                    selected = time.toUtc();
+                    _textEditingController.text =
+                        DateFormat.yMMMMd().format(selected!);
                   });
                 }
               },

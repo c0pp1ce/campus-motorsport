@@ -1,4 +1,6 @@
 import 'package:campus_motorsport/models/components/data_input.dart';
+import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_label.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 class ComponentText extends StatelessWidget {
   const ComponentText({
     required this.dataInput,
+    this.previousData,
     this.minLines = 1,
     this.maxLines = 3,
     this.enabled = true,
@@ -16,6 +19,7 @@ class ComponentText extends StatelessWidget {
   }) : super(key: key);
 
   final DataInput dataInput;
+  final DataInput? previousData;
   final bool enabled;
   final int minLines;
   final int maxLines;
@@ -43,8 +47,36 @@ class ComponentText extends StatelessWidget {
           maxLines: maxLines,
           enabled: enabled,
           textInputType: textInputType,
+          validate: (value) => Validators().validateNotEmpty(value, 'Feld'),
         ),
+        if (_showPreviousValue) ...[
+          const SizedBox(
+            height: SizeConfig.basePadding,
+          ),
+          Text(
+            'Vorheriger Wert',
+            style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                  color: ColorServices.darken(
+                    Theme.of(context).colorScheme.onSurface,
+                    SizeConfig.darkenTextColorBy,
+                  ),
+                ),
+          ),
+          Text(
+            '${previousData!.data}',
+            style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                  color: ColorServices.darken(
+                    Theme.of(context).colorScheme.onSurface,
+                    SizeConfig.darkenTextColorBy,
+                  ),
+                ),
+          ),
+        ],
       ],
     );
+  }
+
+  bool get _showPreviousValue {
+    return previousData != null;
   }
 }

@@ -129,10 +129,10 @@ class _AddComponentState extends State<AddComponent> {
       category: _vehicleKey.currentState!.category!,
     );
 
-    if (_vehicleKey.currentState!.additionalData.isNotEmpty) {
+    if (_vehicleKey.currentState!.additionalData?.isNotEmpty ?? false) {
       baseComponent = ExtendedComponent.fromBaseComponent(
         baseComponent: baseComponent,
-        additionalData: _vehicleKey.currentState!.additionalData,
+        additionalData: _vehicleKey.currentState!.additionalData!,
       );
     }
 

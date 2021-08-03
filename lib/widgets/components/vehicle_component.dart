@@ -19,6 +19,7 @@ import 'package:line_icons/line_icons.dart';
 class VehicleComponent extends StatefulWidget {
   const VehicleComponent({
     this.component,
+    this.previousData,
     this.create = false,
     this.fillWithData = false,
     this.read = true,
@@ -41,6 +42,7 @@ class VehicleComponent extends StatefulWidget {
         super(key: key);
 
   final BaseComponent? component;
+  final BaseComponent? previousData;
 
   /// Create a component.
   final bool create;
@@ -59,6 +61,7 @@ class VehicleComponent extends StatefulWidget {
 
 class VehicleComponentState extends State<VehicleComponent> {
   bool _loading = false;
+  late final bool _previousDataFound;
 
   set loading(bool value) {
     setState(() {
@@ -68,11 +71,11 @@ class VehicleComponentState extends State<VehicleComponent> {
 
   /// If handed over.
   BaseComponent? baseComponent;
+  List<DataInput>? additionalData;
 
   /// For component creation.
   String? name;
   ComponentCategories? category;
-  List<DataInput> additionalData = [];
 
   @override
   void initState() {
@@ -84,6 +87,13 @@ class VehicleComponentState extends State<VehicleComponent> {
             (widget.component! as ExtendedComponent).additionalData;
       }
     }
+
+    if (widget.previousData != null) {
+      _previousDataFound = true;
+    } else {
+      _previousDataFound = false;
+    }
+
     super.initState();
   }
 
@@ -164,7 +174,8 @@ class VehicleComponentState extends State<VehicleComponent> {
                   height: SizeConfig.basePadding * 2,
                 ),
                 ComponentState(
-                  initialState: widget.component?.state,
+                  initialState:
+                      widget.previousData?.state ?? widget.component?.state,
                   enabled: widget.fillWithData,
                   onSaved: (value) {
                     baseComponent!.state = value;
@@ -192,8 +203,9 @@ class VehicleComponentState extends State<VehicleComponent> {
                         final DataInput? dataInput =
                             await _showTypeSelection(context);
                         if (dataInput != null) {
+                          additionalData ??= [];
                           setState(() {
-                            additionalData.add(dataInput);
+                            additionalData!.add(dataInput);
                           });
                         }
                       },
@@ -208,7 +220,8 @@ class VehicleComponentState extends State<VehicleComponent> {
   }
 
   Widget _buildAdditionalData(BuildContext context) {
-    if (additionalData.isEmpty && widget.read) {
+    additionalData ??= [];
+    if (additionalData!.isEmpty && widget.read) {
       return Text(
         'Keine zusätzlichen Datenfelder.',
         style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -217,16 +230,24 @@ class VehicleComponentState extends State<VehicleComponent> {
       );
     }
 
+    if(additionalData!.isEmpty) {
+      return const SizedBox();
+    }
+
+    /// Used to map previous data to the right data input.
+    int index = 0;
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      children: additionalData.map((dataInput) {
+      children: additionalData!.map((dataInput) {
+        index++;
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              child: _getDataInputWidget(dataInput),
+              /// index - 1 as index needs to be incremented before the return statement.
+              child: _getDataInputWidget(dataInput, index - 1),
             ),
             if (widget.create)
               IconButton(
@@ -236,7 +257,7 @@ class VehicleComponentState extends State<VehicleComponent> {
                 ),
                 onPressed: () {
                   setState(() {
-                    additionalData.remove(dataInput);
+                    additionalData!.remove(dataInput);
                   });
                 },
               ),
@@ -246,13 +267,20 @@ class VehicleComponentState extends State<VehicleComponent> {
     );
   }
 
-  Widget _getDataInputWidget(DataInput dataInput) {
+  /// Index of the dataInput inside of the additionalData list.
+  /// Used to map previous data to the right dataInput.
+  Widget _getDataInputWidget(DataInput dataInput, int index) {
+    final DataInput? previousDataInput = _previousDataFound
+        ? (widget.previousData! as ExtendedComponent).additionalData[index]
+        : null;
+
     switch (dataInput.type) {
       case InputTypes.text:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
           child: ComponentText(
             dataInput: dataInput,
+            previousData: previousDataInput,
             enabled: widget.fillWithData,
           ),
         );
@@ -269,6 +297,7 @@ class VehicleComponentState extends State<VehicleComponent> {
           padding: const EdgeInsets.symmetric(vertical: SizeConfig.basePadding),
           child: ComponentDate(
             dataInput: dataInput,
+            previousData: previousDataInput,
             enabled: widget.fillWithData,
           ),
         );

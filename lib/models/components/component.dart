@@ -102,12 +102,13 @@ class BaseComponent {
     );
   }
 
-  Future<Map<String, dynamic>> toJson() async {
+  /// forUpdate skips the usedBy list as this is not needed in state updates.
+  Future<Map<String, dynamic>> toJson({bool forUpdate = false}) async {
     return {
       'id': id,
       'name': name,
       'state': state.name,
-      'usedBy': usedBy ?? <String>[],
+      if (!forUpdate) 'usedBy': usedBy ?? <String>[],
       'category': category.name,
     };
   }
@@ -157,9 +158,9 @@ class ExtendedComponent extends BaseComponent {
   }
 
   @override
-  Future<Map<String, dynamic>> toJson() async {
+  Future<Map<String, dynamic>> toJson({bool forUpdate = false}) async {
     /// Base info.
-    final Map<String, dynamic> json = await super.toJson();
+    final Map<String, dynamic> json = await super.toJson(forUpdate: forUpdate);
     final List<Map<String, dynamic>> fields = List.empty(growable: true);
     for (final DataInput dataInput in additionalData) {
       fields.add(await dataInput.toJson());

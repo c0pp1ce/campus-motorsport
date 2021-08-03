@@ -86,6 +86,7 @@ class _AddUpdatesState extends State<AddUpdates> {
                   currentContainer: currentContainer,
                   selectedComponents: selectedForUpdate,
                   loadingListener: _loadingListener,
+                  successListener: _successListener,
                 ),
     );
   }
@@ -129,11 +130,28 @@ class _AddUpdatesState extends State<AddUpdates> {
     });
   }
 
-  void _reset() {
-    setState(() {
-      selectedArray.fillRange(0, selectedArray.length, false);
-      selectedForUpdate.clear();
-      selectionFinished = false;
-    });
+  Future<void> _successListener(bool value) async {
+    if (value) {
+      _reset(false);
+      setState(() {
+        loading = true;
+      });
+      await context.read<CCViewProvider>().reloadCurrentlyOpen();
+      setState(() {
+        loading = false;
+      });
+      context.read<CCViewProvider>().switchTo(
+            ComponentContainerPage.currentState,
+          );
+    }
+  }
+
+  void _reset([bool shouldSetState = true]) {
+    selectedArray.fillRange(0, selectedArray.length, false);
+    selectedForUpdate.clear();
+    selectionFinished = false;
+    if (shouldSetState) {
+      setState(() {});
+    }
   }
 }
