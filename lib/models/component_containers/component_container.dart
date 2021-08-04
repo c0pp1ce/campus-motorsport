@@ -121,7 +121,7 @@ class ComponentContainer {
     }
 
     json['events'] = List.empty(growable: true);
-    for(final event in events) {
+    for (final event in events) {
       (json['events'] as List).add(event.toJson());
     }
 

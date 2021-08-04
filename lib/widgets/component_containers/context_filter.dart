@@ -32,7 +32,8 @@ class ContextFilter extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               CategoryFilterChips(filterProvider: viewProvider),
-              if(showStateFilter) StateFilterChips(filterProvider: viewProvider),
+              if (showStateFilter)
+                StateFilterChips(filterProvider: viewProvider),
               if (currentState)
                 _buildInfo(
                   context,

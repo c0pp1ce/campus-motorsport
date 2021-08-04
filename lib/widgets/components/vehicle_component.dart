@@ -405,6 +405,7 @@ class VehicleComponentState extends State<VehicleComponent> {
       CMTextField(
         controller: baseEventCounterController,
         enabled: widget.create || widget.fillWithData,
+
         /// baseEventCounterController only in create mode != null.
         initialValue: baseEventCounterController == null
             ? (widget.previousData?.eventCounter ??

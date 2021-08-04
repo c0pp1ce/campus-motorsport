@@ -14,7 +14,7 @@ class EventsList extends StatelessWidget {
   Widget build(BuildContext context) {
     final CCViewProvider viewProvider = context.watch<CCViewProvider>();
 
-    if(viewProvider.currentlyOpen?.events.isEmpty ?? true) {
+    if (viewProvider.currentlyOpen?.events.isEmpty ?? true) {
       return Center(
         child: Text('Kein Events gefunden.'),
       );

@@ -34,8 +34,7 @@ class CategoryFilterChips extends StatelessWidget {
         ),
         _buildInfo(
           context,
-          hint ??
-              'Filter die Komponenten basierend auf ihrer Kategorie.',
+          hint ?? 'Filter die Komponenten basierend auf ihrer Kategorie.',
           LineIcons.filter,
         ),
         const Divider(
