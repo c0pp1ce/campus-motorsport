@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/provider/state_filter_provider_mixin.dart';
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:flutter/material.dart';
@@ -91,11 +92,11 @@ class StateFilterChips extends StatelessWidget {
   Color stateColor(ComponentStates state) {
     switch (state) {
       case ComponentStates.bad:
-        return CurrentState.badState;
+        return ColorServices.brighten(CurrentState.badState, 35);
       case ComponentStates.ok:
-        return CurrentState.okState;
+        return ColorServices.brighten(CurrentState.okState, 35);
       case ComponentStates.newComponent:
-        return CurrentState.newState;
+        return ColorServices.brighten(CurrentState.newState, 25);
     }
   }
 
