@@ -72,7 +72,9 @@ class _CurrentStateState extends State<CurrentState> {
       const ExpandedAppBar(
         appbarTitle: Text('Fehler beim Laden.'),
         offsetBeforeTitleShown: 0,
-        appbarChild: SizedBox(),
+        appbarChild: Center(
+          child: Text('Fehler beim Laden.'),
+        ),
       );
     }
 

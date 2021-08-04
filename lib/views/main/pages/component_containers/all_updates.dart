@@ -23,10 +23,12 @@ class _AllUpdatesState extends State<AllUpdates> {
 
     /// Some error occurred.
     if (viewProvider.currentlyOpen == null) {
-      ExpandedAppBar(
+      return const ExpandedAppBar(
         appbarTitle: Text('Fehler beim Laden.'),
-        offsetBeforeTitleShown: 0,
-        appbarChild: const SizedBox(),
+        offsetBeforeTitleShown: 60,
+        appbarChild: Center(
+          child: Text('Fehler beim Laden.'),
+        ),
       );
     }
 

@@ -86,7 +86,7 @@ class _CMDatePickerState extends State<CMDatePicker> {
                 if (time != null) {
                   setState(() {
                     widget.onSaved(time.toUtc());
-                    selected = time.toUtc();
+                    selected = time.toLocal();
                     _textEditingController.text =
                         DateFormat.yMMMMd().format(selected!);
                   });

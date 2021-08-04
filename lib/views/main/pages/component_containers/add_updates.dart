@@ -30,7 +30,17 @@ class _AddUpdatesState extends State<AddUpdates> {
   @override
   Widget build(BuildContext context) {
     final CCViewProvider viewProvider = context.watch<CCViewProvider>();
-    assert(viewProvider.currentlyOpen != null);
+
+    if (viewProvider.currentlyOpen == null) {
+      return const ExpandedAppBar(
+        appbarTitle: Text('Fehler beim Laden.'),
+        offsetBeforeTitleShown: 60,
+        appbarChild: Center(
+          child: Text('Fehler beim Laden.'),
+        ),
+      );
+    }
+
     final ComponentContainer currentContainer = viewProvider.currentlyOpen!;
     final List<BaseComponent> allComponents =
         context.watch<ComponentsProvider>().components;

@@ -56,7 +56,11 @@ class Validators {
     if (int.tryParse(value!) == null) {
       return 'Nur natürliche Zahlen(inkl. 0) zulässig.';
     } else {
-      return null;
+      if(int.tryParse(value)! < 1) {
+        return 'Grundwert muss größer als 0 sein.';
+      } else {
+        return null;
+      }
     }
   }
 

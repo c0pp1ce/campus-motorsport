@@ -38,10 +38,12 @@ class _AddComponentsState extends State<AddComponents> {
 
     /// Some error occurred.
     if (viewProvider.currentlyOpen == null) {
-      const ExpandedAppBar(
+      return const ExpandedAppBar(
         appbarTitle: Text('Fehler beim Laden.'),
-        offsetBeforeTitleShown: 0,
-        appbarChild: SizedBox(),
+        offsetBeforeTitleShown: 60,
+        appbarChild: Center(
+          child: Text('Fehler beim Laden.'),
+        ),
       );
     }
 
@@ -80,7 +82,9 @@ class _AddComponentsState extends State<AddComponents> {
             componentContainer.name,
             style: Theme.of(context).textTheme.headline6?.copyWith(
                   color: ColorServices.darken(
-                      Theme.of(context).colorScheme.onSurface, 40),
+                    Theme.of(context).colorScheme.onSurface,
+                    SizeConfig.darkenTextColorBy,
+                  ),
                 ),
           ),
         ],

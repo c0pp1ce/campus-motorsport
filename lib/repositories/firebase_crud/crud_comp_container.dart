@@ -1,5 +1,8 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
+import 'package:campus_motorsport/models/component_containers/event.dart';
 import 'package:campus_motorsport/models/component_containers/update.dart';
+import 'package:campus_motorsport/models/components/component.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Create, read, update, delete CContainer (vehicles, stocks).
@@ -75,27 +78,169 @@ class CrudCompContainer {
     }
   }
 
-  /// Adds the given updates to the updates array of the container.
-  /// Updates current-state as well.
-  Future<bool> addUpdates({
+  /// Adds the given event to the vehicle and updates the counters on each current-state
+  /// update which has a counter set.
+  ///
+  /// Updates the current-state if any of those updates reaches 0 with this event.
+  Future<bool> addEvent({
     required String docId,
-    required List<Update> updates,
+    required Event event,
   }) async {
-    if (updates.isEmpty) {
-      return true;
-    }
     try {
-      final List<Map<String, dynamic>> data = [];
-      for (final update in updates) {
-        data.add(await update.toJson());
-      }
-
       return _firestore.runTransaction((transaction) async {
         /// Get the document.
         final DocumentReference containerDoc =
             _firestore.collection('component-containers').doc(docId);
         final DocumentSnapshot containerSnapshot =
             await transaction.get(containerDoc);
+
+        if (containerSnapshot.data() == null) {
+          return false;
+        }
+
+        final Map<String, dynamic> data =
+            containerSnapshot.data()! as Map<String, dynamic>;
+
+        /// Find all updates in current-state with a counter.
+        final List<Map<String, dynamic>> updatesWithCounter = [];
+        for (final update in (data['current-state'] as List? ?? [])
+            .cast<Map<String, dynamic>>()) {
+          if (update['eventCounter'] != null) {
+            updatesWithCounter.add(update);
+          }
+        }
+
+        final List<Map<String, dynamic>> onlyCounterUpdatesNeeded = [];
+        final List<Map<String, dynamic>> counterReachedZero = [];
+
+        /// Calculate new counters.
+        /// If counter reaches zero get the original component as that is needed
+        /// to determine if the counter needs to be reset or removed.
+        for (final update in updatesWithCounter) {
+          int newCounter =
+              (update['eventCounter'] as int) - event.decrementCounterBy;
+          if (newCounter <= 0) {
+            /// Decrement the state of the component.
+            int stateIndex = ComponentStates.values.indexOf(
+                (update['component'] as Map<String, dynamic>)['state']);
+            stateIndex = stateIndex - 1;
+            if (stateIndex < 0) {
+              stateIndex = 0;
+            }
+            (update['component'] as Map<String, dynamic>)['state'] =
+                ComponentStates.values[stateIndex];
+
+            /// Get original component and Reset the counter.
+            final BaseComponent? baseComponent =
+                await CrudComponent().getComponent(
+              (update['component'] as Map<String, dynamic>)['id'],
+            );
+            if (baseComponent == null) {
+              throw Exception(
+                  'Could not get the original component for $update');
+            }
+            if (baseComponent.baseEventCounter == null) {
+              /// No base counter aka no reset possible.
+              update.remove('eventCounter');
+            } else {
+              /// Make sure to not end up in an endless loop.
+              if (baseComponent.baseEventCounter! < 1) {
+                baseComponent.baseEventCounter = 1;
+              }
+
+              /// Calculate new counter.
+              newCounter = newCounter + baseComponent.baseEventCounter!;
+
+              /// Possibly multiple state changes needed.
+              /// Attention : Currently only 3 states possible, so the second decrement
+              /// and everyone after will lead to the same state.
+              while (newCounter <= 0) {
+                (update['component'] as Map<String, dynamic>)['state'] =
+                    ComponentStates.bad;
+                newCounter = newCounter + baseComponent.baseEventCounter!;
+              }
+
+              /// Update counter.
+              update['eventCounter'] = newCounter;
+            }
+            counterReachedZero.add(update);
+          } else {
+            update['eventCounter'] = newCounter;
+            onlyCounterUpdatesNeeded.add(update);
+          }
+        }
+
+        /// Update counter without further side effect.
+        /// Changes the counter of updates in current-state but does not do anything
+        /// else.
+        await addUpdates(
+          docId: docId,
+          updates: [],
+          updatesListMap: onlyCounterUpdatesNeeded,
+          fromListMap: true,
+          addToCurrentStateOnly: true,
+        );
+
+        /// No need to get new snapshot here since one update cannot be in both
+        /// lists at the same time.
+
+        /// Update components where the counter reached 0. Decrements state by 1
+        /// and adds a an update to current-state and updates list.
+        await addUpdates(
+          docId: docId,
+          updates: [],
+          updatesListMap: counterReachedZero,
+          fromListMap: true,
+        );
+
+        /// Add the event to the events list.
+        transaction.update(containerDoc, {
+          'events': FieldValue.arrayUnion([event.toJson()]),
+        });
+        return true;
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  /// Adds the given updates to the updates array of the container, if [addToCurrentStateOnly] is not true.
+  /// Updates current-state as well.
+  Future<bool> addUpdates({
+    required String docId,
+    required List<Update> updates,
+    List<Map<String, dynamic>>? updatesListMap,
+    bool fromListMap = false,
+    bool addToCurrentStateOnly = false,
+    DocumentReference? document,
+    DocumentSnapshot? snapshot,
+  }) async {
+    assert(snapshot != null && document != null ||
+        snapshot == null && document == null);
+    assert(fromListMap && updatesListMap != null || !fromListMap);
+
+    /// No updates given.
+    if (updates.isEmpty && !fromListMap) {
+      return true;
+    }
+    try {
+      late final List<Map<String, dynamic>> data;
+      if (fromListMap) {
+        data = updatesListMap!;
+      } else {
+        data = [];
+        for (final update in updates) {
+          data.add(await update.toJson());
+        }
+      }
+
+      return _firestore.runTransaction((transaction) async {
+        /// Get the document.
+        final DocumentReference containerDoc = document ??
+            _firestore.collection('component-containers').doc(docId);
+        final DocumentSnapshot containerSnapshot =
+            snapshot ?? await transaction.get(containerDoc);
 
         if (containerSnapshot.data() == null) {
           return false;
@@ -117,7 +262,7 @@ class CrudCompContainer {
         /// Add the new updates to the current state and updates list.
         transaction.update(containerDoc, {
           'current-state': FieldValue.arrayUnion(data),
-          'updates': FieldValue.arrayUnion(data),
+          if (!addToCurrentStateOnly) 'updates': FieldValue.arrayUnion(data),
         });
         return true;
       });
