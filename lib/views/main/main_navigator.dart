@@ -235,7 +235,11 @@ class MainNavigatorState extends State<MainNavigator> {
 
     /// No CCViewProvider or on placeholder page.
     if (viewProvider == null ||
-        viewProvider.currentPage == ComponentContainerPage.noContainers) {
+        viewProvider.currentPage == ComponentContainerPage.noContainers ||
+        (viewProvider.vehicles.isEmpty &&
+            viewProvider.stocks.isEmpty &&
+            viewProvider.currentPage == ComponentContainerPage.addContainer &&
+            viewProvider.isAdmin)) {
       return CCViewProvider(
         toggle: toggle,
         vehicles: vehicleProvider.containers,

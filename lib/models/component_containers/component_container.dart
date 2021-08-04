@@ -64,11 +64,11 @@ class ComponentContainer {
             List.empty(growable: true);
 
     for (final update
-        in (json['updates'] as List).cast<Map<String, dynamic>>()) {
+        in (json['updates'] as List? ?? []).cast<Map<String, dynamic>>()) {
       updates.add(Update.fromJson(update));
     }
     for (final update
-        in (json['current-state'] as List).cast<Map<String, dynamic>>()) {
+        in (json['current-state'] as List? ?? []).cast<Map<String, dynamic>>()) {
       currentState.add(Update.fromJson(update));
     }
 

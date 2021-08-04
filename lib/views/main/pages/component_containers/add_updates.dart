@@ -134,6 +134,7 @@ class _AddUpdatesState extends State<AddUpdates> {
       });
       context.read<CCViewProvider>().switchTo(
             ComponentContainerPage.currentState,
+            toggleDrawer: false,
           );
     }
   }

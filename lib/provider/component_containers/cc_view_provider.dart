@@ -72,6 +72,7 @@ class CCViewProvider extends CategoryFilterProvider
   void switchTo(
     ComponentContainerPage page, {
     ComponentContainer? openContainer,
+    toggleDrawer = true,
   }) {
     if (openContainer != null && openContainer.id != currentlyOpen?.id) {
       currentPage = ComponentContainerPage.currentState;
@@ -79,7 +80,9 @@ class CCViewProvider extends CategoryFilterProvider
       allowContextDrawer = true;
       resetAllowedCategories(false);
       resetAllowedStates(false);
-      toggle();
+      if (toggleDrawer) {
+        toggle();
+      }
       notify();
       return;
     }
@@ -95,7 +98,9 @@ class CCViewProvider extends CategoryFilterProvider
         resetAllowedStates(false);
         allowContextDrawer = true;
       }
-      toggle();
+      if (toggleDrawer) {
+        toggle();
+      }
       notify();
     }
   }
@@ -108,14 +113,24 @@ class CCViewProvider extends CategoryFilterProvider
     if (currentlyOpen?.id == null) {
       return;
     }
-    late final List list;
+    late final List<ComponentContainer> list;
     if (currentlyOpen!.type == ComponentContainerTypes.vehicle) {
       list = vehicles;
     } else {
       list = stocks;
     }
 
-    final int index = list.indexOf(currentlyOpen);
+    int index = list.indexOf(currentlyOpen!);
+    if (index == -1) {
+      final componentInList = list.firstWhere(
+        (element) => element.id == currentlyOpen?.id,
+        orElse: () => ComponentContainer(
+          name: '',
+          type: ComponentContainerTypes.vehicle,
+        ),
+      );
+      index = list.indexOf(componentInList);
+    }
     if (index == -1) {
       print('vehicle not found');
       return;

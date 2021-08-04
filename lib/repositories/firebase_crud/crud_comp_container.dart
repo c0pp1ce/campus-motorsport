@@ -234,8 +234,8 @@ class CrudCompContainer {
 
         bool componentFound = false;
         Map<String, dynamic>? matchingUpdate;
-        for (final update
-            in (data['current-state'] as List).cast<Map<String, dynamic>>()) {
+        for (final update in (data['current-state'] as List? ?? [])
+            .cast<Map<String, dynamic>>()) {
           if ((update['component'] as Map<String, dynamic>?)?['id'] ==
               componentId) {
             componentFound = true;
@@ -285,18 +285,17 @@ class CrudCompContainer {
         bool componentFound = false;
         final List<Map<String, dynamic>> matchingUpdates = [];
         for (final update
-            in (data['updates'] as List).cast<Map<String, dynamic>>()) {
+            in (data['updates'] as List? ?? []).cast<Map<String, dynamic>>()) {
           if ((update['component'] as Map<String, dynamic>?)?['id'] ==
               componentId) {
             componentFound = true;
             matchingUpdates.add(update);
-            break;
           }
         }
 
         if (componentFound) {
           transaction.update(containerDoc, {
-            'current-state': FieldValue.arrayRemove(matchingUpdates),
+            'updates': FieldValue.arrayRemove(matchingUpdates),
           });
           return true;
         } else {
