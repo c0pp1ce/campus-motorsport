@@ -2,6 +2,11 @@ import 'package:campus_motorsport/provider/base_provider.dart';
 
 /// Determines which sub page of home should be shown.
 class HomeProvider extends BaseProvider {
+  HomeProvider({
+    required this.toggle,
+  }) : super();
+
+  final void Function() toggle;
   HomePage currentPage = HomePage.overview;
   bool allowContextDrawer = false;
 
@@ -13,6 +18,7 @@ class HomeProvider extends BaseProvider {
       } else {
         allowContextDrawer = false;
       }
+      toggle();
       notify();
     }
   }

@@ -2,11 +2,17 @@ import 'package:campus_motorsport/provider/base_provider.dart';
 
 /// Determines which subpage of User Management should be shown.
 class UserManagementProvider extends BaseProvider {
+  UserManagementProvider({
+    required this.toggle,
+  }) : super();
+
+  final void Function() toggle;
   UMPage currentPage = UMPage.acceptUsers;
 
   void switchTo(UMPage page) {
     if (page != currentPage) {
       currentPage = page;
+      toggle();
       notify();
     }
   }

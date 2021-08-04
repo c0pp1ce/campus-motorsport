@@ -29,14 +29,17 @@ import 'package:provider/provider.dart';
 /// Provider or BloCs needed for those pages need to be inserted above the [StackedUI]
 /// widget.
 class MainNavigator extends StatefulWidget {
-  const MainNavigator({Key? key}) : super(key: key);
+  const MainNavigator({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _MainNavigatorState createState() => _MainNavigatorState();
+  MainNavigatorState createState() => MainNavigatorState();
 }
 
-class _MainNavigatorState extends State<MainNavigator> {
+class MainNavigatorState extends State<MainNavigator> {
   int _currentIndex = 0;
+  final GlobalKey<StackedUIState> uiKey = GlobalKey();
 
   /// The pages of the main navigation.
   /// Length must be equal to [_contextMenus].
@@ -45,6 +48,10 @@ class _MainNavigatorState extends State<MainNavigator> {
   /// The context menus of the main navigation.
   /// Length must be equal to [_pages].
   late final List<Widget?> _contextMenus;
+
+  void toggle() {
+    uiKey.currentState?.toggle();
+  }
 
   @override
   void initState() {
@@ -71,16 +78,29 @@ class _MainNavigatorState extends State<MainNavigator> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => HomeProvider()),
-        ChangeNotifierProvider(create: (context) => UserManagementProvider()),
+        ChangeNotifierProvider(
+          create: (context) => HomeProvider(
+            toggle: toggle,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserManagementProvider(
+            toggle: toggle,
+          ),
+        ),
         ChangeNotifierProvider(create: (context) => UsersProvider()),
-        ChangeNotifierProvider(create: (context) => ComponentsViewProvider()),
+        ChangeNotifierProvider(
+          create: (context) => ComponentsViewProvider(
+            toggle: toggle,
+          ),
+        ),
         ChangeNotifierProvider(create: (context) => ComponentsProvider()),
         ChangeNotifierProvider(create: (context) => VehiclesProvider()),
         ChangeNotifierProvider(create: (context) => StocksProvider()),
         ChangeNotifierProxyProvider2<VehiclesProvider, StocksProvider,
             CCViewProvider>(
           create: (context) => CCViewProvider(
+            toggle: toggle,
             vehicles: Provider.of<VehiclesProvider>(context, listen: false)
                 .getContainersBuildSafe(),
             stocks: Provider.of<StocksProvider>(context, listen: false)
@@ -95,6 +115,7 @@ class _MainNavigatorState extends State<MainNavigator> {
       ],
       builder: (context, child) {
         return StackedUI(
+          key: uiKey,
           navigationDrawer: _buildDrawer(context),
           mainView: _pages[_currentIndex],
           contextDrawer: _contextMenus[_currentIndex],
@@ -129,6 +150,7 @@ class _MainNavigatorState extends State<MainNavigator> {
             if (_currentIndex != 0) {
               setState(() {
                 _currentIndex = 0;
+                toggle();
               });
             }
           },
@@ -144,6 +166,7 @@ class _MainNavigatorState extends State<MainNavigator> {
             if (_currentIndex != 1) {
               setState(() {
                 _currentIndex = 1;
+                toggle();
               });
             }
           },
@@ -157,6 +180,7 @@ class _MainNavigatorState extends State<MainNavigator> {
             if (_currentIndex != 2) {
               setState(() {
                 _currentIndex = 2;
+                toggle();
               });
             }
           },
@@ -171,6 +195,7 @@ class _MainNavigatorState extends State<MainNavigator> {
               if (_currentIndex != 3) {
                 setState(() {
                   _currentIndex = 3;
+                  toggle();
                 });
               }
             },
@@ -212,6 +237,7 @@ class _MainNavigatorState extends State<MainNavigator> {
     if (viewProvider == null ||
         viewProvider.currentPage == ComponentContainerPage.noContainers) {
       return CCViewProvider(
+        toggle: toggle,
         vehicles: vehicleProvider.containers,
         stocks: stocksProvider.containers,
         isAdmin: isAdmin,
@@ -225,6 +251,7 @@ class _MainNavigatorState extends State<MainNavigator> {
         _showRedirectInfo('Admin-Rechte', context);
       });
       return CCViewProvider(
+        toggle: toggle,
         vehicles: vehicleProvider.containers,
         stocks: stocksProvider.containers,
         isAdmin: isAdmin,
@@ -260,6 +287,7 @@ class _MainNavigatorState extends State<MainNavigator> {
               });
             });
             return CCViewProvider(
+              toggle: toggle,
               vehicles: vehicleProvider.containers,
               stocks: stocksProvider.containers,
               isAdmin: isAdmin,
@@ -290,6 +318,7 @@ class _MainNavigatorState extends State<MainNavigator> {
               });
             });
             return CCViewProvider(
+              toggle: toggle,
               vehicles: vehicleProvider.containers,
               stocks: stocksProvider.containers,
               isAdmin: isAdmin,

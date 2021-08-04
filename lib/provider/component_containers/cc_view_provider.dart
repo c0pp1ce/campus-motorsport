@@ -13,6 +13,7 @@ class CCViewProvider extends CategoryFilterProvider
     required this.vehicles,
     required this.stocks,
     required this.isAdmin,
+    required this.toggle,
   }) : super() {
     /// Required when using the [StateFilterProviderMixin].
     stateFilterNotify = notify;
@@ -38,6 +39,8 @@ class CCViewProvider extends CategoryFilterProvider
       currentlyOpen = stocks[0];
     }
   }
+
+  final void Function() toggle;
 
   late bool isAdmin;
   late bool allowContextDrawer;
@@ -76,6 +79,7 @@ class CCViewProvider extends CategoryFilterProvider
       allowContextDrawer = true;
       resetAllowedCategories(false);
       resetAllowedStates(false);
+      toggle();
       notify();
       return;
     }
@@ -91,6 +95,7 @@ class CCViewProvider extends CategoryFilterProvider
         resetAllowedStates(false);
         allowContextDrawer = true;
       }
+      toggle();
       notify();
     }
   }
