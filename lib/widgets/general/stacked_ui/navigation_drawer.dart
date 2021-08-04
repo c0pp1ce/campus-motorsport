@@ -67,30 +67,30 @@ class NavigationDrawer extends StatelessWidget {
     return Container(
       height: double.infinity,
 
-        /// Should be the same as used in the other [StackedUI] widgets.
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(SizeConfig.baseBorderRadius),
-          ),
-          color: ElevationOverlay.applyOverlay(
-            context,
-            Theme.of(context).colorScheme.surface,
-            SizeConfig.baseBackgroundElevation,
-          ),
+      /// Should be the same as used in the other [StackedUI] widgets.
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(SizeConfig.baseBorderRadius),
         ),
-        padding: const EdgeInsets.all(SizeConfig.basePadding),
-        child: RepaintBoundary(
-          child: AnimatedSwitcher(
-            child: navigationItems[selected].secondaryItem,
-            duration: Duration.zero,
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(
-                child: child,
-                scale: animation,
-              );
-            },
-          ),
+        color: ElevationOverlay.applyOverlay(
+          context,
+          Theme.of(context).colorScheme.surface,
+          SizeConfig.baseBackgroundElevation,
         ),
-      );
+      ),
+      padding: const EdgeInsets.all(SizeConfig.basePadding),
+      child: RepaintBoundary(
+        child: AnimatedSwitcher(
+          child: navigationItems[selected].secondaryItem,
+          duration: Duration.zero,
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(
+              child: child,
+              scale: animation,
+            );
+          },
+        ),
+      ),
+    );
   }
 }

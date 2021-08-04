@@ -37,7 +37,10 @@ class _AllUpdatesState extends State<AllUpdates> {
           loading = value;
         });
       },
-      appbarTitle: const Text('Alle Wartungen'),
+      appbarTitle: Text(
+        'Alle Wartungen',
+        style: Theme.of(context).textTheme.headline6,
+      ),
       appbarChild: const Center(
         child: ExpandedTitle(
           title: 'Alle Wartungen',

@@ -34,25 +34,23 @@ class ContextDrawer extends StatelessWidget {
   /// Places the [child] in a predefined [Container] with maximum available
   /// height and width.
   Widget _buildContext(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        height: double.infinity,
-        margin: const EdgeInsets.only(right: 5.0),
-        padding: const EdgeInsets.all(SizeConfig.basePadding),
+    return Container(
+      height: double.infinity,
+      margin: const EdgeInsets.only(right: 5.0),
+      padding: const EdgeInsets.all(SizeConfig.basePadding),
 
-        /// Should be the same as used in the other [StackedUI] widgets.
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(SizeConfig.baseBorderRadius),
-          ),
-          color: ElevationOverlay.applyOverlay(
-            context,
-            Theme.of(context).colorScheme.surface,
-            SizeConfig.baseBackgroundElevation,
-          ),
+      /// Should be the same as used in the other [StackedUI] widgets.
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(SizeConfig.baseBorderRadius),
         ),
-        child: child,
+        color: ElevationOverlay.applyOverlay(
+          context,
+          Theme.of(context).colorScheme.surface,
+          SizeConfig.baseBackgroundElevation,
+        ),
       ),
+      child: child,
     );
   }
 }

@@ -11,14 +11,14 @@ class ComponentSelectionPreUpdate extends StatelessWidget {
     required this.components,
     required this.doneButton,
     required this.onSelect,
-    required this.selectedValues,
+    required this.getSelected,
     Key? key,
   }) : super(key: key);
 
   final Widget doneButton;
   final List<BaseComponent> components;
-  final List<bool> selectedValues;
-  final void Function(int) onSelect;
+  final bool Function(BaseComponent) getSelected;
+  final void Function(BaseComponent) onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,9 @@ class ComponentSelectionPreUpdate extends StatelessWidget {
 
             final Widget child = ComponentSelectionTile(
               component: components[index],
-              selected: selectedValues[index],
+              selected: getSelected(components[index]),
               onSelect: () {
-                onSelect(index);
+                onSelect(components[index]);
               },
             );
 

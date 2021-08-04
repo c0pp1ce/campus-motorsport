@@ -37,7 +37,10 @@ class _AddComponentState extends State<AddComponent> {
   @override
   Widget build(BuildContext context) {
     return ExpandedAppBar(
-      appbarTitle: const Text('Komponente erstellen'),
+      appbarTitle: Text(
+        'Komponente erstellen',
+        style: Theme.of(context).textTheme.headline6,
+      ),
       appbarChild: const Center(
         child: ExpandedTitle(
           title: 'Komponente erstellen',

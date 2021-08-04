@@ -24,18 +24,8 @@ class AddUpdates extends StatefulWidget {
 
 class _AddUpdatesState extends State<AddUpdates> {
   final List<BaseComponent> selectedForUpdate = [];
-  late final List<bool> selectedArray;
   bool selectionFinished = false;
   bool loading = false;
-
-  @override
-  void initState() {
-    selectedArray = List.filled(
-      context.read<CCViewProvider>().currentlyOpen!.components.length,
-      false,
-    );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +42,7 @@ class _AddUpdatesState extends State<AddUpdates> {
       offsetBeforeTitleShown: 50,
       appbarTitle: Text(
         !selectionFinished ? 'Komponenten auswählen' : 'Wartungen eintragen',
+        style: Theme.of(context).textTheme.headline6,
       ),
       appbarChild: Center(
         child: ExpandedTitle(
@@ -65,18 +56,19 @@ class _AddUpdatesState extends State<AddUpdates> {
           ? LoadingList()
           : !selectionFinished
               ? ComponentSelectionPreUpdate(
-                  components: containerComponents,
-                  selectedValues: selectedArray,
+                  components: containerComponents
+                      .where((element) => viewProvider.allowedCategories
+                          .contains(element.category))
+                      .toList(),
+                  getSelected: (component) =>
+                      selectedForUpdate.contains(component),
                   doneButton: _buildNextButton(context),
-                  onSelect: (index) {
+                  onSelect: (component) {
                     setState(() {
-                      if (selectedForUpdate
-                          .contains(containerComponents[index])) {
-                        selectedForUpdate.remove(containerComponents[index]);
-                        selectedArray[index] = false;
+                      if (selectedForUpdate.contains(component)) {
+                        selectedForUpdate.remove(component);
                       } else {
-                        selectedArray[index] = true;
-                        selectedForUpdate.add(containerComponents[index]);
+                        selectedForUpdate.add(component);
                       }
                     });
                   },
@@ -147,7 +139,6 @@ class _AddUpdatesState extends State<AddUpdates> {
   }
 
   void _reset([bool shouldSetState = true]) {
-    selectedArray.fillRange(0, selectedArray.length, false);
     selectedForUpdate.clear();
     selectionFinished = false;
     if (shouldSetState) {

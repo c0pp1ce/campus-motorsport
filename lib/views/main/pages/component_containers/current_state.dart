@@ -69,10 +69,10 @@ class _CurrentStateState extends State<CurrentState> {
 
     /// Some error occurred.
     if (viewProvider.currentlyOpen == null) {
-      ExpandedAppBar(
+      const ExpandedAppBar(
         appbarTitle: Text('Fehler beim Laden.'),
         offsetBeforeTitleShown: 0,
-        appbarChild: const SizedBox(),
+        appbarChild: SizedBox(),
       );
     }
 
@@ -87,14 +87,19 @@ class _CurrentStateState extends State<CurrentState> {
       },
       offsetBeforeTitleShown: 5,
       expandedHeight: edit ? 250 : 210,
-      appbarTitle: CMTextField(
-        style: Theme.of(context).textTheme.headline6?.copyWith(
-              color: edit ? Theme.of(context).colorScheme.primary : null,
+      appbarTitle: isAdmin && edit
+          ? CMTextField(
+              style: Theme.of(context).textTheme.headline6?.copyWith(
+                    color: edit ? Theme.of(context).colorScheme.primary : null,
+                  ),
+              controller: _nameController,
+              enabled: edit,
+              noBorders: true,
+            )
+          : Text(
+              viewProvider.currentlyOpen!.name,
+              style: Theme.of(context).textTheme.headline6,
             ),
-        controller: _nameController,
-        enabled: edit,
-        noBorders: true,
-      ),
       titleAlwaysVisible: true,
       appbarChild: Stack(
         children: [
@@ -120,7 +125,7 @@ class _CurrentStateState extends State<CurrentState> {
               ),
               child: Column(
                 children: <Widget>[
-                  CurrentStateOverview(),
+                  const CurrentStateOverview(),
                   const SizedBox(
                     height: SizeConfig.basePadding * 2,
                   ),
@@ -148,7 +153,7 @@ class _CurrentStateState extends State<CurrentState> {
           height: 50,
           width: 55,
           padding: const EdgeInsets.all(SizeConfig.basePadding),
-          child: CircularProgressIndicator(
+          child: const CircularProgressIndicator(
             strokeWidth: 2,
           ),
         ),

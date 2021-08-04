@@ -252,8 +252,8 @@ class _CMImagePickerState extends State<CMImagePicker> {
     );
   }
 
-  double getFileSize(File file)  {
-    final int bytes =  file.lengthSync();
+  double getFileSize(File file) {
+    final int bytes = file.lengthSync();
     return bytes / (1024 * 1024);
   }
 }

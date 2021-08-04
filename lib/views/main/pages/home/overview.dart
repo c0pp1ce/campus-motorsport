@@ -34,7 +34,10 @@ class Overview extends StatelessWidget {
 
     return ExpandedAppBar(
       expandedHeight: 150,
-      appbarTitle: const Text('Übersicht'),
+      appbarTitle: Text(
+        'Übersicht',
+        style: Theme.of(context).textTheme.headline6,
+      ),
       appbarChild: FutureBuilder<List<int>?>(
         future: _getData(context),
         builder: (context, snapshot) {

@@ -211,7 +211,7 @@ class VehicleComponentState extends State<VehicleComponent> {
                   height: SizeConfig.basePadding * 2,
                 ),
               ],
-              ..._showEventPicker(context),
+              if(widget.showBaseData)..._showEventPicker(context),
               const SizedBox(
                 height: SizeConfig.basePadding,
               ),

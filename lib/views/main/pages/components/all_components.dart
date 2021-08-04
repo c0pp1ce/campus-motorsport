@@ -36,7 +36,10 @@ class _AllComponentsState extends State<AllComponents> {
         dividerColor: Colors.transparent,
       ),
       child: ExpandedAppBar(
-        appbarTitle: const Text('Alle Komponenten'),
+        appbarTitle: Text(
+          'Alle Komponenten',
+          style: Theme.of(context).textTheme.headline6,
+        ),
         appbarChild: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: SizeConfig.basePadding,

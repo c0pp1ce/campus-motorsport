@@ -26,7 +26,10 @@ class _AcceptUsersState extends State<AcceptUsers> {
     final UsersProvider provider = context.watch<UsersProvider>();
 
     return ExpandedAppBar(
-      appbarTitle: const Text('Ausstehende Bestätigungen'),
+      appbarTitle: Text(
+        'Ausstehende Bestätigungen',
+        style: Theme.of(context).textTheme.headline6,
+      ),
       appbarChild: const Center(
         child: ExpandedTitle(
           title: 'Ausstehende Bestätigungen',

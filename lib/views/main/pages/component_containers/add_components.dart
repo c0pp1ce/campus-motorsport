@@ -38,10 +38,10 @@ class _AddComponentsState extends State<AddComponents> {
 
     /// Some error occurred.
     if (viewProvider.currentlyOpen == null) {
-      ExpandedAppBar(
+      const ExpandedAppBar(
         appbarTitle: Text('Fehler beim Laden.'),
         offsetBeforeTitleShown: 0,
-        appbarChild: const SizedBox(),
+        appbarChild: SizedBox(),
       );
     }
 
@@ -53,7 +53,8 @@ class _AddComponentsState extends State<AddComponents> {
       notYetAdded = [];
     } else {
       notYetAdded = components.where((component) {
-        return !componentContainer.components.contains(component.id);
+        return !componentContainer.components.contains(component.id) &&
+            viewProvider.allowedCategories.contains(component.category);
       }).toList();
     }
 
@@ -64,7 +65,10 @@ class _AddComponentsState extends State<AddComponents> {
           loading = value;
         });
       },
-      appbarTitle: const Text('Komponenten hinzufügen'),
+      appbarTitle: Text(
+        'Komponenten hinzufügen',
+        style: Theme.of(context).textTheme.headline6,
+      ),
       appbarChild: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,

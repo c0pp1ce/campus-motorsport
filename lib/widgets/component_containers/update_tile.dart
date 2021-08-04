@@ -1,5 +1,6 @@
 import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:campus_motorsport/widgets/component_containers/update_details.dart';
@@ -37,7 +38,10 @@ class UpdateTile extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(update.component.name),
+            Text(
+              update.component.name,
+              style: Theme.of(context).textTheme.headline6,
+            ),
             Text(
               update.component.category.name,
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
@@ -49,9 +53,23 @@ class UpdateTile extends StatelessWidget {
             ),
             Text(
               DateFormat.yMMMMd().format(update.date),
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: ColorServices.darken(
+                      Theme.of(context).colorScheme.onSurface,
+                      SizeConfig.darkenTextColorBy ~/ 2,
+                    ),
+                    fontSize: 14,
+                  ),
             ),
             Text(
               update.by,
+              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                    color: ColorServices.darken(
+                      Theme.of(context).colorScheme.onSurface,
+                      SizeConfig.darkenTextColorBy ~/ 2,
+                    ),
+                    fontSize: 14,
+                  ),
             ),
           ],
         ),

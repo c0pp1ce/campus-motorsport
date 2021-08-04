@@ -52,7 +52,10 @@ class _AddContainerState extends State<AddContainer> {
   @override
   Widget build(BuildContext context) {
     return ExpandedAppBar(
-      appbarTitle: const Text('Fahrzeug/Lager erstellen'),
+      appbarTitle: Text(
+        'Fahrzeug/Lager erstellen',
+        style: Theme.of(context).textTheme.headline6,
+      ),
       appbarChild: const Center(
         child: ExpandedTitle(
           title: 'Fahrzeug/Lager erstellen',

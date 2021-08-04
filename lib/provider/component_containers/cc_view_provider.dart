@@ -1,20 +1,21 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
-import 'package:campus_motorsport/models/components/component.dart';
-import 'package:campus_motorsport/provider/base_provider.dart';
+import 'package:campus_motorsport/provider/category_filter_provider.dart';
+import 'package:campus_motorsport/provider/state_filter_provider_mixin.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 
 /// Determines which subpage of Component Containers(Vehicles and stock) should
 /// be shown.
 ///
 /// Also holds the current container which should be displayed.
-class CCViewProvider extends BaseProvider {
+class CCViewProvider extends CategoryFilterProvider
+    with StateFilterProviderMixin {
   CCViewProvider({
     required this.vehicles,
     required this.stocks,
     required this.isAdmin,
-  }) {
-    _allowedCategories = [];
-    _addAllCategories();
+  }) : super() {
+    /// Required when using the [StateFilterProviderMixin].
+    stateFilterNotify = notify;
     if (stocks.isEmpty) {
       if (vehicles.isEmpty) {
         /// No vehicles or stocks found.
@@ -46,9 +47,6 @@ class CCViewProvider extends BaseProvider {
   List<ComponentContainer> stocks;
   ComponentContainer? currentlyOpen;
 
-  /// Used to filter components list.
-  late List<ComponentCategories> _allowedCategories;
-
   /// Used to be able to easier build menus.
   static List<ComponentContainerPage> get containerSpecificPages {
     return const [
@@ -75,6 +73,9 @@ class CCViewProvider extends BaseProvider {
     if (openContainer != null && openContainer.id != currentlyOpen?.id) {
       currentPage = ComponentContainerPage.currentState;
       currentlyOpen = openContainer;
+      allowContextDrawer = true;
+      resetAllowedCategories(false);
+      resetAllowedStates(false);
       notify();
       return;
     }
@@ -87,6 +88,7 @@ class CCViewProvider extends BaseProvider {
         allowContextDrawer = false;
       } else {
         resetAllowedCategories(false);
+        resetAllowedStates(false);
         allowContextDrawer = true;
       }
       notify();
@@ -122,35 +124,6 @@ class CCViewProvider extends BaseProvider {
     }
     notify();
   }
-
-  // Filter logic --------------------------------------------------------------
-  void allowCategory(ComponentCategories c) {
-    if (!_allowedCategories.contains(c)) {
-      _allowedCategories.add(c);
-      notify();
-    }
-  }
-
-  void hideCategory(ComponentCategories c) {
-    if (_allowedCategories.remove(c)) {
-      notify();
-    }
-  }
-
-  void resetAllowedCategories([bool notifyListeners = true]) {
-    _allowedCategories.clear();
-    _addAllCategories();
-    if (notifyListeners) {
-      notify();
-    }
-  }
-
-  void _addAllCategories() {
-    ComponentCategories.values.forEach(_allowedCategories.add);
-  }
-
-  List<ComponentCategories> get allowedCategories => _allowedCategories;
-// End Filter logic ------------------------------------------------------------
 }
 
 enum ComponentContainerPage {

@@ -8,8 +8,8 @@ import 'package:campus_motorsport/views/main/pages/component_containers/add_cont
 import 'package:campus_motorsport/views/main/pages/component_containers/add_updates.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/all_updates.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
+import 'package:campus_motorsport/widgets/component_containers/context_filter.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
-import 'package:campus_motorsport/widgets/general/stacked_ui/context_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +34,7 @@ class ComponentContainersView extends StatelessWidget {
         );
       case ComponentContainerPage.addEvent:
         return ExpandedAppBar(
-          appbarTitle: Text('TODO'),
+          appbarTitle: Text('TODO'), // TODO
           appbarChild: Container(),
         );
       case ComponentContainerPage.addComponent:
@@ -44,9 +44,11 @@ class ComponentContainersView extends StatelessWidget {
       case ComponentContainerPage.addContainer:
         return AddContainer();
       case ComponentContainerPage.noContainers:
-        return ExpandedAppBar(
-          appbarTitle: Text('TODO'),
-          appbarChild: Container(),
+        return const ExpandedAppBar(
+          appbarTitle: Text('Fehler'),
+          appbarChild: Center(
+            child: Text('Da ist wohl etwas schiefgelaufen.'),
+          ),
         );
     }
   }
@@ -58,17 +60,24 @@ class ComponentContainersContext extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CCViewProvider ccViewProvider = context.watch<CCViewProvider>();
+
     switch (ccViewProvider.currentPage) {
       case ComponentContainerPage.currentState:
-        return ContextDrawer(); // TODO : Filter list
+        return const ContextFilter(
+          currentState: true,
+        );
       case ComponentContainerPage.updates:
-        return ContextDrawer(); // TODO : Filter list
+        return const ContextFilter();
       case ComponentContainerPage.addUpdate:
-        return ContextDrawer(); // TODO : Filter
+        return const ContextFilter(
+          showStateFilter: false,
+        );
       case ComponentContainerPage.addEvent:
         break;
       case ComponentContainerPage.addComponent:
-        return ContextDrawer(); // TODO : Filter
+        return const ContextFilter(
+          showStateFilter: false,
+        );
       case ComponentContainerPage.addContainer:
         break;
       case ComponentContainerPage.noContainers:

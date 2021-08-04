@@ -29,7 +29,10 @@ class _AdminsState extends State<Admins> {
     final UsersProvider provider = context.watch<UsersProvider>();
 
     return ExpandedAppBar(
-      appbarTitle: const Text('Administratoren'),
+      appbarTitle: Text(
+        'Administratoren',
+        style: Theme.of(context).textTheme.headline6,
+      ),
       appbarChild: const Center(
         child: ExpandedTitle(
           title: 'Administratoren-Verwaltung',
