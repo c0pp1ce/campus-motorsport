@@ -49,17 +49,35 @@ class _AddUpdatesState extends State<AddUpdates> {
         .toList();
 
     return ExpandedAppBar(
+      onRefresh: viewProvider.reloadCurrentlyOpen,
+      loadingListener: (value) {
+        setState(() {
+          loading = value;
+        });
+      },
       offsetBeforeTitleShown: 50,
       appbarTitle: Text(
         !selectionFinished ? 'Komponenten auswählen' : 'Wartungen eintragen',
         style: Theme.of(context).textTheme.headline6,
       ),
-      appbarChild: Center(
-        child: ExpandedTitle(
-          title: !selectionFinished
-              ? 'Komponenten auswählen'
-              : 'Wartungen eintragen',
-        ),
+      appbarChild: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ExpandedTitle(
+            title: !selectionFinished
+                ? 'Komponenten auswählen'
+                : 'Wartungen eintragen',
+          ),
+          Text(
+            viewProvider.currentlyOpen!.name,
+            style: Theme.of(context).textTheme.headline6?.copyWith(
+                  color: ColorServices.darken(
+                    Theme.of(context).colorScheme.onSurface,
+                    SizeConfig.darkenTextColorBy,
+                  ),
+                ),
+          ),
+        ],
       ),
       actions: _buildActions(context),
       body: loading

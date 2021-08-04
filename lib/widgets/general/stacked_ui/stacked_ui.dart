@@ -124,7 +124,7 @@ class StackedUIState extends State<StackedUI>
                   final double slide = maxSlide * animationController.value;
                   return Transform(
                     transform: Matrix4.identity()..translate(slide),
-                    child: child!,
+                    child: child,
                   );
                 },
               ),

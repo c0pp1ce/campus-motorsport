@@ -1,5 +1,5 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
-import 'package:campus_motorsport/models/component_containers/event.dart';
+import 'package:campus_motorsport/models/component_containers/event.dart' as cm;
 import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_component.dart';
@@ -84,7 +84,7 @@ class CrudCompContainer {
   /// Updates the current-state if any of those updates reaches 0 with this event.
   Future<bool> addEvent({
     required String docId,
-    required Event event,
+    required cm.Event event,
   }) async {
     try {
       return _firestore.runTransaction((transaction) async {
@@ -122,15 +122,20 @@ class CrudCompContainer {
           if (newCounter <= 0) {
             /// Decrement the state of the component.
             int stateIndex = ComponentStates.values.indexOf(
-                (update['component'] as Map<String, dynamic>)['state']);
+                ComponentStates.values.firstWhere((element) =>
+                    element.name ==
+                    (update['component'] as Map<String, dynamic>)['state']
+                        as String));
             stateIndex = stateIndex - 1;
             if (stateIndex < 0) {
               stateIndex = 0;
             }
             (update['component'] as Map<String, dynamic>)['state'] =
-                ComponentStates.values[stateIndex];
+                ComponentStates.values[stateIndex].name;
 
             /// Get original component and Reset the counter.
+            /// As long as its forbidden to change the counter there is no need
+            /// to read the value via transaction.
             final BaseComponent? baseComponent =
                 await CrudComponent().getComponent(
               (update['component'] as Map<String, dynamic>)['id'],
@@ -156,19 +161,26 @@ class CrudCompContainer {
               /// and everyone after will lead to the same state.
               while (newCounter <= 0) {
                 (update['component'] as Map<String, dynamic>)['state'] =
-                    ComponentStates.bad;
+                    ComponentStates.bad.name;
                 newCounter = newCounter + baseComponent.baseEventCounter!;
               }
 
               /// Update counter.
               update['eventCounter'] = newCounter;
             }
+            update['by'] = 'Statusänderung durchs System';
+            update['date'] = DateTime.now().toUtc();
             counterReachedZero.add(update);
           } else {
             update['eventCounter'] = newCounter;
             onlyCounterUpdatesNeeded.add(update);
           }
         }
+
+        /// Add the event to the events list.
+        transaction.update(containerDoc, {
+          'events': FieldValue.arrayUnion([event.toJson()]),
+        });
 
         /// Update counter without further side effect.
         /// Changes the counter of updates in current-state but does not do anything
@@ -179,6 +191,9 @@ class CrudCompContainer {
           updatesListMap: onlyCounterUpdatesNeeded,
           fromListMap: true,
           addToCurrentStateOnly: true,
+          transaction: transaction,
+          snapshot: containerSnapshot,
+          document: containerDoc,
         );
 
         /// No need to get new snapshot here since one update cannot be in both
@@ -191,12 +206,11 @@ class CrudCompContainer {
           updates: [],
           updatesListMap: counterReachedZero,
           fromListMap: true,
+          transaction: transaction,
+          snapshot: containerSnapshot,
+          document: containerDoc,
         );
 
-        /// Add the event to the events list.
-        transaction.update(containerDoc, {
-          'events': FieldValue.arrayUnion([event.toJson()]),
-        });
         return true;
       });
     } on Exception catch (e) {
@@ -215,16 +229,23 @@ class CrudCompContainer {
     bool addToCurrentStateOnly = false,
     DocumentReference? document,
     DocumentSnapshot? snapshot,
+    Transaction? transaction,
   }) async {
-    assert(snapshot != null && document != null ||
-        snapshot == null && document == null);
-    assert(fromListMap && updatesListMap != null || !fromListMap);
+    assert(snapshot != null && document != null && transaction != null ||
+        snapshot == null && document == null && transaction == null);
+    assert(fromListMap && updatesListMap != null ||
+        !fromListMap && updatesListMap == null);
 
     /// No updates given.
     if (updates.isEmpty && !fromListMap) {
       return true;
     }
+    if (fromListMap && updatesListMap!.isEmpty) {
+      return true;
+    }
+
     try {
+      /// Construct data list.
       late final List<Map<String, dynamic>> data;
       if (fromListMap) {
         data = updatesListMap!;
@@ -235,41 +256,93 @@ class CrudCompContainer {
         }
       }
 
-      return _firestore.runTransaction((transaction) async {
-        /// Get the document.
-        final DocumentReference containerDoc = document ??
-            _firestore.collection('component-containers').doc(docId);
-        final DocumentSnapshot containerSnapshot =
-            snapshot ?? await transaction.get(containerDoc);
-
-        if (containerSnapshot.data() == null) {
-          return false;
-        }
-
-        /// Delete the current updates which shall be replaced.
-        for (final update in updates) {
-          if (update.component.id == null) {
-            continue;
-          }
-          await deleteComponentFromCurrentState(
-            docId: docId,
-            componentId: update.component.id!,
-            document: containerDoc,
-            snapshot: containerSnapshot,
+      /// Run using the outer transaction.
+      if (transaction != null) {
+        final DocumentReference containerDoc = document!;
+        final DocumentSnapshot containerSnapshot = snapshot!;
+        return _addUpdatesTransactionPartAfterReading(
+          containerDoc: containerDoc,
+          containerSnapshot: containerSnapshot,
+          transaction: transaction,
+          fromListMap: fromListMap,
+          addToCurrentStateOnly: addToCurrentStateOnly,
+          data: data,
+          updatesListMap: updatesListMap,
+        );
+      } else {
+        return _firestore.runTransaction((transaction) async {
+          /// Get the document.
+          final DocumentReference containerDoc = document ??
+              _firestore.collection('component-containers').doc(docId);
+          final DocumentSnapshot containerSnapshot =
+              snapshot ?? await transaction.get(containerDoc);
+          return _addUpdatesTransactionPartAfterReading(
+            containerDoc: containerDoc,
+            containerSnapshot: containerSnapshot,
+            transaction: transaction,
+            fromListMap: fromListMap,
+            addToCurrentStateOnly: addToCurrentStateOnly,
+            data: data,
+            updates: updates,
           );
-        }
-
-        /// Add the new updates to the current state and updates list.
-        transaction.update(containerDoc, {
-          'current-state': FieldValue.arrayUnion(data),
-          if (!addToCurrentStateOnly) 'updates': FieldValue.arrayUnion(data),
         });
-        return true;
-      });
+      }
     } on Exception catch (e) {
       print(e.toString());
       return false;
     }
+  }
+
+  Future<bool> _addUpdatesTransactionPartAfterReading({
+    required DocumentReference containerDoc,
+    required DocumentSnapshot containerSnapshot,
+    required Transaction transaction,
+    required bool fromListMap,
+    required bool addToCurrentStateOnly,
+    required List<Map<String, dynamic>> data,
+    List<Map<String, dynamic>>? updatesListMap,
+    List<Update>? updates,
+  }) async {
+    if (containerSnapshot.data() == null) {
+      return false;
+    }
+
+    /// Delete the current updates which shall be replaced.
+    if (fromListMap) {
+      for (final update in updatesListMap!) {
+        if ((update['component'] as Map<String, dynamic>)['id'] == null) {
+          continue;
+        }
+        await deleteComponentFromCurrentState(
+          transaction: transaction,
+          docId: containerDoc.id,
+          componentId: (update['component'] as Map<String, dynamic>)['id'],
+          document: containerDoc,
+          snapshot: containerSnapshot,
+        );
+      }
+    } else {
+      for (final update in updates!) {
+        if (update.component.id == null) {
+          continue;
+        }
+        await deleteComponentFromCurrentState(
+          transaction: transaction,
+          docId: containerDoc.id,
+          componentId: update.component.id!,
+          document: containerDoc,
+          snapshot: containerSnapshot,
+        );
+      }
+    }
+
+    /// Add the new updates to the current state and updates list.
+    print('update current-state and updates');
+    transaction.update(containerDoc, {
+      'current-state': FieldValue.arrayUnion(data),
+      if (!addToCurrentStateOnly) 'updates': FieldValue.arrayUnion(data),
+    });
+    return true;
   }
 
   /// Adds the given components to the container and updates the components usedBy
@@ -327,6 +400,7 @@ class CrudCompContainer {
         }
 
         await deleteComponentFromCurrentState(
+          transaction: transaction,
           docId: docId,
           componentId: componentId,
           document: containerDoc,
@@ -357,47 +431,46 @@ class CrudCompContainer {
   Future<bool> deleteComponentFromCurrentState({
     required String docId,
     required String componentId,
+    required Transaction transaction,
     DocumentSnapshot? snapshot,
     DocumentReference? document,
   }) async {
     assert(snapshot != null && document != null ||
         snapshot == null && document == null);
     try {
-      return _firestore.runTransaction((transaction) async {
-        /// Get the document.
-        final DocumentReference containerDoc = document ??
-            _firestore.collection('component-containers').doc(docId);
-        final DocumentSnapshot containerSnapshot =
-            snapshot ?? await transaction.get(containerDoc);
+      /// Get the document.
+      final DocumentReference containerDoc =
+          document ?? _firestore.collection('component-containers').doc(docId);
+      final DocumentSnapshot containerSnapshot =
+          snapshot ?? await transaction.get(containerDoc);
 
-        if (containerSnapshot.data() == null) {
-          return false;
+      if (containerSnapshot.data() == null) {
+        return false;
+      }
+
+      final Map<String, dynamic> data =
+          containerSnapshot.data()! as Map<String, dynamic>;
+
+      bool componentFound = false;
+      Map<String, dynamic>? matchingUpdate;
+      for (final update in (data['current-state'] as List? ?? [])
+          .cast<Map<String, dynamic>>()) {
+        if ((update['component'] as Map<String, dynamic>?)?['id'] ==
+            componentId) {
+          componentFound = true;
+          matchingUpdate = update;
+          break;
         }
+      }
 
-        final Map<String, dynamic> data =
-            containerSnapshot.data()! as Map<String, dynamic>;
-
-        bool componentFound = false;
-        Map<String, dynamic>? matchingUpdate;
-        for (final update in (data['current-state'] as List? ?? [])
-            .cast<Map<String, dynamic>>()) {
-          if ((update['component'] as Map<String, dynamic>?)?['id'] ==
-              componentId) {
-            componentFound = true;
-            matchingUpdate = update;
-            break;
-          }
-        }
-
-        if (componentFound) {
-          transaction.update(containerDoc, {
-            'current-state': FieldValue.arrayRemove([matchingUpdate!]),
-          });
-          return true;
-        } else {
-          return false;
-        }
-      });
+      if (componentFound) {
+        transaction.update(containerDoc, {
+          'current-state': FieldValue.arrayRemove([matchingUpdate!]),
+        });
+        return true;
+      } else {
+        return false;
+      }
     } on Exception catch (e) {
       print(e.toString());
       return false;

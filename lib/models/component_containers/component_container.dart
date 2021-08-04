@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/cm_image.dart';
+import 'package:campus_motorsport/models/component_containers/event.dart';
 import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
 
@@ -31,6 +32,7 @@ class ComponentContainer {
     this.updates = const [],
     this.currentState = const [],
     this.components = const [],
+    this.events = const [],
   });
 
   /// Document id.
@@ -41,12 +43,13 @@ class ComponentContainer {
 
   List<Update> updates;
   List<Update> currentState;
+  List<Event> events;
 
   /// List of component (document)ids by which each component can be retrieved.
   List<String> components;
 
   /// Sorts the current-state list.
-  /// Reverts the updates list so that newer updates are first.
+  /// Reverts the updates and events lists so that newer updates are first.
   static ComponentContainer fromJson(Map<String, dynamic> json, String id) {
     /// Get type.
     final String typeName = json['type'];
@@ -59,6 +62,7 @@ class ComponentContainer {
 
     final List<Update> updates = List.empty(growable: true);
     final List<Update> currentState = List.empty(growable: true);
+    final List<Event> events = List.empty(growable: true);
     final List<String> components =
         (json['components'] as List?)?.cast<String>() ??
             List.empty(growable: true);
@@ -67,9 +71,14 @@ class ComponentContainer {
         in (json['updates'] as List? ?? []).cast<Map<String, dynamic>>()) {
       updates.add(Update.fromJson(update));
     }
-    for (final update
-        in (json['current-state'] as List? ?? []).cast<Map<String, dynamic>>()) {
+    for (final update in (json['current-state'] as List? ?? [])
+        .cast<Map<String, dynamic>>()) {
       currentState.add(Update.fromJson(update));
+    }
+
+    for (final event
+        in (json['events'] as List? ?? []).cast<Map<String, dynamic>>()) {
+      events.add(Event.fromJson(event));
     }
 
     sortCurrentStateList(currentState);
@@ -84,6 +93,7 @@ class ComponentContainer {
       updates: updates.reversed.toList(),
       currentState: currentState,
       components: components,
+      events: events.reversed.toList(),
     );
   }
 
@@ -108,6 +118,11 @@ class ComponentContainer {
     json['current-state'] = List.empty(growable: true);
     for (final update in currentState) {
       (json['current-state'] as List).add(await update.toJson());
+    }
+
+    json['events'] = List.empty(growable: true);
+    for(final event in events) {
+      (json['events'] as List).add(event.toJson());
     }
 
     json['components'] = components;

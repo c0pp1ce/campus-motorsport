@@ -56,14 +56,13 @@ class CCViewProvider extends CategoryFilterProvider
       ComponentContainerPage.currentState,
       ComponentContainerPage.updates,
       ComponentContainerPage.addUpdate,
-      ComponentContainerPage.addEvent,
+      ComponentContainerPage.events,
       ComponentContainerPage.addComponent,
     ];
   }
 
   static List<ComponentContainerPage> get containerSpecificAdminOnlyPages {
     return const [
-      ComponentContainerPage.addEvent,
       ComponentContainerPage.addComponent,
     ];
   }
@@ -89,7 +88,7 @@ class CCViewProvider extends CategoryFilterProvider
 
     if (page != currentPage) {
       currentPage = page;
-      if (currentPage == ComponentContainerPage.addEvent ||
+      if (currentPage == ComponentContainerPage.events ||
           currentPage == ComponentContainerPage.noContainers ||
           currentPage == ComponentContainerPage.addContainer) {
         allowContextDrawer = false;
@@ -150,7 +149,7 @@ enum ComponentContainerPage {
   currentState,
   updates,
   addUpdate,
-  addEvent,
+  events,
   addComponent,
   addContainer,
   noContainers,
@@ -163,8 +162,8 @@ extension ComponentsPageExtension on ComponentContainerPage {
         return 'Aktueller Zustand';
       case ComponentContainerPage.addUpdate:
         return 'Wartungen eintragen';
-      case ComponentContainerPage.addEvent:
-        return 'Event eintragen';
+      case ComponentContainerPage.events:
+        return 'Events';
       case ComponentContainerPage.addContainer:
         return 'Fahrzeug/Lager hinzufügen';
       case ComponentContainerPage.updates:

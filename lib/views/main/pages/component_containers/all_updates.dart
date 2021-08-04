@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/provider/component_containers/cc_view_provider.dart';
+import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/component_containers/state_updates.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
@@ -43,12 +44,22 @@ class _AllUpdatesState extends State<AllUpdates> {
         'Alle Wartungen',
         style: Theme.of(context).textTheme.headline6,
       ),
-      appbarChild: const Center(
-        child: ExpandedTitle(
-          title: 'Alle Wartungen',
-        ),
+      appbarChild: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const ExpandedTitle(title: 'Alle Wartungen'),
+          Text(
+            viewProvider.currentlyOpen!.name,
+            style: Theme.of(context).textTheme.headline6?.copyWith(
+                  color: ColorServices.darken(
+                    Theme.of(context).colorScheme.onSurface,
+                    SizeConfig.darkenTextColorBy,
+                  ),
+                ),
+          ),
+        ],
       ),
-      offsetBeforeTitleShown: 60,
+      offsetBeforeTitleShown: 50,
       body: loading
           ? const LoadingList()
           : Padding(

@@ -211,7 +211,7 @@ class VehicleComponentState extends State<VehicleComponent> {
                   height: SizeConfig.basePadding * 2,
                 ),
               ],
-              if(widget.showBaseData)..._showEventPicker(context),
+              if (widget.showBaseData) ..._showEventPicker(context),
               const SizedBox(
                 height: SizeConfig.basePadding,
               ),
@@ -405,9 +405,11 @@ class VehicleComponentState extends State<VehicleComponent> {
       CMTextField(
         controller: baseEventCounterController,
         enabled: widget.create || widget.fillWithData,
+        /// baseEventCounterController only in create mode != null.
         initialValue: baseEventCounterController == null
             ? (widget.previousData?.eventCounter ??
                     widget.currentEventCounter ??
+                    baseComponent?.baseEventCounter ??
                     '')
                 .toString()
             : null,

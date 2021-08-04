@@ -5,7 +5,7 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_components.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_container.dart';
-import 'package:campus_motorsport/views/main/pages/component_containers/add_event.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/events.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_updates.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/all_updates.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
@@ -33,8 +33,8 @@ class ComponentContainersView extends StatelessWidget {
         return AddUpdates(
           key: ValueKey('addUpdate${ccViewProvider.currentlyOpen?.id}'),
         );
-      case ComponentContainerPage.addEvent:
-        return AddEvent();
+      case ComponentContainerPage.events:
+        return Events();
       case ComponentContainerPage.addComponent:
         return AddComponents(
           key: ValueKey('addComponents${ccViewProvider.currentlyOpen?.id}'),
@@ -70,7 +70,7 @@ class ComponentContainersContext extends StatelessWidget {
         return const ContextFilter(
           showStateFilter: false,
         );
-      case ComponentContainerPage.addEvent:
+      case ComponentContainerPage.events:
         break;
       case ComponentContainerPage.addComponent:
         return const ContextFilter(

@@ -48,16 +48,23 @@ class Validators {
     }
   }
 
-  String? validateIntValue(String? value) {
-    if (value?.isEmpty ?? true) {
-      return null;
+  String? validateIntValue(String? value, [bool alsoValidateNotEmpty = false]) {
+    if (alsoValidateNotEmpty) {
+      final String? valueEmptyError = validateNotEmpty(value, 'Wert');
+      if (valueEmptyError != null) {
+        return valueEmptyError;
+      }
+    } else {
+      if (value?.isEmpty ?? true) {
+        return null;
+      }
     }
 
     if (int.tryParse(value!) == null) {
       return 'Nur natürliche Zahlen(inkl. 0) zulässig.';
     } else {
-      if(int.tryParse(value)! < 1) {
-        return 'Grundwert muss größer als 0 sein.';
+      if (int.tryParse(value)! < 1) {
+        return 'Wert muss größer als 0 sein.';
       } else {
         return null;
       }
