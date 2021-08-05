@@ -61,7 +61,7 @@ class Validators {
     }
 
     if (int.tryParse(value!) == null) {
-      return 'Nur natürliche Zahlen(inkl. 0) zulässig.';
+      return 'Nur natürliche Zahlen zulässig.';
     } else {
       if (int.tryParse(value)! < 1) {
         return 'Wert muss größer als 0 sein.';

@@ -17,6 +17,7 @@ class ComponentText extends StatelessWidget {
     this.enabled = true,
     this.textInputType = TextInputType.multiline,
     this.highlightInput = false,
+    this.validate,
     Key? key,
   }) : super(key: key);
 
@@ -27,6 +28,7 @@ class ComponentText extends StatelessWidget {
   final int maxLines;
   final TextInputType textInputType;
   final bool highlightInput;
+  final String? Function(String?)? validate;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,10 @@ class ComponentText extends StatelessWidget {
           maxLines: maxLines,
           enabled: enabled,
           textInputType: textInputType,
-          validate: (value) => Validators().validateNotEmpty(value, 'Feld'),
+          validate: enabled
+              ? validate ??
+                  (value) => Validators().validateNotEmpty(value, 'Feld')
+              : null,
         ),
         if (_showPreviousValue) ...[
           const SizedBox(

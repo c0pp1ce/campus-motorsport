@@ -455,27 +455,29 @@ class VehicleComponentState extends State<VehicleComponent> {
               ),
         ),
       ],
-      const SizedBox(
-        height: SizeConfig.basePadding,
-      ),
-      Text(
-        'Grundwert',
-        style: Theme.of(context).textTheme.subtitle2?.copyWith(
-              color: ColorServices.darken(
-                Theme.of(context).colorScheme.onSurface,
-                SizeConfig.darkenTextColorBy,
+      if (!widget.create) ...[
+        const SizedBox(
+          height: SizeConfig.basePadding,
+        ),
+        Text(
+          'Grundwert',
+          style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                color: ColorServices.darken(
+                  Theme.of(context).colorScheme.onSurface,
+                  SizeConfig.darkenTextColorBy,
+                ),
               ),
-            ),
-      ),
-      Text(
-        widget.component?.baseEventCounter?.toString() ?? 'Nicht gesetzt.',
-        style: Theme.of(context).textTheme.bodyText2?.copyWith(
-              color: ColorServices.darken(
-                Theme.of(context).colorScheme.onSurface,
-                SizeConfig.darkenTextColorBy,
+        ),
+        Text(
+          widget.component?.baseEventCounter?.toString() ?? 'Nicht gesetzt.',
+          style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                color: ColorServices.darken(
+                  Theme.of(context).colorScheme.onSurface,
+                  SizeConfig.darkenTextColorBy,
+                ),
               ),
-            ),
-      ),
+        ),
+      ],
     ];
   }
 }

@@ -106,14 +106,17 @@ class _AddComponentState extends State<AddComponent> {
               ),
             ],
       offsetBeforeTitleShown: 60,
-      body: VehicleComponent(
-        key: _vehicleKey,
-        create: true,
-        read: false,
-        fillWithData: false,
-        nameController: _nameController,
-        categoryKey: _categoryKey,
-        formKey: _formKey,
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: SizeConfig.basePadding),
+        child: VehicleComponent(
+          key: _vehicleKey,
+          create: true,
+          read: false,
+          fillWithData: false,
+          nameController: _nameController,
+          categoryKey: _categoryKey,
+          formKey: _formKey,
+        ),
       ),
     );
   }

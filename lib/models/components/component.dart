@@ -155,6 +155,7 @@ class ExtendedComponent extends BaseComponent {
           name: baseComponent.name,
           state: baseComponent.state,
           category: baseComponent.category,
+          baseEventCounter: baseComponent.baseEventCounter,
         );
 
   /// The additional data fields;

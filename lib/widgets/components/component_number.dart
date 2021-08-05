@@ -1,4 +1,5 @@
 import 'package:campus_motorsport/models/components/data_input.dart';
+import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/widgets/components/component_text.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,7 @@ class ComponentNumber extends StatelessWidget {
       maxLines: 1,
       enabled: enabled,
       textInputType: TextInputType.number,
+      validate: (value) => Validators().validateIntValue(value),
     );
   }
 }
