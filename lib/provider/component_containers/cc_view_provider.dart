@@ -58,6 +58,7 @@ class CCViewProvider extends CategoryFilterProvider
       ComponentContainerPage.addUpdate,
       ComponentContainerPage.events,
       ComponentContainerPage.addComponent,
+      ComponentContainerPage.allComponents,
     ];
   }
 
@@ -151,6 +152,7 @@ enum ComponentContainerPage {
   addUpdate,
   events,
   addComponent,
+  allComponents,
   addContainer,
   noContainers,
 }
@@ -170,6 +172,8 @@ extension ComponentsPageExtension on ComponentContainerPage {
         return 'Alle Wartungen';
       case ComponentContainerPage.addComponent:
         return 'Komponenten hinzufügen';
+      case ComponentContainerPage.allComponents:
+        return 'Alle Komponenten';
       case ComponentContainerPage.noContainers:
         return 'Nichts gefunden';
     }

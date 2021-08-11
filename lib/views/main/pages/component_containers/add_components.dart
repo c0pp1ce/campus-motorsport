@@ -61,7 +61,7 @@ class _AddComponentsState extends State<AddComponents> {
     }
 
     return ExpandedAppBar(
-      onRefresh: context.read<ComponentsProvider>().reload,
+      onRefresh: context.read<CCViewProvider>().reloadCurrentlyOpen,
       loadingListener: (value) {
         setState(() {
           loading = value;

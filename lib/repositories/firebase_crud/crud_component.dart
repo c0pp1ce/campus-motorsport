@@ -99,6 +99,7 @@ class CrudComponent {
               await crudCompContainer.deleteComponent(
                 docId: id,
                 componentId: _component.id!,
+                fromUpdates: true,
               );
             }
           }

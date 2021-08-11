@@ -424,6 +424,10 @@ class CrudCompContainer {
         transaction.update(containerDoc, {
           'components': FieldValue.arrayRemove([componentId]),
         });
+
+        if(fromUpdates) {
+         await CMImage.deleteAllImagesFromFolder('$docId/$componentId', 0);
+        }
         return true;
       });
     } on Exception catch (e) {
