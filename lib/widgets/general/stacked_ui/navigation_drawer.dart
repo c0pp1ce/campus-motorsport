@@ -47,7 +47,7 @@ class NavigationDrawer extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       height: SizeConfig.screenHeight,
       child: ListView.builder(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         itemCount: navigationItems.length,
         itemBuilder: (context, index) {
           return PrimaryNavigationItem(
@@ -75,7 +75,7 @@ class NavigationDrawer extends StatelessWidget {
         color: ElevationOverlay.applyOverlay(
           context,
           Theme.of(context).colorScheme.surface,
-          SizeConfig.baseBackgroundElevation,
+          SizeConfig.baseBackgroundElevation - 4,
         ),
       ),
       padding: const EdgeInsets.all(SizeConfig.basePadding),

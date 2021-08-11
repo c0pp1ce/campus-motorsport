@@ -47,7 +47,7 @@ class ContextDrawer extends StatelessWidget {
         color: ElevationOverlay.applyOverlay(
           context,
           Theme.of(context).colorScheme.surface,
-          SizeConfig.baseBackgroundElevation,
+          SizeConfig.baseBackgroundElevation - 4,
         ),
       ),
       child: child,

@@ -57,28 +57,24 @@ class MainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: appBarElevation,
-      shape: shape,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          shadowColor: appBarShadowColor,
-          automaticallyImplyLeading: implyLeading,
-          leading: leading,
-          elevation: appBarElevation,
-          backgroundColor: appBarColor,
-          shape: shape,
-          title: title,
-          flexibleSpace: flexibleSpace,
-          actions: actions,
-        ),
-        body: Material(
-          color: backgroundColor ?? Theme.of(context).colorScheme.surface,
-          elevation: backgroundElevation,
-          shadowColor: Colors.transparent,
-          child: child,
-        ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        shadowColor: appBarShadowColor,
+        automaticallyImplyLeading: implyLeading,
+        leading: leading,
+        elevation: appBarElevation,
+        backgroundColor: appBarColor,
+        shape: shape,
+        title: title,
+        flexibleSpace: flexibleSpace,
+        actions: actions,
+      ),
+      body: Material(
+        color: backgroundColor ?? Theme.of(context).colorScheme.surface,
+        elevation: backgroundElevation,
+        shadowColor: Colors.transparent,
+        child: child,
       ),
     );
   }

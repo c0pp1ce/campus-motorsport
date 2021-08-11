@@ -35,9 +35,10 @@ class PrimaryNavigationItem extends StatelessWidget {
         noGradient: true,
         radius: BorderRadius.circular(50.0),
         backgroundColor: ElevationOverlay.applyOverlay(
-            context,
-            Theme.of(context).colorScheme.surface,
-            SizeConfig.baseBackgroundElevation),
+          context,
+          Theme.of(context).colorScheme.surface,
+          SizeConfig.baseBackgroundElevation - 4,
+        ),
         primary: active
             ? isSelected
                 ? Theme.of(context).colorScheme.primary
