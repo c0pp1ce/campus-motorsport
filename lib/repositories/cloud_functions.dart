@@ -15,3 +15,15 @@ Future<void> addAcceptedRole(String email) async {
     print(e.toString());
   }
 }
+
+/// Tries to retrieve/update the training grounds images.
+Future<void> getTrainingGroundsOverview() async {
+  final FirebaseFunctions functions = FirebaseFunctions.instance;
+  try {
+    final HttpsCallable callable =
+        functions.httpsCallable('getTrainingGroundsOverviews');
+    await callable.call();
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+}
