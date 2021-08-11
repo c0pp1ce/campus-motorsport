@@ -79,9 +79,11 @@ class CategoryFilterChips extends StatelessWidget {
 
   TextStyle? getChipTextStyle(bool selected, BuildContext context) {
     return Theme.of(context).textTheme.bodyText2?.copyWith(
-        color: selected
-            ? Theme.of(context).colorScheme.onPrimary
-            : Theme.of(context).colorScheme.onSurface);
+          color: selected
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.onSurface,
+          fontSize: 12,
+        );
   }
 
   Widget _buildInfo(BuildContext context, String text, IconData icon) {
