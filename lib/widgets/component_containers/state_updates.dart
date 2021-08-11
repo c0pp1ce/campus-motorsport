@@ -34,7 +34,11 @@ class StateUpdates extends StatelessWidget {
       padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final child = UpdateTile(update: visibleUpdates[index]);
+        final child = UpdateTile(
+          update: visibleUpdates[index],
+          removed: !viewProvider.currentlyOpen!.components
+              .contains(visibleUpdates[index].component.id),
+        );
 
         late final bool titleChanged;
         if (index == 0) {

@@ -153,7 +153,6 @@ class _CMImagePickerState extends State<CMImagePicker> {
 
   Future<Uint8List?> _compressImage(File file) async {
     final double size = getFileSize(file);
-    print(size);
     final result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
       minWidth: 400,

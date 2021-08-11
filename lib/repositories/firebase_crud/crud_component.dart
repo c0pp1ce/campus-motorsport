@@ -74,7 +74,7 @@ class CrudComponent {
   }
 
   /// Deletes the component from the components collection as well as removing it
-  /// from any vehicle/storage component list.
+  /// from any vehicle/storage component list and current-state.
   Future<bool> deleteComponent(BaseComponent component) async {
     try {
       return _firestore.runTransaction((transaction) async {

@@ -11,10 +11,14 @@ import 'package:intl/intl.dart';
 class UpdateTile extends StatelessWidget {
   const UpdateTile({
     required this.update,
+    required this.removed,
     Key? key,
   }) : super(key: key);
 
   final Update update;
+
+  /// Indicator if this component has been removed from the app.
+  final bool removed;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,9 @@ class UpdateTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              update.component.name,
+              !removed
+                  ? update.component.name
+                  : '${update.component.name} - GELÖSCHT',
               style: Theme.of(context).textTheme.headline6,
             ),
             Text(

@@ -386,10 +386,11 @@ class CrudCompContainer {
   }
 
   /// Deletes the component as well as the corresponding entry inside the
-  /// current-state array as well as every occurrence in the updates entry.
+  /// current-state array.
   Future<bool> deleteComponent({
     required String docId,
     required String componentId,
+    bool fromUpdates = false,
   }) async {
     try {
       return _firestore.runTransaction((transaction) async {
@@ -411,12 +412,14 @@ class CrudCompContainer {
           snapshot: containerSnapshot,
         );
 
-        await deleteComponentFromUpdates(
-          docId: docId,
-          componentId: componentId,
-          document: containerDoc,
-          snapshot: containerSnapshot,
-        );
+        if(fromUpdates) {
+          await deleteComponentFromUpdates(
+            docId: docId,
+            componentId: componentId,
+            document: containerDoc,
+            snapshot: containerSnapshot,
+          );
+        }
 
         transaction.update(containerDoc, {
           'components': FieldValue.arrayRemove([componentId]),

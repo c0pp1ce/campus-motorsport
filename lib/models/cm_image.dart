@@ -29,12 +29,16 @@ class CMImage {
     }
   }
 
+  /// Recursively deletes any image in this folder and any subfolder.
   static Future<bool> deleteAllImagesFromFolder(String folder) async {
     try {
       final files =
           await FirebaseStorage.instance.ref('images/$folder').listAll();
       for (final file in files.items) {
         await file.delete();
+      }
+      for (final prefix in files.prefixes) {
+        await CMImage.deleteAllImagesFromFolder('$folder/${prefix.name}');
       }
       return true;
     } on Exception catch (e) {
