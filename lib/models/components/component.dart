@@ -27,6 +27,7 @@ extension ComponentStateNames on ComponentStates {
 /// firebase (components collection).
 enum ComponentCategories {
   aero,
+  chassis,
   electrical,
   undercarriage,
   engine,
@@ -37,13 +38,15 @@ extension ComponentCategoryNames on ComponentCategories {
   String get name {
     switch (this) {
       case ComponentCategories.aero:
-        return 'Aero';
+        return 'Aerodynamik';
+      case ComponentCategories.chassis:
+        return 'Chassis & Komponentenintegration';
       case ComponentCategories.electrical:
         return 'Elektrotechnik';
       case ComponentCategories.undercarriage:
         return 'Fahrwerk';
       case ComponentCategories.engine:
-        return 'Motor';
+        return 'Motor & Antriebsstrang';
       case ComponentCategories.other:
         return 'Sonstiges';
     }
