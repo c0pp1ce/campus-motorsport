@@ -15,7 +15,7 @@ class CrudComponent {
     try {
       /// Create the new part.
       final DocumentSnapshot<Map<String, dynamic>> document =
-          await _firestore.collection('users').doc().get();
+          await _firestore.collection('components').doc().get();
       component.id = document.id;
       await _firestore.collection('components').doc(document.id).set(
             await component.toJson(),

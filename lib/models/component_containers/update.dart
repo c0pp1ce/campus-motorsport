@@ -47,9 +47,9 @@ class Update {
     );
   }
 
-  Future<Map<String, dynamic>> toJson() async {
+  Future<Map<String, dynamic>> toJson(String folder) async {
     return <String, dynamic>{
-      'component': await component.toJson(forUpdate: true),
+      'component': await component.toJson(forUpdate: true, folder: folder),
       'date': date.toUtc(),
       'by': by,
       if (eventCounter != null) 'eventCounter': eventCounter,

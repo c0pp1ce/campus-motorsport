@@ -29,6 +29,20 @@ class CMImage {
     }
   }
 
+  static Future<bool> deleteAllImagesFromFolder(String folder) async {
+    try {
+      final files =
+          await FirebaseStorage.instance.ref('images/$folder').listAll();
+      for (final file in files.items) {
+        await file.delete();
+      }
+      return true;
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<bool> deleteFromFirebase() async {
     if (url == null) {
       return false;
@@ -43,7 +57,7 @@ class CMImage {
     }
   }
 
-  Future<bool> uploadImageToFirebaseStorage() async {
+  Future<bool> uploadImageToFirebaseStorage(String folder) async {
     if (imageProvider is NetworkImage ||
         imageProvider == null ||
         path == null) {
@@ -58,7 +72,7 @@ class CMImage {
       final format = DateFormat('yyyy-MM-dd-hh-mm');
       final Reference reference = FirebaseStorage.instance
           .ref()
-          .child('images/$uid-${format.format(DateTime.now())}');
+          .child('images/$folder/$uid-${format.format(DateTime.now())}');
 
       /// Upload the image
       final TaskSnapshot taskSnapshot = await reference.putFile(

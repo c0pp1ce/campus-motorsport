@@ -1,3 +1,4 @@
+import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
 import 'package:campus_motorsport/models/component_containers/event.dart' as cm;
 import 'package:campus_motorsport/models/component_containers/update.dart';
@@ -15,8 +16,11 @@ class CrudCompContainer {
     required ComponentContainer componentContainer,
   }) async {
     try {
-      await _firestore.collection('component-containers').add(
-            await componentContainer.toJson(),
+      final DocumentSnapshot<Map<String, dynamic>> document =
+          await _firestore.collection('component-containers').doc().get();
+      componentContainer.id = document.id;
+      await _firestore.collection('component-containers').doc(document.id).set(
+            await componentContainer.toJson(componentContainer.id!),
           );
       return true;
     } on Exception catch (e) {
@@ -252,7 +256,7 @@ class CrudCompContainer {
       } else {
         data = [];
         for (final update in updates) {
-          data.add(await update.toJson());
+          data.add(await update.toJson(docId));
         }
       }
 
@@ -529,6 +533,9 @@ class CrudCompContainer {
   Future<bool> deleteContainer(String docId) async {
     try {
       await _firestore.collection('component-containers').doc(docId).delete();
+      if(!await CMImage.deleteAllImagesFromFolder(docId)) {
+        print('Images not deleted');
+      }
       return true;
     } on Exception catch (e) {
       print(e.toString());

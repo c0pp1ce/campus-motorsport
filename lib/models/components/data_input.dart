@@ -71,7 +71,7 @@ class DataInput {
 
   /// If of type [InputTypes.image] upload function of [CMImage] is called if its
   /// url is null.
-  Future<Map<String, dynamic>> toJson() async {
+  Future<Map<String, dynamic>> toJson(String folder) async {
     final Map<String, dynamic> json = {
       'name': name,
       'type': type.name,
@@ -87,7 +87,7 @@ class DataInput {
         /// Only store URL of the image inside the db.
         if ((data as CMImage).url == null) {
           print('attempt to upload image');
-          await (data as CMImage).uploadImageToFirebaseStorage();
+          await (data as CMImage).uploadImageToFirebaseStorage(folder);
         }
         final String? url = (data as CMImage).url;
         if (url != null) {

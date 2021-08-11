@@ -36,7 +36,7 @@ class ComponentContainer {
   });
 
   /// Document id.
-  final String? id;
+  String? id;
   String name;
   ComponentContainerTypes type;
   CMImage? image;
@@ -97,7 +97,7 @@ class ComponentContainer {
     );
   }
 
-  Future<Map<String, dynamic>> toJson() async {
+  Future<Map<String, dynamic>> toJson(String folder) async {
     /// No need to store id as it is the document it.
     final json = <String, dynamic>{
       'name': name,
@@ -105,19 +105,19 @@ class ComponentContainer {
     };
 
     if (image?.imageProvider != null) {
-      await image!.uploadImageToFirebaseStorage();
+      await image!.uploadImageToFirebaseStorage(folder);
       assert(image?.url != null, 'Upload failed or no URL stored');
       json['image'] = image!.url;
     }
 
     json['updates'] = List.empty(growable: true);
     for (final update in updates) {
-      (json['updates'] as List).add(await update.toJson());
+      (json['updates'] as List).add(await update.toJson(id!));
     }
 
     json['current-state'] = List.empty(growable: true);
     for (final update in currentState) {
-      (json['current-state'] as List).add(await update.toJson());
+      (json['current-state'] as List).add(await update.toJson(id!));
     }
 
     json['events'] = List.empty(growable: true);

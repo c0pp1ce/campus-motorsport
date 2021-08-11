@@ -113,7 +113,14 @@ class BaseComponent {
   }
 
   /// forUpdate skips the usedBy list as this is not needed in state updates.
-  Future<Map<String, dynamic>> toJson({bool forUpdate = false}) async {
+  ///
+  /// folder is used to have an easy way to delete images once a component-container
+  /// is deleted.
+  Future<Map<String, dynamic>> toJson({
+    bool forUpdate = false,
+    String? folder,
+  }) async {
+    assert(forUpdate && folder != null || !forUpdate);
     return {
       'id': id,
       'name': name,
@@ -180,12 +187,16 @@ class ExtendedComponent extends BaseComponent {
   }
 
   @override
-  Future<Map<String, dynamic>> toJson({bool forUpdate = false}) async {
+  Future<Map<String, dynamic>> toJson({
+    bool forUpdate = false,
+    String? folder,
+  }) async {
+    assert(forUpdate && folder != null || !forUpdate);
     /// Base info.
-    final Map<String, dynamic> json = await super.toJson(forUpdate: forUpdate);
+    final Map<String, dynamic> json = await super.toJson(forUpdate: forUpdate, folder: folder);
     final List<Map<String, dynamic>> fields = List.empty(growable: true);
     for (final DataInput dataInput in additionalData) {
-      fields.add(await dataInput.toJson());
+      fields.add(await dataInput.toJson(forUpdate ? folder! : name));
     }
     json['additionalData'] = fields;
     return json;

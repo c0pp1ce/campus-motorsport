@@ -284,7 +284,7 @@ class _CurrentStateState extends State<CurrentState> {
 
     /// New image got selected
     if (imageChanged) {
-      await image.uploadImageToFirebaseStorage();
+      await image.uploadImageToFirebaseStorage(viewProvider.currentlyOpen!.id!);
       assert(image.url != null, 'Upload failed');
       data['image'] = image.url;
     }

@@ -42,6 +42,7 @@ class ExpansionComponent extends StatelessWidget {
                   component.category.name,
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         color: Theme.of(context).colorScheme.primary,
+                        fontSize: 12,
                       ),
                 ),
               ],
