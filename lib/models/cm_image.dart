@@ -11,7 +11,12 @@ import 'package:intl/intl.dart';
 class CMImage {
   CMImage();
 
-  CMImage.fromBytes(Uint8List bytes, String path) : path = path {
+  CMImage.fromBytes(
+    Uint8List bytes,
+    String path, {
+    bool neverUpload = false,
+  })  : path = path,
+        neverUpload = neverUpload {
     imageProvider = MemoryImage(bytes);
   }
 
@@ -22,6 +27,7 @@ class CMImage {
   ImageProvider? imageProvider;
   String? url;
   String? path;
+  bool? neverUpload;
 
   CMImage? cloneNetworkImage() {
     if (imageProvider is NetworkImage) {
@@ -73,7 +79,8 @@ class CMImage {
   Future<bool> uploadImageToFirebaseStorage(String folder) async {
     if (imageProvider is NetworkImage ||
         imageProvider == null ||
-        path == null) {
+        path == null ||
+        neverUpload == true) {
       print('image upload not needed');
       return false;
     }

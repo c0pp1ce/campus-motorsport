@@ -157,7 +157,7 @@ class _CMImagePickerState extends State<CMImagePicker> {
       file.absolute.path,
       minWidth: 400,
       minHeight: 400,
-      quality: size > 2 ? 90 : 100,
+      quality: size > 1 ? 80 : 100,
     );
     return result;
   }

@@ -23,6 +23,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 /// The navigator for the main pages which use the stacked UI.
 ///
@@ -77,42 +78,7 @@ class MainNavigatorState extends State<MainNavigator> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => HomeProvider(
-            toggle: toggle,
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => UserManagementProvider(
-            toggle: toggle,
-          ),
-        ),
-        ChangeNotifierProvider(create: (context) => UsersProvider()),
-        ChangeNotifierProvider(
-          create: (context) => ComponentsViewProvider(
-            toggle: toggle,
-          ),
-        ),
-        ChangeNotifierProvider(create: (context) => ComponentsProvider()),
-        ChangeNotifierProvider(create: (context) => VehiclesProvider()),
-        ChangeNotifierProvider(create: (context) => StocksProvider()),
-        ChangeNotifierProxyProvider2<VehiclesProvider, StocksProvider,
-            CCViewProvider>(
-          create: (context) => CCViewProvider(
-            toggle: toggle,
-            vehicles: Provider.of<VehiclesProvider>(context, listen: false)
-                .getContainersBuildSafe(),
-            stocks: Provider.of<StocksProvider>(context, listen: false)
-                .getContainersBuildSafe(),
-            isAdmin: Provider.of<CurrentUser>(context, listen: false)
-                    .user
-                    ?.isAdmin ??
-                false,
-          ),
-          update: _updateCCViewProvider,
-        ),
-      ],
+      providers: _providers,
       builder: (context, child) {
         return StackedUI(
           key: uiKey,
@@ -123,6 +89,44 @@ class MainNavigatorState extends State<MainNavigator> {
         );
       },
     );
+  }
+
+  List<SingleChildWidget> get _providers {
+    return [
+      ChangeNotifierProvider(
+        create: (context) => HomeProvider(
+          toggle: toggle,
+        ),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UserManagementProvider(
+          toggle: toggle,
+        ),
+      ),
+      ChangeNotifierProvider(create: (context) => UsersProvider()),
+      ChangeNotifierProvider(
+        create: (context) => ComponentsViewProvider(
+          toggle: toggle,
+        ),
+      ),
+      ChangeNotifierProvider(create: (context) => ComponentsProvider()),
+      ChangeNotifierProvider(create: (context) => VehiclesProvider()),
+      ChangeNotifierProvider(create: (context) => StocksProvider()),
+      ChangeNotifierProxyProvider2<VehiclesProvider, StocksProvider,
+          CCViewProvider>(
+        create: (context) => CCViewProvider(
+          toggle: toggle,
+          vehicles: Provider.of<VehiclesProvider>(context, listen: false)
+              .getContainersBuildSafe(),
+          stocks: Provider.of<StocksProvider>(context, listen: false)
+              .getContainersBuildSafe(),
+          isAdmin:
+              Provider.of<CurrentUser>(context, listen: false).user?.isAdmin ??
+                  false,
+        ),
+        update: _updateCCViewProvider,
+      ),
+    ];
   }
 
   /// Determines if a context drawer should be visible.

@@ -53,6 +53,11 @@ dependencies:
   # auth services
   firebase_auth: ^1.1.4
   cloud_functions: ^3.0.0
+  # local db
+  hive: ^2.0.4
+  hive_flutter: ^1.1.0
+  # for storing files locally
+  path_provider: ^2.0.2
 
 dev_dependencies:
   flutter_test:

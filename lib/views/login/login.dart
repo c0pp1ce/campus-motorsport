@@ -175,8 +175,9 @@ class _LoginState extends State<Login> {
                                 _showErrorDialog();
                               } else {
                                 context.read<CurrentUser>().user = user;
-                                Navigator.of(context)
-                                    .pushReplacementNamed(mainRoute);
+                                Navigator.of(context).pushReplacementNamed(
+                                  mainRoute,
+                                );
                               }
                             }
                           },
@@ -196,9 +197,11 @@ class _LoginState extends State<Login> {
                           height: SizeConfig.basePadding,
                         ),
                         _buildGreyButton(
-                          child: const Text('OFFLINE MODUS'),
-                          disabled: true,
-                        ),
+                            child: const Text('OFFLINE MODUS'),
+                            disabled: true,
+                            onPressed: () {
+                              // TODO : Implement
+                            }),
                         const SizedBox(
                           height: SizeConfig.basePadding,
                         ),
