@@ -9,6 +9,7 @@ import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/themes/text_theme.dart';
 import 'package:campus_motorsport/widgets/general/background/background_gradient.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
   ]);
 
   await Firebase.initializeApp();
+  await Hive.initFlutter();
 
   Intl.defaultLocale = 'de';
   await initializeDateFormatting('de', null);

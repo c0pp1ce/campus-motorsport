@@ -24,12 +24,45 @@ class CrudTrainingGrounds {
   late Future<String> dirPath;
   Box? hiveBox;
 
+  /// Checks the first entry and compares the given date to lastUpdate of it.
+  ///
+  /// The lastUpdate attribute is stored inside of a meta collection in firebase
+  /// and its value is assigned to every object. In that sense, lastUpdate re-
+  /// presents the most recent date where any entry of the collection has been updated.
+  Future<bool> needsUpdate(DateTime givenDate) async {
+    try {
+      final String path = await dirPath;
+      if (path.isEmpty) {
+        return false;
+      }
+      hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+
+      final DateTime lastUpdate = ((await hiveBox!.get('meta-info')
+                  as Map<String, dynamic>)['training-grounds']
+              as Map<String, dynamic>)['lastUpdate'] ??
+          DateTime.utc(1900);
+
+      if (lastUpdate.isBefore(givenDate)) {
+        return true;
+      } else {
+        return false;
+      }
+    } on Exception {
+      return false;
+    }
+  }
+
   Future<List<TrainingGround>?> getAll() async {
     final String path = await dirPath;
     if (path.isEmpty) {
       return null;
     }
     hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+
+    final DateTime lastUpdate = ((await hiveBox!.get('meta-info')
+                as Map<String, dynamic>)['training-grounds']
+            as Map<String, dynamic>)['lastUpdate'] ??
+        DateTime.utc(1900);
 
     /// Gets maps from hive.
     final List<Map<String, dynamic>>? maps =
@@ -47,6 +80,7 @@ class CrudTrainingGrounds {
       trainingGrounds.add(
         TrainingGround.fromJson(
           json,
+          lastUpdate,
           json['id'],
           image: image,
         ),
@@ -99,6 +133,7 @@ class CrudTrainingGrounds {
       }
     }
     await hiveBox!.put('training-grounds', data);
+    await _updateMetaInfo(DateTime.now());
     return true;
   }
 
@@ -123,7 +158,27 @@ class CrudTrainingGrounds {
     tgList!.removeWhere((element) =>
         element['id'] == id && element['storagePath'] == storagePath);
     await hiveBox!.put('training-grounds', tgList);
+    await _updateMetaInfo(DateTime.now());
     return true;
+  }
+
+  Future<bool> _updateMetaInfo(DateTime date) async {
+    final String path = await dirPath;
+    if (path.isEmpty) {
+      return false;
+    }
+    hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+
+    try {
+      await hiveBox!.put('meta-info', {
+        'training-grounds': {
+          'lastUpdate': date.toUtc(),
+        },
+      });
+      return true;
+    } on Exception {
+      return false;
+    }
   }
 
   Future<CMImage?> _getImage(String storagePath) async {

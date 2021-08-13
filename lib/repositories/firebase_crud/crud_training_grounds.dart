@@ -12,6 +12,14 @@ class CrudTrainingGrounds {
 
   Future<List<TrainingGround>?> getAll() async {
     try {
+      final DateTime lastUpdate = ((await _firestore
+                      .collection('meta-info')
+                      .doc('training-grounds')
+                      .get())
+                  .data()?['lastUpdate'] as Timestamp?)
+              ?.toDate()
+              .toUtc() ??
+          DateTime.utc(1900);
       final QuerySnapshot<Map<String, dynamic>> query =
           await _firestore.collection('training-grounds').orderBy('name').get();
       final List<TrainingGround> results = List.empty(growable: true);
@@ -29,6 +37,7 @@ class CrudTrainingGrounds {
         }
         results.add(TrainingGround.fromJson(
           doc.data(),
+          lastUpdate,
           doc.id,
           image: image,
         ));
@@ -47,6 +56,22 @@ class CrudTrainingGrounds {
           'image': url,
         },
       );
+      await _updateMetaInfo();
+      return true;
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  /// Sets the current date as lastUpdated.
+  Future<bool> _updateMetaInfo() async {
+    try {
+      await _firestore.collection('meta-info').doc('training-grounds').update(
+        {
+          'lastUpdate': DateTime.now().toUtc(),
+        },
+      );
       return true;
     } on Exception catch (e) {
       print(e);
@@ -58,6 +83,7 @@ class CrudTrainingGrounds {
     try {
       await _firestore.collection('training-grounds').doc(docId).delete();
       await FirebaseStorage.instance.ref(storagePath).delete();
+      await _updateMetaInfo();
       return true;
     } on Exception catch (e) {
       print(e);

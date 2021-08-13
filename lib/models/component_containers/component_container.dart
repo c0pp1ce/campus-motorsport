@@ -71,7 +71,7 @@ class ComponentContainer {
         in (json['updates'] as List? ?? []).cast<Map<String, dynamic>>()) {
       updates.add(Update.fromJson(update));
     }
-    for (final update in (json['current-state'] as List? ?? [])
+    for (final update in (json['currentState'] as List? ?? [])
         .cast<Map<String, dynamic>>()) {
       currentState.add(Update.fromJson(update));
     }
@@ -115,9 +115,9 @@ class ComponentContainer {
       (json['updates'] as List).add(await update.toJson(id!));
     }
 
-    json['current-state'] = List.empty(growable: true);
+    json['currentState'] = List.empty(growable: true);
     for (final update in currentState) {
-      (json['current-state'] as List).add(await update.toJson(id!));
+      (json['currentState'] as List).add(await update.toJson(id!));
     }
 
     json['events'] = List.empty(growable: true);
