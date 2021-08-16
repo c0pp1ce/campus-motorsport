@@ -12,14 +12,18 @@ class CrudTrainingGrounds {
 
   Future<List<TrainingGround>?> getAll() async {
     try {
-      final DateTime lastUpdate = ((await _firestore
-                      .collection('meta-info')
-                      .doc('training-grounds')
-                      .get())
-                  .data()?['lastUpdate'] as Timestamp?)
-              ?.toDate()
-              .toUtc() ??
-          DateTime.utc(1900);
+      dynamic lastUpdate = ((await _firestore
+              .collection('meta-info')
+              .doc('training-grounds')
+              .get())
+          .data())?['lastUpdate'];
+      if(lastUpdate == null) {
+        lastUpdate = DateTime.utc(1900);
+      } else if(lastUpdate is String) {
+        lastUpdate = DateTime.parse(lastUpdate);
+      } else {
+        lastUpdate = (lastUpdate as Timestamp).toDate().toUtc();
+      }
       final QuerySnapshot<Map<String, dynamic>> query =
           await _firestore.collection('training-grounds').orderBy('name').get();
       final List<TrainingGround> results = List.empty(growable: true);
@@ -76,6 +80,27 @@ class CrudTrainingGrounds {
     } on Exception catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  Future<DateTime> getLastUpdate() async {
+    try {
+      final doc = await _firestore
+          .collection('meta-info')
+          .doc('training-grounds')
+          .get();
+      if (doc.data()?['lastUpdate'] != null) {
+        if(doc.data()!['lastUpdate'] is Timestamp) {
+          return (doc.data()!['lastUpdate'] as Timestamp).toDate().toUtc();
+        } else {
+          return DateTime.parse(doc.data()!['lastUpdate']).toUtc();
+        }
+      } else {
+        return DateTime.utc(1900);
+      }
+    } on Exception catch (e) {
+      print(e);
+      return DateTime.utc(1900);
     }
   }
 

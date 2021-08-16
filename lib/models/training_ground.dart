@@ -1,5 +1,4 @@
 import 'package:campus_motorsport/models/cm_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TrainingGround {
   TrainingGround({
@@ -28,15 +27,6 @@ class TrainingGround {
     CMImage? image,
   }) {
     assert(json['image'] != null || image != null);
-
-    /// Date from Firebase is [Timestamp], date from Hive is DateTime
-    late final DateTime lastUpdate;
-    if (json['lastUpdate'] is Timestamp) {
-      final Timestamp timestamp = json['lastUpdate'];
-      lastUpdate = timestamp.toDate().toUtc();
-    } else {
-      lastUpdate = json['lastUpdate'];
-    }
     return TrainingGround(
       id: id,
       name: json['name'],

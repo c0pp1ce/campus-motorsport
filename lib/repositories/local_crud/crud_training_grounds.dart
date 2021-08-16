@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:campus_motorsport/models/training_ground.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -35,11 +35,11 @@ class CrudTrainingGrounds {
       if (path.isEmpty) {
         return false;
       }
-      hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+      hiveBox ??= await Hive.openBox('local-storage');
 
       final DateTime lastUpdate = ((await hiveBox!.get('meta-info')
-                  as Map<String, dynamic>)['training-grounds']
-              as Map<String, dynamic>)['lastUpdate'] ??
+                  as Map<dynamic, dynamic>?)?['training-grounds']
+              as Map<dynamic, dynamic>?)?['lastUpdate'] ??
           DateTime.utc(1900);
 
       if (lastUpdate.isBefore(givenDate)) {
@@ -57,16 +57,18 @@ class CrudTrainingGrounds {
     if (path.isEmpty) {
       return null;
     }
-    hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+    hiveBox ??= await Hive.openBox('local-storage');
 
     final DateTime lastUpdate = ((await hiveBox!.get('meta-info')
-                as Map<String, dynamic>)['training-grounds']
-            as Map<String, dynamic>)['lastUpdate'] ??
+                as Map<dynamic, dynamic>?)?['training-grounds']
+            as Map<dynamic, dynamic>?)?['lastUpdate'] ??
         DateTime.utc(1900);
 
     /// Gets maps from hive.
-    final List<Map<String, dynamic>>? maps =
-        await hiveBox!.get('training-grounds');
+    final List<Map<dynamic, dynamic>>? maps = ((await hiveBox!
+                .get('training-grounds')
+            as Map<dynamic, dynamic>?)?['training-grounds'] as List<dynamic>?)
+        ?.cast<Map<dynamic, dynamic>>();
     if (maps?.isEmpty ?? true) {
       return null;
     }
@@ -77,9 +79,10 @@ class CrudTrainingGrounds {
       if (image == null) {
         continue;
       }
+      image.url = json['image'];
       trainingGrounds.add(
         TrainingGround.fromJson(
-          json,
+          json.cast<String, dynamic>(),
           lastUpdate,
           json['id'],
           image: image,
@@ -89,50 +92,48 @@ class CrudTrainingGrounds {
     return trainingGrounds;
   }
 
+  /// Saves all entries and removes entries that are not provided (clear & update).
   Future<bool> saveAll(List<TrainingGround> trainingGrounds) async {
     final String path = await dirPath;
     if (path.isEmpty) {
       return false;
     }
-    hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+    hiveBox ??= await Hive.openBox('local-storage');
 
-    /// Check if the data actually changed.
-    final List<Map<String, dynamic>>? maps =
-        await hiveBox!.get('training-grounds');
-    late final List<TrainingGround> notStoredYet;
-    if (maps?.isNotEmpty ?? false) {
-      notStoredYet = [];
-      for (final tg in trainingGrounds) {
-        bool alreadyStored = false;
-        for (final json in maps!) {
-          if (json['id'] == tg.id &&
-              json['name'] == tg.name &&
-              json['storagePath'] == tg.storagePath) {
-            alreadyStored = true;
+    /// Clear old data
+    final List<Map<dynamic, dynamic>>? maps = ((await hiveBox!
+                .get('training-grounds')
+            as Map<dynamic, dynamic>?)?['training-grounds'] as List<dynamic>?)
+        ?.cast<Map<dynamic, dynamic>>();
+    if (maps != null) {
+      for (final json in maps) {
+        bool isDeleted = true;
+        for (final tg in trainingGrounds) {
+          if (json['storagePath'] == tg.storagePath) {
+            isDeleted = false;
             break;
           }
         }
-        if (!alreadyStored) {
-          notStoredYet.add(tg);
+        if (isDeleted) {
+          /// No need to delete the entry in the hive box as that will be replaced
+          /// anyway.
+          _deleteImage(json['storagePath']);
         }
       }
-    } else {
-      notStoredYet = trainingGrounds;
     }
 
-    final List<Map<String, dynamic>> data = maps ?? [];
+    final List<Map<String, dynamic>> data = [];
 
     /// Save data
-    for (final tg in notStoredYet) {
+    for (final tg in trainingGrounds) {
       final bool imageSaved = await _saveImage(tg.image, tg.storagePath);
       if (!imageSaved) {
-        print('image save failed. ${tg.name}');
         continue;
       } else {
         data.add(tg.toJson());
       }
     }
-    await hiveBox!.put('training-grounds', data);
+    await hiveBox!.put('training-grounds', {'training-grounds': data});
     await _updateMetaInfo(DateTime.now());
     return true;
   }
@@ -142,7 +143,7 @@ class CrudTrainingGrounds {
     if (path.isEmpty) {
       return false;
     }
-    hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+    hiveBox ??= await Hive.openBox('local-storage');
 
     /// Delete file.
     if (!(await _deleteImage(storagePath))) {
@@ -150,14 +151,16 @@ class CrudTrainingGrounds {
     }
 
     /// Delete from hive.
-    final List<Map<String, dynamic>>? tgList =
-        await hiveBox!.get('training-grounds');
+    final List<Map<dynamic, dynamic>>? tgList = ((await hiveBox!
+                .get('training-grounds')
+            as Map<dynamic, dynamic>?)?['training-grounds'] as List<dynamic>?)
+        ?.cast<Map<dynamic, dynamic>>();
     if (tgList?.isEmpty ?? true) {
       return false;
     }
     tgList!.removeWhere((element) =>
         element['id'] == id && element['storagePath'] == storagePath);
-    await hiveBox!.put('training-grounds', tgList);
+    await hiveBox!.put('training-grounds', {'training-grounds': tgList});
     await _updateMetaInfo(DateTime.now());
     return true;
   }
@@ -167,7 +170,7 @@ class CrudTrainingGrounds {
     if (path.isEmpty) {
       return false;
     }
-    hiveBox ??= await Hive.openBox<Map<String, dynamic>>('local-storage');
+    hiveBox ??= await Hive.openBox('local-storage');
 
     try {
       await hiveBox!.put('meta-info', {
@@ -195,7 +198,7 @@ class CrudTrainingGrounds {
     }
   }
 
-  /// Saving of a network image based on accepted answer of
+  /// Saving of a network image based on
   /// https://stackoverflow.com/questions/59894880/how-to-get-a-uint8list-from-a-network-image-by-url-in-flutter
   Future<bool> _saveImage(CMImage image, String storagePath) async {
     if (image.imageProvider == null) {
@@ -209,23 +212,19 @@ class CrudTrainingGrounds {
       if (image.imageProvider is MemoryImage) {
         bytes = (image.imageProvider! as MemoryImage).bytes;
       } else {
-        assert(image.imageProvider is NetworkImage);
-        await (image.imageProvider! as NetworkImage)
-            .obtainKey(ImageConfiguration())
-            .then((key) {
-          (image.imageProvider! as NetworkImage).load(key,
-              (Uint8List imageBytes,
-                  {bool allowUpscaling = false,
-                  int? cacheWidth,
-                  int? cacheHeight}) {
-            bytes = imageBytes.buffer.asUint8List();
-            return instantiateImageCodec(imageBytes);
-          });
-        });
+        assert(image.imageProvider is NetworkImage && image.url != null);
+        final http.Response response = await http.get(
+          Uri.parse(image.url!),
+        );
+        bytes = response.bodyBytes;
+      }
+      if (!file.existsSync()) {
+        await file.create(recursive: true);
       }
       await file.writeAsBytes(bytes, flush: true);
       return true;
-    } on Exception {
+    } on Exception catch (e) {
+      print(e);
       print('Save image to local storage failed.');
       return false;
     }

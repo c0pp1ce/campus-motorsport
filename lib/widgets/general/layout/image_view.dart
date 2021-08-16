@@ -26,7 +26,7 @@ class ImageView extends StatelessWidget {
               panEnabled: true,
               boundaryMargin: EdgeInsets.zero,
               minScale: 0.5,
-              maxScale: 2.5,
+              maxScale: 4,
               child: Image(
                 image: image ??
                     const AssetImage('assets/images/designer_edited.jpg'),

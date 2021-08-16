@@ -17,7 +17,7 @@ class OfflineInformationProvider extends BaseProvider {
         _crudTrainingGroundsLocal = local.CrudTrainingGrounds(),
         _crudTrainingGroundsFirebase = CrudTrainingGrounds(),
         super() {
-    updateTrainingGrounds(true, true);
+    updateTrainingGrounds();
   }
 
   final bool offlineMode;
@@ -28,19 +28,21 @@ class OfflineInformationProvider extends BaseProvider {
 
   Future<void> updateTrainingGrounds([
     bool notifyListeners = true,
-    bool updateLocally = false,
   ]) async {
+    /// Get from local storage if no update wanted.
     if (offlineMode) {
-      /// Get from local storage.
       _trainingGrounds = await _crudTrainingGroundsLocal.getAll() ?? [];
+      return;
     } else {
-      /// Get from firebase and eventually update local storage.
-      _trainingGrounds = await _crudTrainingGroundsFirebase.getAll() ?? [];
-      if (updateLocally && _trainingGrounds.isNotEmpty) {
-        if (await _crudTrainingGroundsLocal
-            .needsUpdate(_trainingGrounds.first.lastUpdate)) {
-          _crudTrainingGroundsLocal.saveAll(_trainingGrounds);
-        }
+      /// Online mode, Check if Firebase contains newer version.
+      if (await _crudTrainingGroundsLocal
+          .needsUpdate(await _crudTrainingGroundsFirebase.getLastUpdate())) {
+        /// Get the most recent version and save it locally.
+        _trainingGrounds = await _crudTrainingGroundsFirebase.getAll() ?? [];
+        await _crudTrainingGroundsLocal.saveAll(_trainingGrounds);
+      } else {
+        /// Newest version is locally available.
+        _trainingGrounds = await _crudTrainingGroundsLocal.getAll() ?? [];
       }
     }
     if (notifyListeners) {
@@ -64,7 +66,8 @@ class OfflineInformationProvider extends BaseProvider {
     if (!locallyRemoved) {
       print('Couldnt delete ${trainingGround.id} locally.');
     }
-    notify();
+
+    await updateTrainingGrounds(true);
     return true;
   }
 

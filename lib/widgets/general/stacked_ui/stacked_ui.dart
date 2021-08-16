@@ -73,7 +73,7 @@ class StackedUIState extends State<StackedUI>
 
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 200),
     );
     animationController.addStatusListener((status) {
       /// Used to apply the color overlay when main view is inactive.
@@ -197,7 +197,7 @@ class StackedUIState extends State<StackedUI>
     /// maxSlide correctly set in first call of drag update.
     /// No need to further alter any values to get the desired drag feeling.
     if ((mainViewOpen && slideDirection != null) || sideViewOpen) {
-      final double delta = (details.primaryDelta ?? 0) / maxSlide;
+      final double delta = (details.primaryDelta ?? 0) / maxSlide * 1.4;
       animationController.value += delta;
       return;
     }

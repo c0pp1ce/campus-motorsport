@@ -55,10 +55,10 @@ class CCViewProvider extends CategoryFilterProvider
     return const [
       ComponentContainerPage.currentState,
       ComponentContainerPage.updates,
-      ComponentContainerPage.addUpdate,
       ComponentContainerPage.events,
-      ComponentContainerPage.addComponent,
       ComponentContainerPage.allComponents,
+      ComponentContainerPage.addUpdate,
+      ComponentContainerPage.addComponent,
     ];
   }
 
@@ -149,10 +149,10 @@ class CCViewProvider extends CategoryFilterProvider
 enum ComponentContainerPage {
   currentState,
   updates,
-  addUpdate,
   events,
-  addComponent,
   allComponents,
+  addUpdate,
+  addComponent,
   addContainer,
   noContainers,
 }

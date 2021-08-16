@@ -50,7 +50,7 @@ class _AllComponentsState extends State<AllComponents> {
             ),
           ),
         ),
-        offsetBeforeTitleShown: 60,
+        offsetBeforeTitleShown: 50,
         onRefresh: provider.reload,
         loadingListener: (value) {
           setState(() {

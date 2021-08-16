@@ -6,6 +6,8 @@ import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/provider/home/home_provider.dart';
+import 'package:campus_motorsport/provider/information/information_view_provider.dart';
+import 'package:campus_motorsport/provider/information/offline_information_provider.dart';
 import 'package:campus_motorsport/provider/user_management/user_management_provider.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
 import 'package:campus_motorsport/repositories/cm_auth.dart';
@@ -14,6 +16,7 @@ import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/component_containers.dart';
 import 'package:campus_motorsport/views/main/pages/components/components_view.dart';
 import 'package:campus_motorsport/views/main/pages/home/home.dart';
+import 'package:campus_motorsport/views/main/pages/information/information.dart';
 import 'package:campus_motorsport/views/main/pages/user_management/user_management.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/navigation_drawer.dart';
@@ -62,15 +65,17 @@ class MainNavigatorState extends State<MainNavigator> {
     final User? user = context.read<CurrentUser>().user;
     assert(user != null, 'Logged in users should never be null.');
     _pages = [
-      Home(),
-      ComponentContainersView(), // vehicles, stocks
-      ComponentsView(),
-      if (user!.isAdmin) UserManagement(),
+      const Home(),
+      const ComponentContainersView(), // vehicles, stocks
+      const ComponentsView(),
+      const InformationView(),
+      if (user!.isAdmin) const UserManagement(),
     ];
     _contextMenus = [
-      HomeContext(),
-      ComponentContainersContext(), // vehicles, stocks
-      ComponentsViewContext(), // components
+      const HomeContext(),
+      const ComponentContainersContext(), // vehicles, stocks
+      const ComponentsViewContext(), // components
+      null, // Info
       if (user.isAdmin) null, // user management
     ];
   }
@@ -99,12 +104,6 @@ class MainNavigatorState extends State<MainNavigator> {
         ),
       ),
       ChangeNotifierProvider(
-        create: (context) => UserManagementProvider(
-          toggle: toggle,
-        ),
-      ),
-      ChangeNotifierProvider(create: (context) => UsersProvider()),
-      ChangeNotifierProvider(
         create: (context) => ComponentsViewProvider(
           toggle: toggle,
         ),
@@ -125,6 +124,22 @@ class MainNavigatorState extends State<MainNavigator> {
                   false,
         ),
         update: _updateCCViewProvider,
+      ),
+      ChangeNotifierProvider(
+        create: (context) => InformationViewProvider(toggle: toggle),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => OfflineInformationProvider(
+          offlineMode: false,
+        ),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UserManagementProvider(
+          toggle: toggle,
+        ),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UsersProvider(),
       ),
     ];
   }
@@ -158,7 +173,7 @@ class MainNavigatorState extends State<MainNavigator> {
               });
             }
           },
-          secondaryItem: HomeSecondary(),
+          secondaryItem: const HomeSecondary(),
         ),
 
         /// Vehicles
@@ -174,7 +189,7 @@ class MainNavigatorState extends State<MainNavigator> {
               });
             }
           },
-          secondaryItem: ComponentContainersSecondary(),
+          secondaryItem: const ComponentContainersSecondary(),
         ),
 
         /// Components
@@ -188,7 +203,21 @@ class MainNavigatorState extends State<MainNavigator> {
               });
             }
           },
-          secondaryItem: ComponentsViewSecondary(),
+          secondaryItem: const ComponentsViewSecondary(),
+        ),
+
+        /// Info
+        NavigationItemData(
+          icon: LineIcons.infoCircle,
+          onPressed: () {
+            if (_currentIndex != 3) {
+              setState(() {
+                _currentIndex = 3;
+                toggle();
+              });
+            }
+          },
+          secondaryItem: const InformationViewSecondary(),
         ),
 
         /// User management page. Only show to admins.
@@ -196,14 +225,14 @@ class MainNavigatorState extends State<MainNavigator> {
           NavigationItemData(
             icon: LineIcons.users,
             onPressed: () {
-              if (_currentIndex != 3) {
+              if (_currentIndex != 4) {
                 setState(() {
-                  _currentIndex = 3;
+                  _currentIndex = 4;
                   toggle();
                 });
               }
             },
-            secondaryItem: UserManagementSecondary(),
+            secondaryItem: const UserManagementSecondary(),
           ),
 
         /// LOGOUT

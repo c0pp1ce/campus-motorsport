@@ -33,7 +33,6 @@ class Overview extends StatelessWidget {
     context.watch<VehiclesProvider>();
 
     return ExpandedAppBar(
-      expandedHeight: 150,
       appbarTitle: Text(
         'Übersicht',
         style: Theme.of(context).textTheme.headline6,
