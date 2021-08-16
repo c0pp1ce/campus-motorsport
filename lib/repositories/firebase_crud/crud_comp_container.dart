@@ -82,10 +82,10 @@ class CrudCompContainer {
     }
   }
 
-  /// Adds the given event to the vehicle and updates the counters on each current-state
+  /// Adds the given event to the vehicle and updates the counters on each currentState
   /// update which has a counter set.
   ///
-  /// Updates the current-state if any of those updates reaches 0 with this event.
+  /// Updates the currentState if any of those updates reaches 0 with this event.
   Future<bool> addEvent({
     required String docId,
     required cm.Event event,
@@ -105,9 +105,9 @@ class CrudCompContainer {
         final Map<String, dynamic> data =
             containerSnapshot.data()! as Map<String, dynamic>;
 
-        /// Find all updates in current-state with a counter.
+        /// Find all updates in currentState with a counter.
         final List<Map<String, dynamic>> updatesWithCounter = [];
-        for (final update in (data['current-state'] as List? ?? [])
+        for (final update in (data['currentState'] as List? ?? [])
             .cast<Map<String, dynamic>>()) {
           if (update['eventCounter'] != null) {
             updatesWithCounter.add(update);
@@ -187,7 +187,7 @@ class CrudCompContainer {
         });
 
         /// Update counter without further side effect.
-        /// Changes the counter of updates in current-state but does not do anything
+        /// Changes the counter of updates in currentState but does not do anything
         /// else.
         await addUpdates(
           docId: docId,
@@ -204,7 +204,7 @@ class CrudCompContainer {
         /// lists at the same time.
 
         /// Update components where the counter reached 0. Decrements state by 1
-        /// and adds a an update to current-state and updates list.
+        /// and adds a an update to currentState and updates list.
         await addUpdates(
           docId: docId,
           updates: [],
@@ -224,7 +224,7 @@ class CrudCompContainer {
   }
 
   /// Adds the given updates to the updates array of the container, if [addToCurrentStateOnly] is not true.
-  /// Updates current-state as well.
+  /// Updates currentState as well.
   Future<bool> addUpdates({
     required String docId,
     required List<Update> updates,
@@ -341,9 +341,9 @@ class CrudCompContainer {
     }
 
     /// Add the new updates to the current state and updates list.
-    print('update current-state and updates');
+    print('update currentState and updates');
     transaction.update(containerDoc, {
-      'current-state': FieldValue.arrayUnion(data),
+      'currentState': FieldValue.arrayUnion(data),
       if (!addToCurrentStateOnly) 'updates': FieldValue.arrayUnion(data),
     });
     return true;
@@ -386,7 +386,7 @@ class CrudCompContainer {
   }
 
   /// Deletes the component as well as the corresponding entry inside the
-  /// current-state array.
+  /// currentState array.
   Future<bool> deleteComponent({
     required String docId,
     required String componentId,
@@ -437,7 +437,7 @@ class CrudCompContainer {
   }
 
   /// Tries to delete the update entry of the given component from the
-  /// current-state array (if found).
+  /// currentState array (if found).
   /// Also returns true when there is no matching entry.
   Future<bool> deleteComponentFromCurrentState({
     required String docId,
@@ -464,7 +464,7 @@ class CrudCompContainer {
 
       bool componentFound = false;
       Map<String, dynamic>? matchingUpdate;
-      for (final update in (data['current-state'] as List? ?? [])
+      for (final update in (data['currentState'] as List? ?? [])
           .cast<Map<String, dynamic>>()) {
         if ((update['component'] as Map<String, dynamic>?)?['id'] ==
             componentId) {
@@ -476,7 +476,7 @@ class CrudCompContainer {
 
       if (componentFound) {
         transaction.update(containerDoc, {
-          'current-state': FieldValue.arrayRemove([matchingUpdate!]),
+          'currentState': FieldValue.arrayRemove([matchingUpdate!]),
         });
         return true;
       } else {
