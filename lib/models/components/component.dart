@@ -192,8 +192,10 @@ class ExtendedComponent extends BaseComponent {
     String? folder,
   }) async {
     assert(forUpdate && folder != null || !forUpdate);
+
     /// Base info.
-    final Map<String, dynamic> json = await super.toJson(forUpdate: forUpdate, folder: folder);
+    final Map<String, dynamic> json =
+        await super.toJson(forUpdate: forUpdate, folder: folder);
     final List<Map<String, dynamic>> fields = List.empty(growable: true);
     for (final DataInput dataInput in additionalData) {
       fields.add(await dataInput.toJson(forUpdate ? '${folder!}/$id' : name));

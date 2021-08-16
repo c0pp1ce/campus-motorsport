@@ -412,7 +412,7 @@ class CrudCompContainer {
           snapshot: containerSnapshot,
         );
 
-        if(fromUpdates) {
+        if (fromUpdates) {
           await deleteComponentFromUpdates(
             docId: docId,
             componentId: componentId,
@@ -425,8 +425,8 @@ class CrudCompContainer {
           'components': FieldValue.arrayRemove([componentId]),
         });
 
-        if(fromUpdates) {
-         await CMImage.deleteAllImagesFromFolder('$docId/$componentId', 0);
+        if (fromUpdates) {
+          await CMImage.deleteAllImagesFromFolder('$docId/$componentId', 0);
         }
         return true;
       });
@@ -540,7 +540,7 @@ class CrudCompContainer {
   Future<bool> deleteContainer(String docId) async {
     try {
       await _firestore.collection('component-containers').doc(docId).delete();
-      if(!await CMImage.deleteAllImagesFromFolder(docId)) {
+      if (!await CMImage.deleteAllImagesFromFolder(docId)) {
         print('Images not deleted');
       }
       return true;

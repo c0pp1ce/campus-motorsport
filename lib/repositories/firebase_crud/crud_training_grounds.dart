@@ -17,9 +17,9 @@ class CrudTrainingGrounds {
               .doc('training-grounds')
               .get())
           .data())?['lastUpdate'];
-      if(lastUpdate == null) {
+      if (lastUpdate == null) {
         lastUpdate = DateTime.utc(1900);
-      } else if(lastUpdate is String) {
+      } else if (lastUpdate is String) {
         lastUpdate = DateTime.parse(lastUpdate);
       } else {
         lastUpdate = (lastUpdate as Timestamp).toDate().toUtc();
@@ -90,7 +90,7 @@ class CrudTrainingGrounds {
           .doc('training-grounds')
           .get();
       if (doc.data()?['lastUpdate'] != null) {
-        if(doc.data()!['lastUpdate'] is Timestamp) {
+        if (doc.data()!['lastUpdate'] is Timestamp) {
           return (doc.data()!['lastUpdate'] as Timestamp).toDate().toUtc();
         } else {
           return DateTime.parse(doc.data()!['lastUpdate']).toUtc();

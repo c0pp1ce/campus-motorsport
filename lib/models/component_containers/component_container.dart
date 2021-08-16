@@ -71,8 +71,8 @@ class ComponentContainer {
         in (json['updates'] as List? ?? []).cast<Map<String, dynamic>>()) {
       updates.add(Update.fromJson(update));
     }
-    for (final update in (json['currentState'] as List? ?? [])
-        .cast<Map<String, dynamic>>()) {
+    for (final update
+        in (json['currentState'] as List? ?? []).cast<Map<String, dynamic>>()) {
       currentState.add(Update.fromJson(update));
     }
 

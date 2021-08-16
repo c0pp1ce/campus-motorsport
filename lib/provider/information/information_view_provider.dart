@@ -2,19 +2,22 @@ import 'package:campus_motorsport/provider/base_provider.dart';
 
 /// Handles the info pages (training grounds, clipboards, team structure).
 class InformationViewProvider extends BaseProvider {
-    InformationViewProvider({required this.toggle, this.offlineMode = false,});
+  InformationViewProvider({
+    required this.toggle,
+    this.offlineMode = false,
+  });
 
-    final void Function() toggle;
-    final bool offlineMode;
-    InformationPage currentPage = InformationPage.generalInfo;
+  final void Function() toggle;
+  final bool offlineMode;
+  InformationPage currentPage = InformationPage.generalInfo;
 
-    void switchTo(InformationPage page) {
-      if(page != currentPage) {
-        currentPage = page;
-        toggle();
-        notify();
-      }
+  void switchTo(InformationPage page) {
+    if (page != currentPage) {
+      currentPage = page;
+      toggle();
+      notify();
     }
+  }
 }
 
 enum InformationPage {
