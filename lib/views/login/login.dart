@@ -198,9 +198,12 @@ class _LoginState extends State<Login> {
                         ),
                         _buildGreyButton(
                             child: const Text('OFFLINE MODUS'),
-                            disabled: true,
+                            disabled: false,
                             onPressed: () {
-                              // TODO : Implement
+                              Navigator.pushNamed(
+                                context,
+                                offlineRoute,
+                              );
                             }),
                         const SizedBox(
                           height: SizeConfig.basePadding,

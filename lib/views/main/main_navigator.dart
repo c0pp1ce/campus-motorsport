@@ -246,9 +246,9 @@ class MainNavigatorState extends State<MainNavigator> {
             Navigator.of(context)
                 .pushNamedAndRemoveUntil(loginRoute, (route) => false);
           },
-          secondaryItem: Center(
+          secondaryItem: const Center(
             key: ValueKey('logout'),
-            child: const SizedBox(),
+            child: SizedBox(),
           ),
         ),
       ],

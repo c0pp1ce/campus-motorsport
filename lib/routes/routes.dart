@@ -1,5 +1,6 @@
 /// main_navigator
 const String mainRoute = '/';
+const String offlineRoute = 'offline';
 
 /// Initializes the app. Dont use / to avoid strange navigation behaviour.
 const String initAppRoute = 'init';

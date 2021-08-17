@@ -1,6 +1,7 @@
 import 'package:campus_motorsport/views/login/login.dart';
 import 'package:campus_motorsport/views/login_problems/login_problems.dart';
 import 'package:campus_motorsport/views/main/main_navigator.dart';
+import 'package:campus_motorsport/views/main/offline_navigator.dart';
 import 'package:campus_motorsport/views/registration/registration.dart';
 import 'package:campus_motorsport/main.dart';
 import 'package:campus_motorsport/routes/routes.dart';
@@ -14,6 +15,12 @@ class CustomRouter {
       case mainRoute:
         return MaterialPageRoute(
           builder: (_) => MainNavigator(),
+          settings: settings,
+        );
+
+      case offlineRoute:
+        return MaterialPageRoute(
+          builder: (_) => OfflineNavigator(),
           settings: settings,
         );
 

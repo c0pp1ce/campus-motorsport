@@ -13,18 +13,15 @@ import 'package:campus_motorsport/repositories/local_crud/crud_training_grounds.
 class OfflineInformationProvider extends BaseProvider {
   OfflineInformationProvider({
     required this.offlineMode,
-  })  : _trainingGrounds = [],
-        _crudTrainingGroundsLocal = local.CrudTrainingGrounds(),
+  })  : _crudTrainingGroundsLocal = local.CrudTrainingGrounds(),
         _crudTrainingGroundsFirebase = CrudTrainingGrounds(),
-        super() {
-    updateTrainingGrounds();
-  }
+        super();
 
   final bool offlineMode;
   final local.CrudTrainingGrounds _crudTrainingGroundsLocal;
   final CrudTrainingGrounds _crudTrainingGroundsFirebase;
 
-  List<TrainingGround> _trainingGrounds;
+  List<TrainingGround>? _trainingGrounds;
 
   Future<void> updateTrainingGrounds([
     bool notifyListeners = true,
@@ -32,6 +29,9 @@ class OfflineInformationProvider extends BaseProvider {
     /// Get from local storage if no update wanted.
     if (offlineMode) {
       _trainingGrounds = await _crudTrainingGroundsLocal.getAll() ?? [];
+      if (notifyListeners) {
+        notify();
+      }
       return;
     } else {
       /// Online mode, Check if Firebase contains newer version.
@@ -39,7 +39,7 @@ class OfflineInformationProvider extends BaseProvider {
           .needsUpdate(await _crudTrainingGroundsFirebase.getLastUpdate())) {
         /// Get the most recent version and save it locally.
         _trainingGrounds = await _crudTrainingGroundsFirebase.getAll() ?? [];
-        await _crudTrainingGroundsLocal.saveAll(_trainingGrounds);
+        await _crudTrainingGroundsLocal.saveAll(_trainingGrounds!);
       } else {
         /// Newest version is locally available.
         _trainingGrounds = await _crudTrainingGroundsLocal.getAll() ?? [];
@@ -71,5 +71,11 @@ class OfflineInformationProvider extends BaseProvider {
     return true;
   }
 
-  List<TrainingGround> get trainingGrounds => _trainingGrounds;
+  List<TrainingGround> get trainingGrounds {
+    if (_trainingGrounds == null) {
+      updateTrainingGrounds();
+      return [];
+    }
+    return _trainingGrounds!;
+  }
 }
