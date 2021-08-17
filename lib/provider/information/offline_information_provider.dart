@@ -92,7 +92,8 @@ class OfflineInformationProvider extends BaseProvider {
     if (!offlineMode) {
       final TeamStructure? firebaseTs = await _crudTeamStructureFirebase.get();
       if ((firebaseTs == null && _teamStructure != null) ||
-          await _crudTeamStructureLocal.needsUpdate(firebaseTs?.name ?? '')) {
+          await _crudTeamStructureLocal.needsUpdate(
+              firebaseTs?.name, _teamStructure?.name, true)) {
         await _crudTeamStructureLocal.setMostRecent(firebaseTs);
         _teamStructure = await _crudTeamStructureLocal.getMostRecent();
       }

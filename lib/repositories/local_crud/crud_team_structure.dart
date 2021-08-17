@@ -22,21 +22,19 @@ class CrudTeamStructure {
   Box? hiveBox;
 
   /// Determined based on name, which is acquired from the original file name.
-  Future<bool> needsUpdate(String fbName) async {
-    if (fbName.isEmpty) {
-      return false;
-    }
+  Future<bool> needsUpdate(
+    String? fbName, [
+    String? oldName,
+    bool dontGetLocalData = false,
+  ]) async {
     try {
       final String path = await dirPath;
       if (path.isEmpty) {
         return false;
       }
-      final TeamStructure? ts = await getMostRecent();
-      if (ts == null) {
-        return true;
-      } else {
-        return ts.name != fbName;
-      }
+      final String? oldTsName =
+          dontGetLocalData ? oldName : oldName ?? (await getMostRecent())?.name;
+      return oldTsName != fbName;
     } on Exception {
       return false;
     }
