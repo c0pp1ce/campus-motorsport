@@ -41,6 +41,8 @@ dependencies:
     git:
       url: https://github.com/c0pp1ce/flutter_cool_alert.git
       ref: master
+  file_picker: ^4.0.0
+  native_pdf_view: ^4.1.0
 
   # Connect to firebase project
   firebase_core: ^1.1.1

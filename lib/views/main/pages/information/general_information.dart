@@ -6,6 +6,7 @@ import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
 import 'package:campus_motorsport/widgets/general/layout/loading_list.dart';
+import 'package:campus_motorsport/widgets/infomation/team_structure_section.dart';
 import 'package:campus_motorsport/widgets/infomation/training_grounds_card.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +50,10 @@ class _GeneralInformationState extends State<GeneralInformation> {
         ),
       ),
       offsetBeforeTitleShown: 50,
-      onRefresh: () async => dataProvider.updateTrainingGrounds(true),
+      onRefresh: () async {
+        await dataProvider.updateTrainingGrounds(true);
+        await dataProvider.getTeamStructure();
+      },
       loadingListener: (value) {
         setState(() {
           _loading = value;
@@ -68,7 +72,20 @@ class _GeneralInformationState extends State<GeneralInformation> {
           const SizedBox(
             height: SizeConfig.basePadding * 2,
           ),
-          // TODO : Team structure
+          Text(
+            'Team-Infos',
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+            textAlign: context.read<CurrentUser>().user?.isAdmin ?? false
+                ? null
+                : TextAlign.center,
+          ),
+          const SizedBox(
+            height: SizeConfig.basePadding,
+          ),
+          TeamStructureSection(),
         ],
       ),
     );

@@ -89,25 +89,29 @@ class _CMImagePickerState extends State<CMImagePicker> {
                   child: SizedBox(
                     height: 60,
                     width: 60,
-                    child: IconButton(
-                      icon: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surface
-                              .withOpacity(0.6),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        splashRadius: SizeConfig.iconButtonSplashRadius,
+                        icon: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.6),
+                          ),
+                          alignment: Alignment.center,
+                          child: Icon(LineIcons.camera),
                         ),
-                        alignment: Alignment.center,
-                        child: Icon(LineIcons.camera),
+                        onPressed: () async {
+                          bool? success = await _showPicker(context);
+                          success ??= false;
+                          if (!success) {
+                            _showErrorDialog();
+                          }
+                        },
                       ),
-                      onPressed: () async {
-                        bool? success = await _showPicker(context);
-                        success ??= false;
-                        if (!success) {
-                          _showErrorDialog();
-                        }
-                      },
                     ),
                   ),
                 ),
@@ -118,7 +122,7 @@ class _CMImagePickerState extends State<CMImagePicker> {
           CMTextButton(
             primary: Theme.of(context).colorScheme.primary,
             backgroundColor: Colors.transparent,
-            child: Text('REMOVE'),
+            child: Text('ENTFERNEN'),
             onPressed: _deleteImage,
           ),
       ],

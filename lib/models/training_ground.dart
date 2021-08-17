@@ -36,6 +36,9 @@ class TrainingGround {
     );
   }
 
+  /// Firestore does not allow id, but it is used for hive db. Currently there is
+  /// no way to update anything but the url from the app, so no need to differentiate
+  /// between Hive and Firestore/with id and without id here.
   Map<String, dynamic> toJson() {
     assert(image.url != null);
     return {
