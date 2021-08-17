@@ -80,11 +80,6 @@ class CrudTeamStructure {
         /// New value is null, only delete of local version needed.
         return true;
       }
-      final String path = await dirPath;
-      if (path.isEmpty) {
-        return false;
-      }
-      hiveBox ??= await Hive.openBox('local-storage');
 
       final bool fileSaved = await _saveFile(ts);
       if (!fileSaved) {

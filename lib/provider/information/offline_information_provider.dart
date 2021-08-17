@@ -85,6 +85,8 @@ class OfflineInformationProvider extends BaseProvider {
   ///
   /// The used pdf viewers read files, it therefore is crucial that the teamStructure
   /// is always locally saved before returning from this method.
+  ///
+  /// TODO : More efficient way to check if local data needs to be updated.
   Future<void> getTeamStructure() async {
     _teamStructure = await _crudTeamStructureLocal.getMostRecent();
     if (!offlineMode) {
