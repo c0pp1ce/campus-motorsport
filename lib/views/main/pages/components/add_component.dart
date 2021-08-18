@@ -55,7 +55,7 @@ class _AddComponentState extends State<AddComponent> {
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                 ),
-              )
+              ),
             ]
           : [
               IconButton(

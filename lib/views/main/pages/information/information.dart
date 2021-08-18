@@ -1,7 +1,9 @@
+import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/provider/information/information_view_provider.dart';
 import 'package:campus_motorsport/views/main/pages/information/clipboards.dart';
 import 'package:campus_motorsport/views/main/pages/information/create_clipboard.dart';
 import 'package:campus_motorsport/views/main/pages/information/general_information.dart';
+import 'package:campus_motorsport/widgets/infomation/clipboards_context.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +44,7 @@ class InformationViewSecondary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isAdmin = context.read<CurrentUser>().user?.isAdmin ?? false;
     final InformationViewProvider viewProvider =
         context.watch<InformationViewProvider>();
 
@@ -49,6 +52,9 @@ class InformationViewSecondary extends StatelessWidget {
       if ((page == InformationPage.clipboards ||
               page == InformationPage.addClipboard) &&
           viewProvider.offlineMode) {
+        return const SizedBox();
+      }
+      if (!isAdmin && page == InformationPage.addClipboard) {
         return const SizedBox();
       }
 
@@ -74,5 +80,22 @@ class InformationViewSecondary extends StatelessWidget {
         children: children,
       ),
     );
+  }
+}
+
+class InformationContext extends StatelessWidget {
+  const InformationContext({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final InformationViewProvider viewProvider =
+        context.watch<InformationViewProvider>();
+
+    switch (viewProvider.currentPage) {
+      case InformationPage.clipboards:
+        return ClipBoardContext();
+      default:
+        return const SizedBox();
+    }
   }
 }

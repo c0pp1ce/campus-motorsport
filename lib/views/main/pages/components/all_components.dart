@@ -101,6 +101,15 @@ class _AllComponentsState extends State<AllComponents> {
           }
         }
 
+        final Widget child = ExpansionComponent(
+          key: ValueKey(
+            components[index].id ?? components[index].name,
+          ),
+          component: components[index],
+          isAdmin: isAdmin,
+          showDeleteDialog: _showDeleteDialog,
+        );
+
         if (categoryChanged) {
           return Column(
             children: <Widget>[
@@ -114,25 +123,11 @@ class _AllComponentsState extends State<AllComponents> {
               const SizedBox(
                 height: SizeConfig.basePadding,
               ),
-              ExpansionComponent(
-                key: ValueKey(
-                  components[index].id ?? components[index].name,
-                ),
-                component: components[index],
-                isAdmin: isAdmin,
-                showDeleteDialog: _showDeleteDialog,
-              ),
+              child,
             ],
           );
         } else {
-          return ExpansionComponent(
-            key: ValueKey(
-              components[index].id ?? components[index].name,
-            ),
-            component: components[index],
-            isAdmin: isAdmin,
-            showDeleteDialog: _showDeleteDialog,
-          );
+          return child;
         }
       },
     );
@@ -169,7 +164,7 @@ class _AllComponentsState extends State<AllComponents> {
         padding: const EdgeInsets.only(left: SizeConfig.basePadding / 2),
         child: CMTextButton(
           child: const Text(
-            'VERSTANDEN',
+            'LÖSCHEN',
           ),
           onPressed: () async {
             setState(() {

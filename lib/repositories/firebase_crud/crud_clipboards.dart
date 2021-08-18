@@ -14,6 +14,9 @@ class CrudClipboards {
       if (clipboard.image != null) {
         await clipboard.image!
             .uploadImageToFirebaseStorage('clipboards/${clipboard.id}');
+        await _firestore.collection(collectionName).doc(clipboard.id).update({
+          'image': clipboard.image?.url,
+        });
       }
       return true;
     } on Exception catch (e) {
@@ -66,7 +69,7 @@ class CrudClipboards {
       final List<Clipboard> clipboards = [];
       for (final doc in docs.docs) {
         if (doc.data() != null) {
-          clipboards.add(Clipboard.fromJson(doc.data()));
+          clipboards.add(Clipboard.fromJson(doc.data(), doc.id));
         }
       }
       return clipboards;

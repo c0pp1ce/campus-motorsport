@@ -15,7 +15,7 @@ class MainView extends StatelessWidget {
     this.appBarColor,
     this.appBarShadowColor,
     this.backgroundColor,
-    this.backgroundElevation = SizeConfig.baseBackgroundElevation,
+    this.backgroundElevation = SizeConfig.baseBackgroundElevation - 2,
     required this.child,
     this.actions,
     Key? key,

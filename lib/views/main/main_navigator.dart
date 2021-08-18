@@ -6,6 +6,7 @@ import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/components/components_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/provider/home/home_provider.dart';
+import 'package:campus_motorsport/provider/information/clipboard_provider.dart';
 import 'package:campus_motorsport/provider/information/information_view_provider.dart';
 import 'package:campus_motorsport/provider/information/offline_information_provider.dart';
 import 'package:campus_motorsport/provider/user_management/user_management_provider.dart';
@@ -75,7 +76,7 @@ class MainNavigatorState extends State<MainNavigator> {
       const HomeContext(),
       const ComponentContainersContext(), // vehicles, stocks
       const ComponentsViewContext(), // components
-      null, // Info
+      const InformationContext(), // Info
       if (user.isAdmin) null, // user management
     ];
   }
@@ -134,6 +135,9 @@ class MainNavigatorState extends State<MainNavigator> {
         ),
       ),
       ChangeNotifierProvider(
+        create: (context) => ClipboardProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (context) => UserManagementProvider(
           toggle: toggle,
         ),
@@ -152,6 +156,8 @@ class MainNavigatorState extends State<MainNavigator> {
       return context.watch<CCViewProvider>().allowContextDrawer;
     } else if (_currentIndex == 2) {
       return context.watch<ComponentsViewProvider>().allowContextDrawer;
+    } else if (_currentIndex == 3) {
+      return context.watch<InformationViewProvider>().allowContextDrawer;
     }
     return false;
   }
