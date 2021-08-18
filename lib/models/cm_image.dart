@@ -82,7 +82,7 @@ class CMImage {
         path == null ||
         neverUpload == true) {
       print('image upload not needed');
-      return false;
+      return true;
     }
     try {
       /// Get current users id.

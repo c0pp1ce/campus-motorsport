@@ -45,8 +45,9 @@ class OfflineInformationProvider extends BaseProvider {
       return;
     } else {
       /// Online mode, Check if Firebase contains newer version.
-      if (await _crudTrainingGroundsLocal
-          .needsUpdate(await _crudTrainingGroundsFirebase.getLastUpdate())) {
+      if (await _crudTrainingGroundsLocal.needsUpdate(
+        await _crudTrainingGroundsFirebase.getLastUpdate(),
+      )) {
         /// Get the most recent version and save it locally.
         _trainingGrounds = await _crudTrainingGroundsFirebase.getAll() ?? [];
         await _crudTrainingGroundsLocal.saveAll(_trainingGrounds!);
@@ -93,7 +94,10 @@ class OfflineInformationProvider extends BaseProvider {
       final TeamStructure? firebaseTs = await _crudTeamStructureFirebase.get();
       if ((firebaseTs == null && _teamStructure != null) ||
           await _crudTeamStructureLocal.needsUpdate(
-              firebaseTs?.name, _teamStructure?.name, true)) {
+            firebaseTs?.name,
+            _teamStructure?.name,
+            true,
+          )) {
         await _crudTeamStructureLocal.setMostRecent(firebaseTs);
         _teamStructure = await _crudTeamStructureLocal.getMostRecent();
       }

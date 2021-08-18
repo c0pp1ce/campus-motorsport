@@ -1,4 +1,6 @@
 import 'package:campus_motorsport/provider/information/information_view_provider.dart';
+import 'package:campus_motorsport/views/main/pages/information/clipboards.dart';
+import 'package:campus_motorsport/views/main/pages/information/create_clipboard.dart';
 import 'package:campus_motorsport/views/main/pages/information/general_information.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +23,16 @@ class InformationView extends StatelessWidget {
         return GeneralInformation(
           offlineMode: offlineMode,
         );
+      case InformationPage.clipboards:
+        if (offlineMode) {
+          return const SizedBox();
+        }
+        return const Clipboards();
+      case InformationPage.addClipboard:
+        if (offlineMode) {
+          return const SizedBox();
+        }
+        return const CreateClipboard();
     }
   }
 }
@@ -34,6 +46,12 @@ class InformationViewSecondary extends StatelessWidget {
         context.watch<InformationViewProvider>();
 
     final List<Widget> children = InformationPage.values.map((page) {
+      if ((page == InformationPage.clipboards ||
+              page == InformationPage.addClipboard) &&
+          viewProvider.offlineMode) {
+        return const SizedBox();
+      }
+
       return ListTile(
         onTap: () {
           viewProvider.switchTo(page);

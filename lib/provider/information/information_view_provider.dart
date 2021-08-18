@@ -22,6 +22,8 @@ class InformationViewProvider extends BaseProvider {
 
 enum InformationPage {
   generalInfo,
+  clipboards,
+  addClipboard,
 }
 
 extension InfoPageExtension on InformationPage {
@@ -29,6 +31,10 @@ extension InfoPageExtension on InformationPage {
     switch (this) {
       case InformationPage.generalInfo:
         return 'Allgemeine Informationen';
+      case InformationPage.clipboards:
+        return 'Clipboards';
+      case InformationPage.addClipboard:
+        return 'Clipboard erstellen';
     }
   }
 }
