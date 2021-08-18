@@ -22,7 +22,7 @@ class ClipboardProvider extends BaseProvider {
       final Clipboard? clipboard = await crud.getOne(id);
       if (clipboard != null) {
         final int i = _clipboards!.indexWhere(
-              (element) => element.id == clipboard.id,
+          (element) => element.id == clipboard.id,
         );
         if (i >= 0) {
           _clipboards![i] = clipboard;

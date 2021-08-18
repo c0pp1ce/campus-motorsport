@@ -54,8 +54,8 @@ class Clipboard {
       date = DateTime.parse(json['creationDate']);
     }
     late CpTypes type;
-    for(final value in CpTypes.values) {
-      if(json['type'] == value.name) {
+    for (final value in CpTypes.values) {
+      if (json['type'] == value.name) {
         type = value;
         break;
       }

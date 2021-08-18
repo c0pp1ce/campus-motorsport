@@ -382,7 +382,7 @@ class ClipboardViewState extends State<ClipboardView> {
         if (!success) {
           _showErrorDialog(context);
         } else {
-          if(widget.standAlone) {
+          if (widget.standAlone) {
             Navigator.of(context).pop();
           }
         }
