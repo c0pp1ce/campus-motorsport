@@ -1,14 +1,9 @@
 import 'package:campus_motorsport/provider/home/home_provider.dart';
-import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/views/main/pages/home/attendance_list.dart';
 import 'package:campus_motorsport/views/main/pages/home/overview.dart';
 import 'package:campus_motorsport/views/main/pages/home/overview_context.dart';
-import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
-import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
-import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';
-import 'package:campus_motorsport/widgets/general/stacked_ui/context_drawer.dart';
 
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 /// Main view.
@@ -22,37 +17,9 @@ class Home extends StatelessWidget {
     final HomeProvider homeProvider = context.watch<HomeProvider>();
     switch (homeProvider.currentPage) {
       case HomePage.overview:
-        return Overview();
+        return const Overview();
       case HomePage.attendanceList:
-        return ExpandedAppBar(
-          offsetBeforeTitleShown: 35,
-          appbarTitle: const Text('Anwesenheitsliste'),
-          appbarChild: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const ExpandedTitle(
-                title: 'Anwesenheitsliste',
-                margin: EdgeInsets.zero,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Derzeit vor Ort',
-                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          fontSize: 16,
-                        ),
-                  ),
-                  Switch(
-                    value: true,
-                    onChanged: (value) => {},
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+        return const AttendanceList();
     }
   }
 }
@@ -68,29 +35,7 @@ class HomeContext extends StatelessWidget {
       case HomePage.overview:
         return OverviewContext();
       case HomePage.attendanceList:
-        return ContextDrawer(
-          child: Material(
-            color: Colors.transparent,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
-                Icon(
-                  LineIcons.infoCircle,
-                ),
-                Expanded(
-                  child: SimpleCard(
-                    elevation: SizeConfig.baseBackgroundElevation - 3,
-                    margin: EdgeInsets.only(left: 5),
-                    child: Text(
-                      'Auf dieser Seite kannst du sehen, wer gerade vor Ort ist.\n\n'
-                      'Bitte ändere hier deinen Status, wenn du ankommst oder die Räume des Campus verlässt.',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+        return const SizedBox();
     }
   }
 }

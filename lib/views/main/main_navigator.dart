@@ -412,6 +412,7 @@ class MainNavigatorState extends State<MainNavigator> {
   /// Reset user specific providers on logout.
   Future<void> _logout(BuildContext context) async {
     final CMAuth auth = CMAuth();
+    await context.read<CurrentUser>().setOnSiteState(false);
     context.read<CurrentUser>().user = null;
     await auth.signOut();
   }
