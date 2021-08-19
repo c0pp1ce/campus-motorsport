@@ -5,6 +5,7 @@ import 'package:campus_motorsport/services/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
+import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_image_picker.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
@@ -46,6 +47,7 @@ class ClipboardViewState extends State<ClipboardView> {
   bool _loading = false;
   bool disposed = false;
 
+  String? searchTerm;
   String? name;
   String? content;
   CpTypes? type;
@@ -54,16 +56,19 @@ class ClipboardViewState extends State<ClipboardView> {
   final GlobalKey<CMDropDownMenuState> _dropDownKey = GlobalKey();
   TextEditingController? nameController;
   TextEditingController? contentController;
+  TextEditingController? searchController;
 
   void reset() {
     name = widget.clipboard?.name;
     content = widget.clipboard?.content;
     type = widget.clipboard?.type;
+    searchTerm = null;
     _dropDownKey.currentState?.reset();
 
     if (widget.create) {
       nameController?.clear();
       contentController?.clear();
+      searchController?.clear();
     }
     if (widget.edit) {
       nameController?.clear();
@@ -84,6 +89,7 @@ class ClipboardViewState extends State<ClipboardView> {
     if (widget.create) {
       nameController = TextEditingController();
       contentController = TextEditingController();
+      searchController = TextEditingController();
       image = CMImage();
     } else if (widget.edit) {
       nameController = TextEditingController();
@@ -108,6 +114,7 @@ class ClipboardViewState extends State<ClipboardView> {
     disposed = true;
     nameController?.dispose();
     contentController?.dispose();
+    searchController?.dispose();
     super.dispose();
   }
 
@@ -142,6 +149,16 @@ class ClipboardViewState extends State<ClipboardView> {
   }
 
   Widget _buildBoardView() {
+    List<Clipboard>? templates;
+    if (searchTerm != null && (searchTerm?.isNotEmpty ?? false)) {
+      final allBoards = widget.clipboardProvider != null
+          ? widget.clipboardProvider!.clipboards
+          : context.watch<ClipboardProvider>().clipboards;
+      templates = allBoards
+          .where((element) =>
+              element.name.toLowerCase().contains(searchTerm!.toLowerCase()))
+          .toList();
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: SizeConfig.basePadding),
       child: Form(
@@ -162,6 +179,18 @@ class ClipboardViewState extends State<ClipboardView> {
               ),
             ],
             if (widget.edit || widget.create) ...[
+              Text(
+                'Allgemeine Infos',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: ColorServices.darken(
+                        Theme.of(context).colorScheme.onSurface,
+                        SizeConfig.darkenTextColorBy,
+                      ),
+                    ),
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding,
+              ),
               CMTextField(
                 initialValue: nameController == null ? name : null,
                 enabled: true,
@@ -204,6 +233,27 @@ class ClipboardViewState extends State<ClipboardView> {
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
               ),
+              Text(
+                'Bild',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: ColorServices.darken(
+                        Theme.of(context).colorScheme.onSurface,
+                        SizeConfig.darkenTextColorBy,
+                      ),
+                    ),
+              ),
+              Text(
+                'Nachträglich nicht mehr änderbar.',
+                style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                      color: ColorServices.darken(
+                        Theme.of(context).colorScheme.onSurface,
+                        SizeConfig.darkenTextColorBy,
+                      ),
+                    ),
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding,
+              ),
               CMImagePicker(
                 imageFile: image ?? CMImage(),
                 heroTag: 'createEditClipboard',
@@ -211,6 +261,100 @@ class ClipboardViewState extends State<ClipboardView> {
               ),
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
+              ),
+              if (widget.create) ...[
+                Text(
+                  'Vorlage wählen',
+                  style: Theme.of(context).textTheme.headline6?.copyWith(
+                        color: ColorServices.darken(
+                          Theme.of(context).colorScheme.onSurface,
+                          SizeConfig.darkenTextColorBy,
+                        ),
+                      ),
+                ),
+                Text(
+                  'Optional. Bereits erstellte Clipboards können als Vorlage verwendet werden.',
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: ColorServices.darken(
+                          Theme.of(context).colorScheme.onSurface,
+                          SizeConfig.darkenTextColorBy,
+                        ),
+                      ),
+                ),
+                const SizedBox(
+                  height: SizeConfig.basePadding,
+                ),
+                CMTextField(
+                  controller: searchController,
+                  enabled: true,
+                  label: 'Clipboard-Suche',
+                  minLines: 1,
+                  maxLines: 1,
+                  textInputType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  onChanged: (value) {
+                    setState(() {
+                      searchTerm = value;
+                    });
+                  },
+                ),
+                if (searchTerm != null && (searchTerm?.isNotEmpty ?? false))
+                  if (templates?.isEmpty ?? true)
+                    Padding(
+                      padding: const EdgeInsets.all(
+                        SizeConfig.basePadding,
+                      ),
+                      child: Text('Keine Suchergebnisse.'),
+                    ),
+                if (templates?.isNotEmpty ?? false)
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: templates?.length,
+                    itemBuilder: (context, index) {
+                      return SimpleCard(
+                        padding: EdgeInsets.zero,
+                        margin: const EdgeInsets.all(SizeConfig.basePadding),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          title: Text(templates![index].name),
+                          onTap: () {
+                            setState(() {
+                              content = templates![index].content;
+                              contentController?.text = content!;
+                              searchTerm = null;
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                const SizedBox(
+                  height: SizeConfig.basePadding * 2,
+                ),
+              ],
+              Text(
+                'Clipboard-Inhalt',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: ColorServices.darken(
+                        Theme.of(context).colorScheme.onSurface,
+                        SizeConfig.darkenTextColorBy,
+                      ),
+                    ),
+              ),
+              Text(
+                'Styling mit Markdown ist möglich.',
+                style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                      color: ColorServices.darken(
+                        Theme.of(context).colorScheme.onSurface,
+                        SizeConfig.darkenTextColorBy,
+                      ),
+                    ),
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding,
               ),
               CMTextField(
                 initialValue: contentController == null ? name : null,
@@ -239,15 +383,6 @@ class ClipboardViewState extends State<ClipboardView> {
               Text(
                 'Ausgabe',
                 style: Theme.of(context).textTheme.headline6?.copyWith(
-                      color: ColorServices.darken(
-                        Theme.of(context).colorScheme.onSurface,
-                        SizeConfig.darkenTextColorBy,
-                      ),
-                    ),
-              ),
-              Text(
-                'Styling mit Markdown ist möglich.',
-                style: Theme.of(context).textTheme.bodyText2?.copyWith(
                       color: ColorServices.darken(
                         Theme.of(context).colorScheme.onSurface,
                         SizeConfig.darkenTextColorBy,

@@ -15,7 +15,10 @@ class AttendanceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.watch<CurrentUser>().user!;
+    final currentUser = context.watch<CurrentUser>().user;
+    if(currentUser == null) {
+      return const SizedBox();
+    }
     return ExpandedAppBar(
       offsetBeforeTitleShown: 30,
       appbarTitle: const Text('Anwesenheitsliste'),
