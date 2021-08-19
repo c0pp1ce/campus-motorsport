@@ -67,6 +67,9 @@ class UpdateTile extends StatelessWidget {
                     fontSize: 14,
                   ),
             ),
+            const SizedBox(
+              height: SizeConfig.basePadding,
+            ),
             Text(
               update.by,
               style: Theme.of(context).textTheme.subtitle1?.copyWith(

@@ -172,10 +172,12 @@ class CrudCompContainer {
               /// Update counter.
               update['eventCounter'] = newCounter;
             }
-            update['by'] = 'Statusänderung durchs System';
+            update['by'] = 'Statusänderung\nEvent: ${event.name}';
             update['date'] = DateTime.now().toUtc();
             counterReachedZero.add(update);
           } else {
+            update['by'] = 'Änderung Fahrtenzähler\nEvent: ${event.name}';
+            update['date'] = DateTime.now().toUtc();
             update['eventCounter'] = newCounter;
             onlyCounterUpdatesNeeded.add(update);
           }
@@ -194,7 +196,6 @@ class CrudCompContainer {
           updates: [],
           updatesListMap: onlyCounterUpdatesNeeded,
           fromListMap: true,
-          addToCurrentStateOnly: true,
           transaction: transaction,
           snapshot: containerSnapshot,
           document: containerDoc,
