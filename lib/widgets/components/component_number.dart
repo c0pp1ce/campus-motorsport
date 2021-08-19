@@ -28,7 +28,7 @@ class ComponentNumber extends StatelessWidget {
       maxLines: 1,
       enabled: enabled,
       textInputType: TextInputType.number,
-      validate: (value) => Validators().validateIntValue(value),
+      validate: (value) => Validators().validateIntValue(value, true, false),
     );
   }
 }

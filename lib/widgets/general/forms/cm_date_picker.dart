@@ -49,8 +49,9 @@ class _CMDatePickerState extends State<CMDatePicker> {
               minLines: 1,
               controller: _textEditingController,
               enabled: widget.enabled,
-              validate: (value) =>
-                  Validators().validateNotEmpty(value, 'Datum'),
+              validate: widget.enabled
+                  ? (value) => Validators().validateNotEmpty(value, 'Datum')
+                  : null,
             ),
           ),
         ),

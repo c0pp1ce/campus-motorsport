@@ -29,12 +29,6 @@ class _TeamStructureSectionState extends State<TeamStructureSection> {
   Widget build(BuildContext context) {
     final dataProvider = context.watch<OfflineInformationProvider>();
 
-    if (dataProvider.teamStructure == null) {
-      return Center(
-        child: Text('Keine Daten gefunden.'),
-      );
-    }
-
     late final bool isAdmin;
     if (dataProvider.offlineMode) {
       isAdmin = false;
@@ -43,7 +37,9 @@ class _TeamStructureSectionState extends State<TeamStructureSection> {
     }
 
     if (!isAdmin && dataProvider.teamStructure == null) {
-      return const SizedBox();
+      return Center(
+        child: Text('Keine Daten gefunden.'),
+      );
     }
 
     return SimpleCard(

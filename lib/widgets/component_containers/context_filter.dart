@@ -37,7 +37,7 @@ class ContextFilter extends StatelessWidget {
               if (currentState)
                 _buildInfo(
                   context,
-                  'Filter haben keine Einfluss auf nie gewartete Komponenten',
+                  'Filter haben keine Einfluss auf nie gewartete Komponenten.',
                   LineIcons.infoCircle,
                 ),
             ],
