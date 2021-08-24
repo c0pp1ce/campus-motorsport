@@ -2,7 +2,7 @@ import 'package:campus_motorsport/models/clipboard.dart';
 import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:campus_motorsport/provider/information/clipboard_provider.dart';
 import 'package:campus_motorsport/utilities/color_services.dart';
-import 'package:campus_motorsport/services/validators.dart';
+import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';

@@ -3,7 +3,7 @@ import 'package:campus_motorsport/models/component_containers/component_containe
 import 'package:campus_motorsport/provider/component_containers/cc_provider.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 import 'package:campus_motorsport/utilities/color_services.dart';
-import 'package:campus_motorsport/services/validators.dart';
+import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';

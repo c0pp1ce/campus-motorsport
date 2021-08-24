@@ -5,7 +5,7 @@ import 'package:campus_motorsport/provider/component_containers/cc_view_provider
 import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_comp_container.dart';
 import 'package:campus_motorsport/utilities/color_services.dart';
-import 'package:campus_motorsport/services/validators.dart';
+import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/component_containers/current_state_overview.dart';
 import 'package:campus_motorsport/widgets/component_containers/state_updates.dart';

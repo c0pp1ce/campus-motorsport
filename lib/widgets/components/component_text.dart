@@ -1,6 +1,6 @@
 import 'package:campus_motorsport/models/components/data_input.dart';
 import 'package:campus_motorsport/utilities/color_services.dart';
-import 'package:campus_motorsport/services/validators.dart';
+import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/components/vehicle_component.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_label.dart';

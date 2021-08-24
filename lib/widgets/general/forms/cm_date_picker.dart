@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/services/validators.dart';
+import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';

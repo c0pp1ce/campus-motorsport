@@ -1,5 +1,5 @@
 import 'package:campus_motorsport/utilities/color_services.dart';
-import 'package:campus_motorsport/services/validators.dart';
+import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:flutter/material.dart';
 
 class CMDropDownMenu extends StatefulWidget {

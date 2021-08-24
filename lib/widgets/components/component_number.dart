@@ -1,5 +1,5 @@
 import 'package:campus_motorsport/models/components/data_input.dart';
-import 'package:campus_motorsport/services/validators.dart';
+import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/widgets/components/component_text.dart';
 import 'package:flutter/material.dart';
 
