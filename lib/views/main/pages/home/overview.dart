@@ -2,7 +2,7 @@ import 'package:campus_motorsport/provider/component_containers/cc_provider.dart
 import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
-import 'package:campus_motorsport/widgets/home/overview/app_statistics.dart';
+import 'package:campus_motorsport/widgets/home/app_statistics.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
