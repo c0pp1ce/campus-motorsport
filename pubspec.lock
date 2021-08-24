@@ -136,13 +136,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  dio:
-    dependency: "direct main"
-    description:
-      name: dio
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   email_validator:
     dependency: "direct main"
     description:
@@ -227,13 +220,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  firebase_database:
-    dependency: "direct main"
-    description:
-      name: firebase_database
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.1.2"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -288,13 +274,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  flutter_slidable:
-    dependency: "direct main"
-    description:
-      name: flutter_slidable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -501,13 +480,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.1"
-  pinput:
-    dependency: "direct main"
-    description:
-      name: pinput
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   platform:
     dependency: transitive
     description:
@@ -597,13 +569,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
-  transparent_image:
-    dependency: "direct main"
-    description:
-      name: transparent_image
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   typed_data:
     dependency: transitive
     description:

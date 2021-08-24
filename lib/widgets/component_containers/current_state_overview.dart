@@ -1,7 +1,7 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
 import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/provider/component_containers/cc_view_provider.dart';
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
 import 'package:flutter/material.dart';

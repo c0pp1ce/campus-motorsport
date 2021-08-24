@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_title.dart';

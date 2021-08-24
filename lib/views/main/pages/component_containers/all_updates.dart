@@ -1,5 +1,5 @@
 import 'package:campus_motorsport/provider/component_containers/cc_view_provider.dart';
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/component_containers/state_updates.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';

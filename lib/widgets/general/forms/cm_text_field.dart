@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 
 /// Styled [TextFormField] to be used throughout the app.
 class CMTextField extends StatefulWidget {

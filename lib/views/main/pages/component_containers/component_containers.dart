@@ -1,7 +1,7 @@
 import 'package:campus_motorsport/models/component_containers/component_container.dart';
 import 'package:campus_motorsport/provider/component_containers/cc_view_provider.dart';
 import 'package:campus_motorsport/provider/global/current_user.dart';
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_components.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/add_container.dart';

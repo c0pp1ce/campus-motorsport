@@ -1,6 +1,6 @@
 import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:campus_motorsport/widgets/component_containers/update_details.dart';

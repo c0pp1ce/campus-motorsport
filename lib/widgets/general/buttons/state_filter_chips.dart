@@ -1,6 +1,6 @@
 import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/provider/state_filter_provider_mixin.dart';
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:flutter/material.dart';

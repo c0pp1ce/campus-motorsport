@@ -25,17 +25,13 @@ dependencies:
     sdk: flutter
 
   provider: ^5.0.0
-  dio: ^4.0.0
   email_validator: ^2.0.1
-  pinput: ^1.2.0
   shimmer: ^2.0.0
   image_picker: ^0.8.2
   flutter_image_compress: ^1.0.0
   intl: ^0.17.0
-  flutter_slidable: ^0.6.0
 
   google_fonts: ^2.0.0
-  transparent_image: ^2.0.0
   line_icons: ^2.0.1
   cool_alert:
     git:
@@ -47,8 +43,6 @@ dependencies:
 
   # Connect to firebase project
   firebase_core: ^1.1.1
-  # Realtime db
-  firebase_database: ^6.1.2
   # noSQL db
   cloud_firestore: ^2.1.0
   # cloud storage

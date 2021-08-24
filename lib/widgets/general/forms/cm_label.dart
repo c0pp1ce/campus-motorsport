@@ -1,4 +1,4 @@
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/widgets/components/vehicle_component.dart';
 import 'package:flutter/material.dart';
 

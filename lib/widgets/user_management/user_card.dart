@@ -1,6 +1,6 @@
 import 'package:campus_motorsport/models/user.dart';
 import 'package:campus_motorsport/repositories/firebase_crud/crud_user.dart';
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';

@@ -1,7 +1,7 @@
 import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
 import 'package:campus_motorsport/models/components/data_input.dart';
-import 'package:campus_motorsport/services/color_services.dart';
+import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/services/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
