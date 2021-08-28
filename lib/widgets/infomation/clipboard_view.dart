@@ -187,9 +187,13 @@ class ClipboardViewState extends State<ClipboardView> {
               const SizedBox(
                 height: SizeConfig.basePadding,
               ),
+            ],
+            if (!widget.create &&
+                !widget.edit &&
+                widget.clipboard?.eventDate != null) ...[
               CMLabel(
                 label: 'Event-Datum: ${DateFormat.yMMMMd().format(
-                  widget.clipboard?.eventDate.toLocal() ?? DateTime.now(),
+                  widget.clipboard!.eventDate.toLocal(),
                 )}',
                 darken: true,
               ),
