@@ -29,6 +29,7 @@ class OfflineInformationProvider extends BaseProvider {
   final CrudTeamStructure _crudTeamStructureFirebase = CrudTeamStructure();
 
   List<TrainingGround>? _trainingGrounds;
+  DateTime? _tgLastUpdate;
   TeamStructure? _teamStructure;
 
   bool alreadyRequestedUpdate = false;
@@ -39,18 +40,21 @@ class OfflineInformationProvider extends BaseProvider {
     /// Get from local storage if no update wanted.
     if (offlineMode) {
       _trainingGrounds = await _crudTrainingGroundsLocal.getAll() ?? [];
+      _tgLastUpdate = await _crudTrainingGroundsLocal.getDate();
       if (notifyListeners) {
         notify();
       }
       return;
     } else {
       /// Online mode, Check if Firebase contains newer version.
+      _tgLastUpdate = await _crudTrainingGroundsFirebase.getLastUpdate();
       if (await _crudTrainingGroundsLocal.needsUpdate(
-        await _crudTrainingGroundsFirebase.getLastUpdate(),
+        tgLastUpdate!,
       )) {
         /// Get the most recent version and save it locally.
         _trainingGrounds = await _crudTrainingGroundsFirebase.getAll() ?? [];
         await _crudTrainingGroundsLocal.saveAll(_trainingGrounds!);
+        _tgLastUpdate = await _crudTrainingGroundsLocal.getDate();
       } else {
         /// Newest version is locally available.
         _trainingGrounds = await _crudTrainingGroundsLocal.getAll() ?? [];
@@ -135,6 +139,8 @@ class OfflineInformationProvider extends BaseProvider {
     notify();
     return true;
   }
+
+  DateTime? get tgLastUpdate => _tgLastUpdate;
 
   List<TrainingGround> get trainingGrounds {
     if (_trainingGrounds == null) {

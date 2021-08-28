@@ -12,18 +12,6 @@ class CrudTrainingGrounds {
 
   Future<List<TrainingGround>?> getAll() async {
     try {
-      dynamic lastUpdate = ((await _firestore
-              .collection('meta-info')
-              .doc('training-grounds')
-              .get())
-          .data())?['lastUpdate'];
-      if (lastUpdate == null) {
-        lastUpdate = DateTime.utc(1900);
-      } else if (lastUpdate is String) {
-        lastUpdate = DateTime.parse(lastUpdate);
-      } else {
-        lastUpdate = (lastUpdate as Timestamp).toDate().toUtc();
-      }
       final QuerySnapshot<Map<String, dynamic>> query =
           await _firestore.collection('training-grounds').orderBy('name').get();
       final List<TrainingGround> results = List.empty(growable: true);
@@ -41,7 +29,6 @@ class CrudTrainingGrounds {
         }
         results.add(TrainingGround.fromJson(
           doc.data(),
-          lastUpdate,
           doc.id,
           image: image,
         ));

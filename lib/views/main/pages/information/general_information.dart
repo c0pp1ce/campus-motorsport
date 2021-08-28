@@ -146,7 +146,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
           SizedBox(
             width: SizeConfig.screenWidth,
             child: Text(
-              'Aktualisiert am ${DateFormat.yMMMMd().format(dataProvider.trainingGrounds.first.lastUpdate)}',
+              'Aktualisiert am ${DateFormat.yMMMMd().format(dataProvider.tgLastUpdate?.toLocal() ?? DateTime.utc(1900).toLocal())}',
             ),
           ),
         const SizedBox(

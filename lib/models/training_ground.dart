@@ -6,7 +6,6 @@ class TrainingGround {
     required this.name,
     required this.image,
     required this.storagePath,
-    required this.lastUpdate,
   });
 
   /// Id of the firebase document.
@@ -18,11 +17,9 @@ class TrainingGround {
   String storagePath;
 
   /// Stored as UTC.
-  final DateTime lastUpdate;
 
   static TrainingGround fromJson(
     Map<String, dynamic> json,
-    DateTime lastUpdate,
     String id, {
     CMImage? image,
   }) {
@@ -32,7 +29,6 @@ class TrainingGround {
       name: json['name'],
       image: image ?? CMImage.fromUrl(json['image']),
       storagePath: json['storagePath'],
-      lastUpdate: lastUpdate,
     );
   }
 

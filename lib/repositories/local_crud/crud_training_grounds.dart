@@ -37,10 +37,7 @@ class CrudTrainingGrounds {
       }
       hiveBox ??= await Hive.openBox('local-storage');
 
-      final DateTime lastUpdate = ((await hiveBox!.get('meta-info')
-                  as Map<dynamic, dynamic>?)?['training-grounds']
-              as Map<dynamic, dynamic>?)?['lastUpdate'] ??
-          DateTime.utc(1900);
+      final DateTime lastUpdate = await getDate();
 
       if (lastUpdate.isBefore(givenDate)) {
         return true;
@@ -52,17 +49,19 @@ class CrudTrainingGrounds {
     }
   }
 
+  Future<DateTime> getDate() async {
+    return ((await hiveBox!.get('meta-info')
+                as Map<dynamic, dynamic>?)?['training-grounds']
+            as Map<dynamic, dynamic>?)?['lastUpdate'] ??
+        DateTime.utc(1900);
+  }
+
   Future<List<TrainingGround>?> getAll() async {
     final String path = await dirPath;
     if (path.isEmpty) {
       return null;
     }
     hiveBox ??= await Hive.openBox('local-storage');
-
-    final DateTime lastUpdate = ((await hiveBox!.get('meta-info')
-                as Map<dynamic, dynamic>?)?['training-grounds']
-            as Map<dynamic, dynamic>?)?['lastUpdate'] ??
-        DateTime.utc(1900);
 
     /// Gets maps from hive.
     final List<Map<dynamic, dynamic>>? maps = ((await hiveBox!
@@ -83,7 +82,6 @@ class CrudTrainingGrounds {
       trainingGrounds.add(
         TrainingGround.fromJson(
           json.cast<String, dynamic>(),
-          lastUpdate,
           json['id'],
           image: image,
         ),
