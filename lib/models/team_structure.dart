@@ -21,7 +21,7 @@ class TeamStructure {
   static TeamStructure fromJson(Map<String, dynamic> json, String id) {
     if (json['latestUpdate'] is String) {
       json['latestUpdate'] = DateTime.parse(json['latestUpdate']).toLocal();
-    } else {
+    } else if (json['latestUpdate'] is Timestamp) {
       json['latestUpdate'] =
           (json['latestUpdate'] as Timestamp).toDate().toLocal();
     }
@@ -29,7 +29,7 @@ class TeamStructure {
       name: json['name'],
       id: id,
       url: json['url'],
-      latestUpdate: json['latestUpdate'],
+      latestUpdate: json['latestUpdate'] ?? DateTime.now(),
     );
   }
 
