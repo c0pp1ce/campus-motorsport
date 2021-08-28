@@ -23,8 +23,8 @@ class CrudTeamStructure {
 
   /// Determined based on name, which is acquired from the original file name.
   Future<bool> needsUpdate(
-    String? fbName, [
-    String? oldName,
+    DateTime? fbLatestUpdate, [
+    DateTime? oldLatestUpdate,
     bool dontGetLocalData = false,
   ]) async {
     try {
@@ -32,9 +32,17 @@ class CrudTeamStructure {
       if (path.isEmpty) {
         return false;
       }
-      final String? oldTsName =
-          dontGetLocalData ? oldName : oldName ?? (await getMostRecent())?.name;
-      return oldTsName != fbName;
+      final DateTime? localLatestUpdate = dontGetLocalData
+          ? oldLatestUpdate
+          : oldLatestUpdate ?? (await getMostRecent())?.latestUpdate;
+      if (fbLatestUpdate == null && localLatestUpdate == null) {
+        return false;
+      } else if ((fbLatestUpdate != null && localLatestUpdate == null) ||
+          (fbLatestUpdate == null && localLatestUpdate != null)) {
+        return true;
+      } else {
+        return fbLatestUpdate!.isAfter(localLatestUpdate!);
+      }
     } on Exception {
       return false;
     }

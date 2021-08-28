@@ -86,20 +86,18 @@ class OfflineInformationProvider extends BaseProvider {
   ///
   /// The used pdf viewers read files, it therefore is crucial that the teamStructure
   /// is always locally saved before returning from this method.
-  ///
-  /// TODO : More efficient way to check if local data needs to be updated.
   Future<void> getTeamStructure() async {
     _teamStructure = await _crudTeamStructureLocal.getMostRecent();
     if (!offlineMode) {
       final TeamStructure? firebaseTs = await _crudTeamStructureFirebase.get();
       if ((firebaseTs == null && _teamStructure != null) ||
           await _crudTeamStructureLocal.needsUpdate(
-            firebaseTs?.name,
-            _teamStructure?.name,
+            firebaseTs?.latestUpdate,
+            _teamStructure?.latestUpdate,
             true,
           )) {
         await _crudTeamStructureLocal.setMostRecent(firebaseTs);
-        _teamStructure = await _crudTeamStructureLocal.getMostRecent();
+        _teamStructure = firebaseTs;
       }
     }
     notify();
@@ -110,6 +108,7 @@ class OfflineInformationProvider extends BaseProvider {
     final String displayName = fileName.split('.').first;
     // final String storagePath = 'files/team-structure/$fileName';
     final ts = TeamStructure(
+      latestUpdate: DateTime.now(),
       name: displayName,
       id: CrudTeamStructure.id,
       localFilePath: path, // Will be changed once the local storage is updated.
