@@ -49,8 +49,7 @@ class _AddEventState extends State<AddEvent> {
               Text(
                 'Gib dem Event einen Namen und optional eine Beschreibung.\n\n'
                 'Wichtig: Ein Event einzutragen kann Einfluss auf den Zustand des Fahrzeuges haben.\n'
-                'Die Fahrtenzähler werden um den eingetragenen Wert verringert und der Status der Komponenten '
-                'gegebenenfalls angepasst.',
+                'Die Betriebsstunden-Zähler der Komponenten wird um den eingetragenen Wert verringert und der Status bei Erreichen von 0 verschlechtert.',
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               const SizedBox(
@@ -83,7 +82,7 @@ class _AddEventState extends State<AddEvent> {
                 height: SizeConfig.basePadding * 2,
               ),
               CMTextField(
-                label: 'Fahrten',
+                label: 'Betriebsstunden',
                 textInputType: TextInputType.number,
                 onSaved: (value) {
                   decrementBy = int.tryParse(value ?? '');

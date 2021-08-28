@@ -34,8 +34,8 @@ class EventTile extends StatelessWidget {
             ),
             Text(
               event.decrementCounterBy == 0 || event.decrementCounterBy > 1
-                  ? '${event.decrementCounterBy} Fahrten'
-                  : '${event.decrementCounterBy} Fahrt',
+                  ? '${event.decrementCounterBy} Betriebsstunden'
+                  : '${event.decrementCounterBy} Betriebsstunde',
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),

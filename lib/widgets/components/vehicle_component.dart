@@ -380,15 +380,15 @@ class VehicleComponentState extends State<VehicleComponent> {
   List<Widget> _showEventPicker(BuildContext context) {
     return [
       CMLabel(
-        label: widget.create ? 'Fahrtenzähler Grundwert' : 'Fahrtenzähler',
+        label: widget.create ? 'Betriebsstunden-Zähler Grundwert' : 'Betriebsstunden-Zähler',
         darken: widget.highlightInputs,
       ),
       Text(
         widget.fillWithData || widget.read
-            ? 'Anzahl an einzutragenden Fahrten bevor der Status automatisch geändert wird.\n\n'
+            ? 'Anzahl an einzutragenden Betriebsstunden bevor der Status automatisch geändert wird.\n\n'
                 'Kein Wert = keine automatische Änderung.\n'
                 'Kein Grundwert = Nach erreichen von 0 kein automatischer Reset.'
-            : 'Grundwert für den Fahrtenzähler, auf den zurückgesetzt wird nachdem er 0 erreicht hat.\n\n'
+            : 'Grundwert für den Zähler, auf den zurückgesetzt wird nachdem er 0 erreicht hat.\n\n'
                 'Kein Grundwert = Nach erreichen von 0 kein automatischer Reset.',
         style: widget.highlightInputs
             ? Theme.of(context).textTheme.bodyText2?.copyWith(
