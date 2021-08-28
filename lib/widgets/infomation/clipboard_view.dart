@@ -6,13 +6,16 @@ import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
 import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
+import 'package:campus_motorsport/widgets/general/forms/cm_date_picker.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_image_picker.dart';
+import 'package:campus_motorsport/widgets/general/forms/cm_label.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_text_field.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/main_view.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -52,8 +55,10 @@ class ClipboardViewState extends State<ClipboardView> {
   String? content;
   CpTypes? type;
   CMImage? image;
+  DateTime? eventDate;
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<CMDropDownMenuState> _dropDownKey = GlobalKey();
+  final GlobalKey<CMDatePickerState> _datePickerKey = GlobalKey();
   TextEditingController? nameController;
   TextEditingController? contentController;
   TextEditingController? searchController;
@@ -65,16 +70,20 @@ class ClipboardViewState extends State<ClipboardView> {
     searchTerm = null;
     _dropDownKey.currentState?.reset();
 
+    eventDate = widget.clipboard?.eventDate;
+
     if (widget.create) {
       nameController?.clear();
       contentController?.clear();
       searchController?.clear();
+      _datePickerKey.currentState?.reset(true);
     }
     if (widget.edit) {
       nameController?.clear();
       nameController?.text = name ?? '';
       contentController?.clear();
       contentController?.text = content ?? '';
+      _datePickerKey.currentState?.reset(false);
     }
 
     setState(() {});
@@ -85,6 +94,7 @@ class ClipboardViewState extends State<ClipboardView> {
     name = widget.clipboard?.name;
     content = widget.clipboard?.content;
     type = widget.clipboard?.type;
+    eventDate = widget.clipboard?.eventDate;
 
     if (widget.create) {
       nameController = TextEditingController();
@@ -175,6 +185,15 @@ class ClipboardViewState extends State<ClipboardView> {
                 enabled: widget.create,
               ),
               const SizedBox(
+                height: SizeConfig.basePadding,
+              ),
+              CMLabel(
+                label: 'Event-Datum: ${DateFormat.yMMMMd().format(
+                  widget.clipboard?.eventDate.toLocal() ?? DateTime.now(),
+                )}',
+                darken: true,
+              ),
+              const SizedBox(
                 height: SizeConfig.basePadding * 2,
               ),
             ],
@@ -229,6 +248,18 @@ class ClipboardViewState extends State<ClipboardView> {
                   );
                 },
                 label: 'Kategorie',
+              ),
+              const SizedBox(
+                height: SizeConfig.basePadding * 2,
+              ),
+              CMDatePicker(
+                key: _datePickerKey,
+                initialValue: eventDate,
+                hint: 'Event-Datum',
+                enabled: true,
+                onSaved: (value) {
+                  eventDate = value;
+                },
               ),
               const SizedBox(
                 height: SizeConfig.basePadding * 2,
@@ -456,6 +487,7 @@ class ClipboardViewState extends State<ClipboardView> {
           content: content!,
           type: type!,
           image: image,
+          eventDate: eventDate!,
         );
         final success = widget.standAlone
             ? await widget.clipboardProvider!.create(cb)
@@ -495,6 +527,9 @@ class ClipboardViewState extends State<ClipboardView> {
         }
         if (content != widget.clipboard?.content) {
           data['content'] = content;
+        }
+        if (eventDate != widget.clipboard?.eventDate) {
+          data['eventDate'] = eventDate;
         }
 
         final success = widget.standAlone

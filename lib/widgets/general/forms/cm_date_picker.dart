@@ -12,28 +12,41 @@ class CMDatePicker extends StatefulWidget {
     required this.onSaved,
     this.enabled = true,
     this.initialValue,
+    this.hint,
     Key? key,
   }) : super(key: key);
 
   final DateTime? initialValue;
   final void Function(DateTime) onSaved;
   final bool enabled;
+  final String? hint;
 
   @override
-  _CMDatePickerState createState() => _CMDatePickerState();
+  CMDatePickerState createState() => CMDatePickerState();
 }
 
-class _CMDatePickerState extends State<CMDatePicker> {
+class CMDatePickerState extends State<CMDatePicker> {
   DateTime? selected;
   final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    selected = widget.initialValue;
+    selected = widget.initialValue?.toLocal();
     if (selected != null) {
       _textEditingController.text = DateFormat.yMMMMd().format(selected!);
     }
+  }
+
+  void reset(bool toNull) {
+    setState(() {
+      selected = toNull ? null : widget.initialValue?.toLocal();
+      if (selected == null) {
+        _textEditingController.clear();
+      } else {
+        _textEditingController.text = DateFormat.yMMMMd().format(selected!);
+      }
+    });
   }
 
   @override
@@ -45,6 +58,7 @@ class _CMDatePickerState extends State<CMDatePicker> {
         Expanded(
           child: AbsorbPointer(
             child: CMTextField(
+              hint: widget.hint,
               maxLines: 1,
               minLines: 1,
               controller: _textEditingController,
@@ -75,7 +89,7 @@ class _CMDatePickerState extends State<CMDatePicker> {
                   helpText: 'Datum wählen',
                   cancelText: 'ABBRECHEN',
                   context: context,
-                  initialDate: DateTime.now(),
+                  initialDate: widget.initialValue?.toLocal() ?? DateTime.now(),
                   currentDate: DateTime.now(),
                   firstDate: DateTime.now().subtract(
                     Duration(days: 360),

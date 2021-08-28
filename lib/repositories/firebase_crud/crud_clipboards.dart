@@ -60,7 +60,7 @@ class CrudClipboards {
     try {
       final docs = await _firestore
           .collection(collectionName)
-          .orderBy('creationDate', descending: true)
+          .orderBy('eventDate', descending: true)
           .orderBy('name')
           .get();
       if (docs.docs.isEmpty) {

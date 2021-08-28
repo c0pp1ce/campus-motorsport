@@ -80,7 +80,7 @@ class _ClipboardsState extends State<Clipboards> {
         if (index == 0) {
           dateChanged = true;
         } else {
-          if (boards[index - 1].creationDate != boards[index].creationDate) {
+          if (boards[index - 1].eventDate != boards[index].eventDate) {
             dateChanged = true;
           } else {
             dateChanged = false;
@@ -105,7 +105,9 @@ class _ClipboardsState extends State<Clipboards> {
                   height: SizeConfig.basePadding,
                 ),
               ListSubHeader(
-                header: DateFormat.yMMMMd().format(boards[index].creationDate),
+                header: DateFormat.yMMMMd().format(
+                  boards[index].eventDate.toLocal(),
+                ),
               ),
               const SizedBox(
                 height: SizeConfig.basePadding,

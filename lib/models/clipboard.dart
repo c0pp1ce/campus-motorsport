@@ -30,15 +30,13 @@ class Clipboard {
     required this.name,
     required this.content,
     required this.type,
-    DateTime? creationDate,
+    required this.eventDate,
     this.id,
     this.image,
-  }) {
-    this.creationDate = creationDate ?? DateTime.now().toUtc();
-  }
+  });
 
   String name;
-  late DateTime creationDate;
+  late DateTime eventDate;
 
   /// Can contain markdown syntax.
   String content;
@@ -48,10 +46,10 @@ class Clipboard {
 
   static Clipboard fromJson(Map<String, dynamic> json, [String? id]) {
     late final DateTime date;
-    if (json['creationDate'] is Timestamp) {
-      date = (json['creationDate'] as Timestamp).toDate().toUtc();
+    if (json['eventDate'] is Timestamp) {
+      date = (json['eventDate'] as Timestamp).toDate().toUtc();
     } else {
-      date = DateTime.parse(json['creationDate']);
+      date = DateTime.parse(json['eventDate']);
     }
     late CpTypes type;
     for (final value in CpTypes.values) {
@@ -65,7 +63,7 @@ class Clipboard {
       name: json['name'],
       content: json['content'],
       type: type,
-      creationDate: date,
+      eventDate: date,
       id: id ?? json['id'],
       image: json['image'] != null ? CMImage.fromUrl(json['image']) : null,
     );
@@ -75,7 +73,7 @@ class Clipboard {
     return {
       'name': name,
       'content': content,
-      'creationDate': creationDate,
+      'eventDate': eventDate,
       'type': type.name,
       if (withId && id != null) 'id': id,
       if (image?.url != null) 'image': image!.url,
