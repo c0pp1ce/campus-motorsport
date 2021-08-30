@@ -90,29 +90,33 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
   Widget build(BuildContext context) {
     late final Widget? onSiteIndicator;
     if (widget.showOnSiteIndicator) {
-      final user = context.watch<CurrentUser>().user!;
-      if (user.onSite) {
-        onSiteIndicator = Padding(
-          padding: const EdgeInsets.all(
-            SizeConfig.basePadding,
-          ),
-          child: Icon(
-            LineIcons.user,
-            color: CurrentState.newState,
-            size: 20,
-          ),
-        );
+      final user = context.watch<CurrentUser>().user;
+      if (user != null) {
+        if (user.onSite) {
+          onSiteIndicator = Padding(
+            padding: const EdgeInsets.all(
+              SizeConfig.basePadding,
+            ),
+            child: Icon(
+              LineIcons.user,
+              color: CurrentState.newState,
+              //size: 20,
+            ),
+          );
+        } else {
+          onSiteIndicator = Padding(
+            padding: const EdgeInsets.all(
+              SizeConfig.basePadding,
+            ),
+            child: Icon(
+              LineIcons.user,
+              color: CurrentState.badState,
+              //size: 20,
+            ),
+          );
+        }
       } else {
-        onSiteIndicator = Padding(
-          padding: const EdgeInsets.all(
-            SizeConfig.basePadding,
-          ),
-          child: Icon(
-            LineIcons.user,
-            color: CurrentState.badState,
-            size: 20,
-          ),
-        );
+        onSiteIndicator = null;
       }
     } else {
       onSiteIndicator = null;
@@ -123,10 +127,10 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
           : null,
       appBarShadowColor: _showAppbarTitle ? null : Colors.transparent,
       backgroundElevation: ExpandedAppBar.elevation,
-      actions: widget.showOnSiteIndicator
+      actions: widget.showOnSiteIndicator && onSiteIndicator != null
           ? widget.actions != null
-              ? [onSiteIndicator!, ...widget.actions!]
-              : [onSiteIndicator!]
+              ? [onSiteIndicator, ...widget.actions!]
+              : [onSiteIndicator]
           : widget.actions,
       child: Stack(
         fit: StackFit.expand,

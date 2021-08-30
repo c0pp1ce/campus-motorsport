@@ -1,4 +1,6 @@
 import 'package:campus_motorsport/provider/global/current_user.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_user.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +15,8 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import 'models/user.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,38 +96,66 @@ class _InitAppState extends State<InitApp> {
   bool? loggedIn;
 
   @override
-  void didChangeDependencies() {
+  Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
 
     /// Initialize the size values only once.
     SizeConfig().init(context);
 
     if (loggedIn == null) {
-      /// Check auto login here.
-      /// then
-      setState(() {
-        loggedIn = false;
-      });
+      if (auth.FirebaseAuth.instance.currentUser != null) {
+        final User? currentUser = await CrudUser().getUser(
+          auth.FirebaseAuth.instance.currentUser!.uid,
+        );
+        if (context.read<CurrentUser>().user != null &&
+            context.read<CurrentUser>().user?.uid ==
+                auth.FirebaseAuth.instance.currentUser!.uid) {
+          setState(() {
+            loggedIn = true;
+          });
+          return;
+        }
+        if (currentUser != null) {
+          context.read<CurrentUser>().user = currentUser;
+          setState(() {
+            loggedIn = true;
+          });
+        } else {
+          setState(() {
+            loggedIn = false;
+          });
+        }
+        setState(() {
+          loggedIn = true;
+        });
+      } else {
+        setState(() {
+          loggedIn = false;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loggedIn ?? false) {
+    final child = BackgroundGradient(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    if (loggedIn == null) {
+      return child;
+    } else if (loggedIn == true) {
       /// Successful auto login. Go to home screen.
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         Navigator.of(context).pushReplacementNamed(mainRoute);
       });
-    } else if (!(loggedIn ?? true)) {
+    } else {
       /// Failed auto login. Go to login screen.
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         Navigator.of(context).pushReplacementNamed(loginRoute);
       });
     }
-    return BackgroundGradient(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    return child;
   }
 }

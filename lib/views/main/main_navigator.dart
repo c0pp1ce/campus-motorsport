@@ -12,6 +12,7 @@ import 'package:campus_motorsport/provider/information/offline_information_provi
 import 'package:campus_motorsport/provider/user_management/user_management_provider.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
 import 'package:campus_motorsport/repositories/cm_auth.dart';
+import 'package:campus_motorsport/repositories/firebase_crud/crud_user.dart';
 import 'package:campus_motorsport/routes/routes.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/views/main/pages/component_containers/component_containers.dart';
@@ -24,6 +25,7 @@ import 'package:campus_motorsport/widgets/general/stacked_ui/navigation_drawer.d
 import 'package:campus_motorsport/widgets/general/stacked_ui/primary_navigation_item.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/stacked_ui.dart';
 import 'package:cool_alert/cool_alert.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +72,6 @@ class MainNavigatorState extends State<MainNavigator> {
 
     /// Read user to determine if admin pages need to be shown.
     final User? user = context.read<CurrentUser>().user;
-    assert(user != null, 'Logged in users should never be null.');
     _pages = [
       Home(
         setIndex: setIndex,
@@ -78,30 +79,43 @@ class MainNavigatorState extends State<MainNavigator> {
       const ComponentContainersView(), // vehicles, stocks
       const ComponentsView(),
       const InformationView(),
-      if (user!.isAdmin) const UserManagement(),
+      if (user?.isAdmin ?? false) const UserManagement(),
     ];
     _contextMenus = [
       null,
       const ComponentContainersContext(), // vehicles, stocks
       const ComponentsViewContext(), // components
       const InformationContext(), // Info
-      if (user.isAdmin) null, // user management
+      if (user?.isAdmin ?? false) null, // user management
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: _providers,
-      builder: (context, child) {
-        return StackedUI(
-          key: uiKey,
-          navigationDrawer: _buildDrawer(context),
-          mainView: _pages[_currentIndex],
-          contextDrawer: _contextMenus[_currentIndex],
-          allowSlideToContext: _allowContextSlide(context),
+    return WillPopScope(
+      onWillPop: () async {
+        if (auth.FirebaseAuth.instance.currentUser?.uid == null) {
+          return true;
+        }
+        await CrudUser().updateField(
+          uid: auth.FirebaseAuth.instance.currentUser!.uid,
+          key: 'onSite',
+          data: false,
         );
+        return true;
       },
+      child: MultiProvider(
+        providers: _providers,
+        builder: (context, child) {
+          return StackedUI(
+            key: uiKey,
+            navigationDrawer: _buildDrawer(context),
+            mainView: _pages[_currentIndex],
+            contextDrawer: _contextMenus[_currentIndex],
+            allowSlideToContext: _allowContextSlide(context),
+          );
+        },
+      ),
     );
   }
 
