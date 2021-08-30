@@ -23,6 +23,8 @@ class StackedUI extends StatefulWidget {
   final double slidedWidth;
 
   /// Middle view of the [StackedUI].
+  ///
+  /// Only tested for usage with [MainView].
   final Widget mainView;
 
   /// Left view of the [StackedUI].
@@ -154,9 +156,11 @@ class StackedUIState extends State<StackedUI>
       if (maxSlide < 0) {
         maxSlide = -maxSlide;
         leftSideOpen = false;
-        setState(() {
-          _index = 0;
-        });
+        if(_index != 0) {
+          setState(() {
+            _index = 0;
+          });
+        }
       }
       animationController.forward();
     } else if (animationController.isCompleted) {
@@ -195,7 +199,7 @@ class StackedUIState extends State<StackedUI>
     }
 
     /// maxSlide correctly set in first call of drag update.
-    /// No need to further alter any values to get the desired drag feeling.
+    /// Alter (maxSlide * 1.4) to get the desired drag feeling.
     if ((mainViewOpen && slideDirection != null) || sideViewOpen) {
       final double delta = (details.primaryDelta ?? 0) / maxSlide * 1.4;
       animationController.value += delta;
