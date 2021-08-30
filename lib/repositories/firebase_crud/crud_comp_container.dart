@@ -176,7 +176,8 @@ class CrudCompContainer {
             update['date'] = DateTime.now().toUtc();
             counterReachedZero.add(update);
           } else {
-            update['by'] = 'Änderung Betriebsstunden-Zähler\nEvent: ${event.name}';
+            update['by'] =
+                'Änderung Betriebsstunden-Zähler\nEvent: ${event.name}';
             update['date'] = DateTime.now().toUtc();
             update['eventCounter'] = newCounter;
             onlyCounterUpdatesNeeded.add(update);

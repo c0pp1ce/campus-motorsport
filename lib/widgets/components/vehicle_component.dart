@@ -380,7 +380,9 @@ class VehicleComponentState extends State<VehicleComponent> {
   List<Widget> _showEventPicker(BuildContext context) {
     return [
       CMLabel(
-        label: widget.create ? 'Betriebsstunden-Zähler Grundwert' : 'Betriebsstunden-Zähler',
+        label: widget.create
+            ? 'Betriebsstunden-Zähler Grundwert'
+            : 'Betriebsstunden-Zähler',
         darken: widget.highlightInputs,
       ),
       Text(
