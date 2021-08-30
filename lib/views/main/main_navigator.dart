@@ -150,9 +150,7 @@ class MainNavigatorState extends State<MainNavigator> {
 
   /// Determines if a context drawer should be visible.
   bool _allowContextSlide(BuildContext context) {
-    if (_currentIndex == 0) {
-      return context.watch<HomeProvider>().allowContextDrawer;
-    } else if (_currentIndex == 1) {
+    if (_currentIndex == 1) {
       return context.watch<CCViewProvider>().allowContextDrawer;
     } else if (_currentIndex == 2) {
       return context.watch<ComponentsViewProvider>().allowContextDrawer;

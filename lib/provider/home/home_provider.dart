@@ -8,7 +8,6 @@ class HomeProvider extends BaseProvider {
 
   final void Function() toggle;
   HomePage currentPage = HomePage.overview;
-  bool allowContextDrawer = false;
 
   void switchTo(HomePage page) {
     if (page != currentPage) {
