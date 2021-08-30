@@ -35,15 +35,15 @@ class _AllAssignedComponentsState extends State<AllAssignedComponents> {
         });
       },
       appbarTitle: Text(
-        'Komponenten hinzufügen',
+        'Alle Komponenten',
         style: Theme.of(context).textTheme.headline6,
       ),
       appbarChild: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          ExpandedTitle(
-            title: 'Komponenten hinzufügen',
+          const ExpandedTitle(
+            title: 'Alle Komponenten',
           ),
           Text(
             context.watch<CCViewProvider>().currentlyOpen!.name,
