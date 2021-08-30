@@ -84,7 +84,7 @@ class MyMaterialApp extends StatelessWidget {
 
 /// Initialize SizeConfig.
 ///
-/// Auto-Login can be checked here as well.
+/// Auto-Login is checked here as well.
 class InitApp extends StatefulWidget {
   const InitApp({Key? key}) : super(key: key);
 
