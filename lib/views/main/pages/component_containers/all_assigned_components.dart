@@ -28,6 +28,7 @@ class _AllAssignedComponentsState extends State<AllAssignedComponents> {
   @override
   Widget build(BuildContext context) {
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       onRefresh: context.read<CCViewProvider>().reloadCurrentlyOpen,
       loadingListener: (value) {
         setState(() {

@@ -1,9 +1,13 @@
 import 'dart:math';
 
+import 'package:campus_motorsport/provider/global/current_user.dart';
 import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/views/main/pages/component_containers/current_state.dart';
 import 'package:campus_motorsport/widgets/general/stacked_ui/main_view.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 /// A layout preset for the StackedUI MainView.
 class ExpandedAppBar extends StatefulWidget {
@@ -17,8 +21,11 @@ class ExpandedAppBar extends StatefulWidget {
     this.onRefresh,
     this.loadingListener,
     this.actions,
+    this.showOnSiteIndicator = false,
     Key? key,
   }) : super(key: key);
+
+  final bool showOnSiteIndicator;
 
   /// The title is shown when the appbars expanded space is not visible.
   final Widget appbarTitle;
@@ -81,13 +88,46 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    late final Widget? onSiteIndicator;
+    if (widget.showOnSiteIndicator) {
+      final user = context.watch<CurrentUser>().user!;
+      if (user.onSite) {
+        onSiteIndicator = Padding(
+          padding: const EdgeInsets.all(
+            SizeConfig.basePadding,
+          ),
+          child: Icon(
+            LineIcons.user,
+            color: CurrentState.newState,
+            size: 20,
+          ),
+        );
+      } else {
+        onSiteIndicator = Padding(
+          padding: const EdgeInsets.all(
+            SizeConfig.basePadding,
+          ),
+          child: Icon(
+            LineIcons.user,
+            color: CurrentState.badState,
+            size: 20,
+          ),
+        );
+      }
+    } else {
+      onSiteIndicator = null;
+    }
     return MainView(
       title: _showAppbarTitle || widget.titleAlwaysVisible
           ? widget.appbarTitle
           : null,
       appBarShadowColor: _showAppbarTitle ? null : Colors.transparent,
       backgroundElevation: ExpandedAppBar.elevation,
-      actions: widget.actions,
+      actions: widget.showOnSiteIndicator
+          ? widget.actions != null
+              ? [onSiteIndicator!, ...widget.actions!]
+              : [onSiteIndicator!]
+          : widget.actions,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[

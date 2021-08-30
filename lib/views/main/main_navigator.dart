@@ -181,7 +181,7 @@ class MainNavigatorState extends State<MainNavigator> {
             if (_currentIndex != 0) {
               setState(() {
                 _currentIndex = 0;
-                toggle();
+                //toggle();
               });
             }
           },
@@ -197,7 +197,7 @@ class MainNavigatorState extends State<MainNavigator> {
             if (_currentIndex != 1) {
               setState(() {
                 _currentIndex = 1;
-                toggle();
+                //toggle();
               });
             }
           },
@@ -211,7 +211,7 @@ class MainNavigatorState extends State<MainNavigator> {
             if (_currentIndex != 2) {
               setState(() {
                 _currentIndex = 2;
-                toggle();
+                //toggle();
               });
             }
           },
@@ -225,7 +225,7 @@ class MainNavigatorState extends State<MainNavigator> {
             if (_currentIndex != 3) {
               setState(() {
                 _currentIndex = 3;
-                toggle();
+                //toggle();
               });
             }
           },
@@ -240,7 +240,7 @@ class MainNavigatorState extends State<MainNavigator> {
               if (_currentIndex != 4) {
                 setState(() {
                   _currentIndex = 4;
-                  toggle();
+                  //toggle();
                 });
               }
             },

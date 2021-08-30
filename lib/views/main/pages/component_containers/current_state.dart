@@ -81,6 +81,7 @@ class _CurrentStateState extends State<CurrentState> {
     final bool isAdmin = context.watch<CurrentUser>().user?.isAdmin ?? false;
 
     return ExpandedAppBar(
+      showOnSiteIndicator: !edit,
       onRefresh: viewProvider.reloadCurrentlyOpen,
       loadingListener: (value) {
         setState(() {

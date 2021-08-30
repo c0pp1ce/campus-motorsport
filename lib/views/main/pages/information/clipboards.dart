@@ -35,6 +35,7 @@ class _ClipboardsState extends State<Clipboards> {
     }
 
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       appbarTitle: Text(
         'Clipboards',
         style: Theme.of(context).textTheme.headline6,

@@ -29,6 +29,7 @@ class _AdminsState extends State<Admins> {
     final UsersProvider provider = context.watch<UsersProvider>();
 
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       appbarTitle: Text(
         'Administratoren',
         style: Theme.of(context).textTheme.headline6,

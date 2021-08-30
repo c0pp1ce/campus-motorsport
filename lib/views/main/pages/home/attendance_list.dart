@@ -20,6 +20,7 @@ class AttendanceList extends StatelessWidget {
       return const SizedBox();
     }
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       offsetBeforeTitleShown: 30,
       appbarTitle: const Text('Anwesenheitsliste'),
       appbarChild: Column(

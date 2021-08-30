@@ -36,6 +36,7 @@ class _AllComponentsState extends State<AllComponents> {
         dividerColor: Colors.transparent,
       ),
       child: ExpandedAppBar(
+        showOnSiteIndicator: true,
         appbarTitle: Text(
           'Alle Komponenten',
           style: Theme.of(context).textTheme.headline6,

@@ -42,6 +42,7 @@ class _EventsState extends State<Events> {
     final bool isAdmin = context.watch<CurrentUser>().user?.isAdmin ?? false;
 
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       appbarTitle: Text(
         'Events',
         style: Theme.of(context).textTheme.headline6,

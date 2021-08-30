@@ -26,6 +26,7 @@ class _AcceptUsersState extends State<AcceptUsers> {
     final UsersProvider provider = context.watch<UsersProvider>();
 
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       appbarTitle: Text(
         'Ausstehende Bestätigungen',
         style: Theme.of(context).textTheme.headline6,

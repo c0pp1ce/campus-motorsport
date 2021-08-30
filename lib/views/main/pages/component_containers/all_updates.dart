@@ -34,6 +34,7 @@ class _AllUpdatesState extends State<AllUpdates> {
     }
 
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       onRefresh: viewProvider.reloadCurrentlyOpen,
       loadingListener: (value) {
         setState(() {

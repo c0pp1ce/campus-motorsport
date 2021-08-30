@@ -49,6 +49,7 @@ class _AddUpdatesState extends State<AddUpdates> {
         .toList();
 
     return ExpandedAppBar(
+      showOnSiteIndicator: !selectionFinished,
       onRefresh: viewProvider.reloadCurrentlyOpen,
       loadingListener: (value) {
         setState(() {

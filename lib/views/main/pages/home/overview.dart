@@ -39,6 +39,7 @@ class Overview extends StatelessWidget {
     context.watch<VehiclesProvider>();
 
     return ExpandedAppBar(
+      showOnSiteIndicator: true,
       appbarTitle: Text(
         'Übersicht',
         style: Theme.of(context).textTheme.headline6,

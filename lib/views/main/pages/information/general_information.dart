@@ -35,6 +35,7 @@ class _GeneralInformationState extends State<GeneralInformation> {
         context.watch<OfflineInformationProvider>();
 
     return ExpandedAppBar(
+      showOnSiteIndicator: !widget.offlineMode,
       appbarTitle: Text(
         'Allgemeine Informationen',
         style: Theme.of(context).textTheme.headline6,

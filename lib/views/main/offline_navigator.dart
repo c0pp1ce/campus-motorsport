@@ -37,7 +37,7 @@ class _OfflineNavigatorState extends State<OfflineNavigator> {
     super.initState();
 
     _pages = [
-      InformationView(
+      const InformationView(
         offlineMode: true,
       ),
     ];
@@ -84,10 +84,10 @@ class _OfflineNavigatorState extends State<OfflineNavigator> {
         NavigationItemData(
           icon: LineIcons.infoCircle,
           onPressed: () {
-            if (_currentIndex != 3) {
+            if (_currentIndex != 0) {
               setState(() {
-                _currentIndex = 3;
-                toggle();
+                _currentIndex = 0;
+                //toggle();
               });
             }
           },
