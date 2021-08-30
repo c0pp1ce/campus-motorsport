@@ -1,6 +1,9 @@
 import 'package:campus_motorsport/provider/component_containers/cc_provider.dart';
+import 'package:campus_motorsport/provider/component_containers/cc_view_provider.dart';
 import 'package:campus_motorsport/provider/components/components_provider.dart';
 import 'package:campus_motorsport/provider/user_management/users_provider.dart';
+import 'package:campus_motorsport/utilities/size_config.dart';
+import 'package:campus_motorsport/widgets/general/cards/simple_card.dart';
 import 'package:campus_motorsport/widgets/general/layout/expanded_appbar.dart';
 import 'package:campus_motorsport/widgets/home/app_statistics.dart';
 
@@ -11,8 +14,11 @@ import 'package:provider/provider.dart';
 /// Its part of the home screen.
 class Overview extends StatelessWidget {
   const Overview({
+    required this.setIndex,
     Key? key,
   }) : super(key: key);
+
+  final Function(int) setIndex;
 
   /// [[users, parts, vehicles]]
   Future<List<int>> _getData(BuildContext context) async {
@@ -63,6 +69,42 @@ class Overview extends StatelessWidget {
             vehicleCount: snapshot.data![2],
             partCount: snapshot.data![1],
             userCount: snapshot.data![0],
+          );
+        },
+      ),
+      body: ListView.builder(
+        itemCount: context.watch<VehiclesProvider>().containers.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final container = context.read<VehiclesProvider>().containers[index];
+          return SimpleCard(
+            padding: EdgeInsets.zero,
+            margin: const EdgeInsets.all(
+              SizeConfig.basePadding,
+            ),
+            child: ListTile(
+              onTap: () {
+                setIndex(1);
+                context.read<CCViewProvider>().switchTo(
+                      ComponentContainerPage.currentState,
+                      openContainer: container,
+                      onlyToggleToOpen: true,
+                    );
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              contentPadding: const EdgeInsets.all(SizeConfig.basePadding),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(container.name),
+                  Text(
+                      '${container.components.length}  Teil${container.components.length == 1 ? '' : 'e'}'),
+                ],
+              ),
+            ),
           );
         },
       ),

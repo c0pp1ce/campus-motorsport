@@ -1,8 +1,6 @@
 import 'package:campus_motorsport/provider/home/home_provider.dart';
 import 'package:campus_motorsport/views/main/pages/home/attendance_list.dart';
 import 'package:campus_motorsport/views/main/pages/home/overview.dart';
-import 'package:campus_motorsport/views/main/pages/home/overview_context.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,32 +8,21 @@ import 'package:provider/provider.dart';
 class Home extends StatelessWidget {
   const Home({
     Key? key,
+    required this.setIndex,
   }) : super(key: key);
 
+  final Function(int) setIndex;
+
   @override
   Widget build(BuildContext context) {
     final HomeProvider homeProvider = context.watch<HomeProvider>();
     switch (homeProvider.currentPage) {
       case HomePage.overview:
-        return const Overview();
+        return Overview(
+          setIndex: setIndex,
+        );
       case HomePage.attendanceList:
         return const AttendanceList();
-    }
-  }
-}
-
-/// Right drawer.
-class HomeContext extends StatelessWidget {
-  const HomeContext({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final HomeProvider homeProvider = context.watch<HomeProvider>();
-    switch (homeProvider.currentPage) {
-      case HomePage.overview:
-        return OverviewContext();
-      case HomePage.attendanceList:
-        return const SizedBox();
     }
   }
 }

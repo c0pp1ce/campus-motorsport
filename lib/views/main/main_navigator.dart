@@ -54,8 +54,14 @@ class MainNavigatorState extends State<MainNavigator> {
   /// Length must be equal to [_pages].
   late final List<Widget?> _contextMenus;
 
-  void toggle() {
-    uiKey.currentState?.toggle();
+  void toggle([bool onlyOpenMain = false]) {
+    uiKey.currentState?.toggle(onlyOpenMain);
+  }
+
+  void setIndex(int i) {
+    setState(() {
+      _currentIndex = i;
+    });
   }
 
   @override
@@ -66,14 +72,16 @@ class MainNavigatorState extends State<MainNavigator> {
     final User? user = context.read<CurrentUser>().user;
     assert(user != null, 'Logged in users should never be null.');
     _pages = [
-      const Home(),
+      Home(
+        setIndex: setIndex,
+      ),
       const ComponentContainersView(), // vehicles, stocks
       const ComponentsView(),
       const InformationView(),
       if (user!.isAdmin) const UserManagement(),
     ];
     _contextMenus = [
-      const HomeContext(),
+      null,
       const ComponentContainersContext(), // vehicles, stocks
       const ComponentsViewContext(), // components
       const InformationContext(), // Info

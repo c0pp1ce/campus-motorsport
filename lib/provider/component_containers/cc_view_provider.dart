@@ -40,7 +40,7 @@ class CCViewProvider extends CategoryFilterProvider
     }
   }
 
-  final void Function() toggle;
+  final void Function([bool]) toggle;
 
   late bool isAdmin;
   late bool allowContextDrawer;
@@ -72,7 +72,8 @@ class CCViewProvider extends CategoryFilterProvider
   void switchTo(
     ComponentContainerPage page, {
     ComponentContainer? openContainer,
-    toggleDrawer = true,
+    bool toggleDrawer = true,
+    bool onlyToggleToOpen = false,
   }) {
     if (openContainer != null && openContainer.id != currentlyOpen?.id) {
       currentPage = ComponentContainerPage.currentState;
@@ -81,7 +82,7 @@ class CCViewProvider extends CategoryFilterProvider
       resetAllowedCategories(false);
       resetAllowedStates(false);
       if (toggleDrawer) {
-        toggle();
+        toggle(onlyToggleToOpen);
       }
       notify();
       return;
@@ -99,7 +100,7 @@ class CCViewProvider extends CategoryFilterProvider
         allowContextDrawer = true;
       }
       if (toggleDrawer) {
-        toggle();
+        toggle(onlyToggleToOpen);
       }
       notify();
     }

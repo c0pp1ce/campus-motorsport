@@ -149,8 +149,8 @@ class StackedUIState extends State<StackedUI>
   /// Opens navigation menu or the main view.
   ///
   /// Does not open the context menu.
-  void toggle() {
-    if (animationController.isDismissed) {
+  void toggle([bool onlyOpenMain = false]) {
+    if (animationController.isDismissed && !onlyOpenMain) {
       if (maxSlide < 0) {
         maxSlide = -maxSlide;
         leftSideOpen = false;
@@ -159,7 +159,7 @@ class StackedUIState extends State<StackedUI>
         });
       }
       animationController.forward();
-    } else {
+    } else if (animationController.isCompleted) {
       animationController.reverse();
     }
   }
