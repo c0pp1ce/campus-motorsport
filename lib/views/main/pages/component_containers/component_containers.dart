@@ -207,6 +207,12 @@ class ComponentContainersSecondary extends StatelessWidget {
                       .contains(page)) {
                 return const SizedBox();
               }
+
+              /// Events are for stock types not very useful. Remove this to enable
+              /// them anyway.
+              if (stocks && page == ComponentContainerPage.events) {
+                return const SizedBox();
+              }
               return ListTile(
                 contentPadding: EdgeInsets.only(
                   left: SizeConfig.basePadding * 4,
