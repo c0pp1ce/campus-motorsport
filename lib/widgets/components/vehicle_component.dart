@@ -307,7 +307,7 @@ class VehicleComponentState extends State<VehicleComponent> {
     const double padding = SizeConfig.basePadding * 2;
 
     switch (dataInput.type) {
-      case InputTypes.text:
+      case InputType.text:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentText(
@@ -317,7 +317,7 @@ class VehicleComponentState extends State<VehicleComponent> {
             enabled: widget.fillWithData,
           ),
         );
-      case InputTypes.number:
+      case InputType.number:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentNumber(
@@ -327,7 +327,7 @@ class VehicleComponentState extends State<VehicleComponent> {
             previousData: previousDataInput,
           ),
         );
-      case InputTypes.date:
+      case InputType.date:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentDate(
@@ -337,7 +337,7 @@ class VehicleComponentState extends State<VehicleComponent> {
             enabled: widget.fillWithData,
           ),
         );
-      case InputTypes.image:
+      case InputType.image:
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: padding),
           child: ComponentImage(

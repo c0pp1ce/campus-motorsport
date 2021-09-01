@@ -20,7 +20,7 @@ class CreateDataInput extends StatefulWidget {
 }
 
 class _CreateDataInputState extends State<CreateDataInput> {
-  InputTypes? type;
+  InputType? type;
   String? name;
   String? description;
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -98,7 +98,7 @@ class _CreateDataInputState extends State<CreateDataInput> {
           child: ListView(
             shrinkWrap: true,
             physics: BouncingScrollPhysics(),
-            children: InputTypes.values.map((types) {
+            children: InputType.values.map((types) {
               return ListTile(
                 title: Text(types.name),
                 onTap: () {

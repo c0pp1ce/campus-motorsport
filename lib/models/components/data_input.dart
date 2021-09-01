@@ -2,23 +2,23 @@ import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Possible input/data types
-enum InputTypes {
+enum InputType {
   text,
   number,
   date,
   image,
 }
 
-extension InputTypesNames on InputTypes {
+extension InputTypesNames on InputType {
   String get name {
     switch (this) {
-      case InputTypes.text:
+      case InputType.text:
         return 'Text';
-      case InputTypes.number:
+      case InputType.number:
         return 'Zahl';
-      case InputTypes.date:
+      case InputType.date:
         return 'Datum';
-      case InputTypes.image:
+      case InputType.image:
         return 'Bild';
     }
   }
@@ -26,7 +26,7 @@ extension InputTypesNames on InputTypes {
 
 /// Defines a data input field.
 ///
-/// [InputTypes.image] --> data needs to be of type [CMImage].
+/// [InputType.image] --> data needs to be of type [CMImage].
 class DataInput {
   DataInput({
     required this.type,
@@ -35,15 +35,15 @@ class DataInput {
     this.data,
   });
 
-  InputTypes type;
+  InputType type;
   String name;
   String description;
   dynamic data;
 
   static DataInput fromJson(Map<String, dynamic> json) {
     final String typeName = json['type'];
-    late InputTypes type;
-    for (final InputTypes myType in InputTypes.values) {
+    late InputType type;
+    for (final InputType myType in InputType.values) {
       if (myType.name == typeName) {
         type = myType;
         break;
@@ -52,9 +52,9 @@ class DataInput {
     assert(type != null, 'Invalid type stored in database: $typeName');
     dynamic data;
 
-    if (type == InputTypes.image && json['data'] != null) {
+    if (type == InputType.image && json['data'] != null) {
       data = CMImage.fromUrl(json['data']);
-    } else if (type == InputTypes.date && json['data'] != null) {
+    } else if (type == InputType.date && json['data'] != null) {
       final Timestamp timestamp = json['data'];
       data = timestamp.toDate();
     } else {
@@ -69,7 +69,7 @@ class DataInput {
     );
   }
 
-  /// If of type [InputTypes.image] upload function of [CMImage] is called if its
+  /// If of type [InputType.image] upload function of [CMImage] is called if its
   /// url is null.
   Future<Map<String, dynamic>> toJson(String folder) async {
     final Map<String, dynamic> json = {
@@ -80,7 +80,7 @@ class DataInput {
 
     /// Check if there is data to be stored.
     if (data != null) {
-      if (type != InputTypes.image) {
+      if (type != InputType.image) {
         /// Generic types that can be stored inside of the db.
         json['data'] = data;
       } else {
