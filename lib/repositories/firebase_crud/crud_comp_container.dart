@@ -20,7 +20,7 @@ class CrudCompContainer {
           await _firestore.collection('component-containers').doc().get();
       componentContainer.id = document.id;
       await _firestore.collection('component-containers').doc(document.id).set(
-            await componentContainer.toJson(componentContainer.id!),
+            await componentContainer.toJson(componentContainer.id),
           );
       return true;
     } on Exception catch (e) {
@@ -125,8 +125,8 @@ class CrudCompContainer {
               (update['eventCounter'] as int) - event.decrementCounterBy;
           if (newCounter <= 0) {
             /// Decrement the state of the component.
-            int stateIndex = ComponentState.values.indexOf(
-                ComponentState.values.firstWhere((element) =>
+            int stateIndex = ComponentState.values.indexOf(ComponentState.values
+                .firstWhere((element) =>
                     element.name ==
                     (update['component'] as Map<String, dynamic>)['state']
                         as String));

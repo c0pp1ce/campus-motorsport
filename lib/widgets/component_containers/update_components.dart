@@ -124,7 +124,7 @@ class _UpdateComponentsState extends State<UpdateComponents> {
     }
 
     final bool success = await CrudCompContainer().addUpdates(
-      docId: widget.currentContainer.id!,
+      docId: widget.currentContainer.id,
       updates: updates,
     );
     widget.loadingListener(false);

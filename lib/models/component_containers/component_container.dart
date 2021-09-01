@@ -25,7 +25,7 @@ extension ComponentContainerTypeNames on ComponentContainerTypes {
 /// update to each component.
 class ComponentContainer {
   ComponentContainer({
-    this.id,
+    required this.id,
     required this.name,
     required this.type,
     this.image,
@@ -35,8 +35,20 @@ class ComponentContainer {
     this.events = const [],
   });
 
+  /// This constructor is only used for creating a new component which therefore
+  /// cannot posses an ID. Dont use it for any other purpose.
+  ComponentContainer.withoutId({
+    required this.name,
+    required this.type,
+    this.image,
+    this.updates = const [],
+    this.currentState = const [],
+    this.components = const [],
+    this.events = const [],
+  }) : id = '';
+
   /// Document id.
-  String? id;
+  String id;
   String name;
   ComponentContainerTypes type;
   CMImage? image;
@@ -112,12 +124,12 @@ class ComponentContainer {
 
     json['updates'] = List.empty(growable: true);
     for (final update in updates) {
-      (json['updates'] as List).add(await update.toJson(id!));
+      (json['updates'] as List).add(await update.toJson(id));
     }
 
     json['currentState'] = List.empty(growable: true);
     for (final update in currentState) {
-      (json['currentState'] as List).add(await update.toJson(id!));
+      (json['currentState'] as List).add(await update.toJson(id));
     }
 
     json['events'] = List.empty(growable: true);

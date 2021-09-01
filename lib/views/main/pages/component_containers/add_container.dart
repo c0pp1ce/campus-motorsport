@@ -170,7 +170,7 @@ class _AddContainerState extends State<AddContainer> {
         _loading = true;
       });
       final bool success = await CrudCompContainer().createContainer(
-        componentContainer: ComponentContainer(
+        componentContainer: ComponentContainer.withoutId(
           name: name,
           type: type,
           image: image,

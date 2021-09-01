@@ -105,7 +105,7 @@ class _AllAssignedComponentsState extends State<AllAssignedComponents> {
             showDeleteDialog: (component) {
               _showDeleteDialog(
                 component,
-                context.read<CCViewProvider>().currentlyOpen!.id!,
+                context.read<CCViewProvider>().currentlyOpen!.id,
               );
             },
           );

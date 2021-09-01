@@ -223,7 +223,7 @@ class _AddComponentsState extends State<AddComponents> {
     if (selected.isEmpty) {
       success = false;
     }
-    if (container.id?.isEmpty ?? true) {
+    if (container.id.isEmpty) {
       success = false;
     }
 
@@ -241,7 +241,7 @@ class _AddComponentsState extends State<AddComponents> {
       selection.add(component.id);
     }
     success = await CrudCompContainer().addComponents(
-      docId: container.id!,
+      docId: container.id,
       data: selection,
     );
 

@@ -126,18 +126,21 @@ class CCViewProvider extends CategoryFilterProvider
       final componentInList = list.firstWhere(
         (element) => element.id == currentlyOpen?.id,
         orElse: () => ComponentContainer(
+          id: '',
           name: '',
           type: ComponentContainerTypes.vehicle,
         ),
       );
-      index = list.indexOf(componentInList);
+      if (componentInList.id.isNotEmpty) {
+        index = list.indexOf(componentInList);
+      }
     }
     if (index == -1) {
       print('vehicle not found');
       return;
     } else {
       final ComponentContainer? c =
-          await CrudCompContainer().getContainer(currentlyOpen!.id!);
+          await CrudCompContainer().getContainer(currentlyOpen!.id);
       if (c != null) {
         list[index] = c;
         currentlyOpen = list[index];

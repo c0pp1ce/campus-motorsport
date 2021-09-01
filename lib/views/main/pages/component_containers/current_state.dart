@@ -112,7 +112,7 @@ class _CurrentStateState extends State<CurrentState> {
             ),
             child: CMImagePicker(
               imageFile: image,
-              heroTag: viewProvider.currentlyOpen!.id!,
+              heroTag: viewProvider.currentlyOpen!.id,
               enabled: edit,
               roundedBottom: true,
             ),
@@ -140,7 +140,7 @@ class _CurrentStateState extends State<CurrentState> {
                   ),
                   UnusedComponents(
                     isAdmin: isAdmin,
-                    key: ValueKey(viewProvider.currentlyOpen!.id!),
+                    key: ValueKey(viewProvider.currentlyOpen!.id),
                   ),
                 ],
               ),
@@ -285,13 +285,13 @@ class _CurrentStateState extends State<CurrentState> {
 
     /// New image got selected
     if (imageChanged) {
-      await image.uploadImageToFirebaseStorage(viewProvider.currentlyOpen!.id!);
+      await image.uploadImageToFirebaseStorage(viewProvider.currentlyOpen!.id);
       assert(image.url != null, 'Upload failed');
       data['image'] = image.url;
     }
 
     final bool success = await CrudCompContainer().updateContainer(
-      docId: viewProvider.currentlyOpen!.id!,
+      docId: viewProvider.currentlyOpen!.id,
       data: data,
     );
     if (success) {
@@ -372,7 +372,7 @@ class _CurrentStateState extends State<CurrentState> {
 
             /// Try to delete the container.
             final bool success = await CrudCompContainer().deleteContainer(
-              container.id!,
+              container.id,
             );
             if (success) {
               // TODO : Probably error check as well.

@@ -92,7 +92,7 @@ class _EventsState extends State<Events> {
             loading = true;
           });
           final bool success = await CrudCompContainer().addEvent(
-            docId: viewProvider.currentlyOpen!.id!,
+            docId: viewProvider.currentlyOpen!.id,
             event: event,
           );
           if (!success) {

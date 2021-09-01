@@ -329,15 +329,16 @@ class MainNavigatorState extends State<MainNavigator> {
       switch (viewProvider.currentlyOpen!.type) {
         case ComponentContainerTypes.stock:
           late final bool objectNotFound;
-          final o = stocksProvider.containers.firstWhere(
+          final ComponentContainer o = stocksProvider.containers.firstWhere(
               (element) => element.id == viewProvider.currentlyOpen!.id,
               orElse: () {
             return ComponentContainer(
+              id: '',
               name: '',
               type: ComponentContainerTypes.vehicle,
             );
           });
-          if (o.name.isEmpty) {
+          if (o.id.isEmpty) {
             objectNotFound = true;
           } else {
             objectNotFound = false;
@@ -360,15 +361,16 @@ class MainNavigatorState extends State<MainNavigator> {
           }
         case ComponentContainerTypes.vehicle:
           late final bool objectNotFound;
-          final o = vehicleProvider.containers.firstWhere(
+          final ComponentContainer o = vehicleProvider.containers.firstWhere(
               (element) => element.id == viewProvider.currentlyOpen!.id,
               orElse: () {
             return ComponentContainer(
+              id: '',
               name: '',
               type: ComponentContainerTypes.vehicle,
             );
           });
-          if (o.name.isEmpty) {
+          if (o.id.isEmpty) {
             objectNotFound = true;
           } else {
             objectNotFound = false;
