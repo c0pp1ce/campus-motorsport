@@ -147,13 +147,13 @@ class CurrentStateOverview extends StatelessWidget {
 
     for (final update in componentContainer.currentState) {
       switch (update.component.state) {
-        case ComponentStates.bad:
+        case ComponentState.bad:
           results[1]++;
           break;
-        case ComponentStates.ok:
+        case ComponentState.ok:
           results[2]++;
           break;
-        case ComponentStates.newComponent:
+        case ComponentState.newComponent:
           results[3]++;
           break;
       }

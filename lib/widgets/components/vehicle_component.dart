@@ -9,7 +9,7 @@ import 'package:campus_motorsport/widgets/components/component_category.dart';
 import 'package:campus_motorsport/widgets/components/component_date.dart';
 import 'package:campus_motorsport/widgets/components/component_image.dart';
 import 'package:campus_motorsport/widgets/components/component_number.dart';
-import 'package:campus_motorsport/widgets/components/component_state.dart';
+import 'package:campus_motorsport/widgets/components/component_state.dart' as ui;
 import 'package:campus_motorsport/widgets/components/component_text.dart';
 import 'package:campus_motorsport/widgets/components/create_data_input.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
@@ -198,7 +198,7 @@ class VehicleComponentState extends State<VehicleComponent> {
                 const SizedBox(
                   height: SizeConfig.basePadding * 2,
                 ),
-                ComponentState(
+                ui.ComponentState(
                   highlightInput: widget.highlightInputs,
                   initialState: widget.previousData?.component.state ??
                       widget.component?.state,

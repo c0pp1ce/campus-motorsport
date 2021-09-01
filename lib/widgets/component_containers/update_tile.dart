@@ -93,11 +93,11 @@ class UpdateTile extends StatelessWidget {
 
   Color get stateColor {
     switch (update.component.state) {
-      case ComponentStates.bad:
+      case ComponentState.bad:
         return CurrentState.badState;
-      case ComponentStates.ok:
+      case ComponentState.ok:
         return CurrentState.okState;
-      case ComponentStates.newComponent:
+      case ComponentState.newComponent:
         return CurrentState.newState;
     }
   }

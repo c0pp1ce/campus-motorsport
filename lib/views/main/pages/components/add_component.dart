@@ -135,7 +135,7 @@ class _AddComponentState extends State<AddComponent> {
 
     BaseComponent baseComponent = BaseComponent(
       name: _vehicleKey.currentState!.name!,
-      state: ComponentStates.newComponent,
+      state: ComponentState.newComponent,
       category: _vehicleKey.currentState!.category!,
       baseEventCounter: _vehicleKey.currentState!.baseEventCounter,
     );

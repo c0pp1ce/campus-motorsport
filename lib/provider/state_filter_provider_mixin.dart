@@ -6,16 +6,16 @@ mixin StateFilterProviderMixin {
   late final void Function() stateFilterNotify;
 
   /// Used to filter components list.
-  final List<ComponentStates> _allowedStates = _init();
+  final List<ComponentState> _allowedStates = _init();
 
-  void allowState(ComponentStates s) {
+  void allowState(ComponentState s) {
     if (!_allowedStates.contains(s)) {
       _allowedStates.add(s);
       stateFilterNotify();
     }
   }
 
-  void hideState(ComponentStates s) {
+  void hideState(ComponentState s) {
     if (_allowedStates.remove(s)) {
       stateFilterNotify();
     }
@@ -29,15 +29,15 @@ mixin StateFilterProviderMixin {
     }
   }
 
-  static void _addAllStates(List<ComponentStates> states) {
-    ComponentStates.values.forEach(states.add);
+  static void _addAllStates(List<ComponentState> states) {
+    ComponentState.values.forEach(states.add);
   }
 
-  static List<ComponentStates> _init() {
-    final List<ComponentStates> states = [];
+  static List<ComponentState> _init() {
+    final List<ComponentState> states = [];
     _addAllStates(states);
     return states;
   }
 
-  List<ComponentStates> get allowedStates => _allowedStates;
+  List<ComponentState> get allowedStates => _allowedStates;
 }

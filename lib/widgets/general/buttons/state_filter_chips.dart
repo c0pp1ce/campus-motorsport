@@ -55,7 +55,7 @@ class StateFilterChips extends StatelessWidget {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
-      children: ComponentStates.values.map((state) {
+      children: ComponentState.values.map((state) {
         final bool selected = filterProvider.allowedStates.contains(state);
         return FilterChip(
           checkmarkColor: Theme.of(context).colorScheme.onPrimary,
@@ -79,7 +79,7 @@ class StateFilterChips extends StatelessWidget {
   }
 
   TextStyle? getChipTextStyle(
-    ComponentStates state,
+    ComponentState state,
     bool selected,
     BuildContext context,
   ) {
@@ -89,13 +89,13 @@ class StateFilterChips extends StatelessWidget {
             : Theme.of(context).colorScheme.onSurface);
   }
 
-  Color stateColor(ComponentStates state) {
+  Color stateColor(ComponentState state) {
     switch (state) {
-      case ComponentStates.bad:
+      case ComponentState.bad:
         return ColorServices.brighten(CurrentState.badState, 35);
-      case ComponentStates.ok:
+      case ComponentState.ok:
         return ColorServices.brighten(CurrentState.okState, 35);
-      case ComponentStates.newComponent:
+      case ComponentState.newComponent:
         return ColorServices.brighten(CurrentState.newState, 25);
     }
   }

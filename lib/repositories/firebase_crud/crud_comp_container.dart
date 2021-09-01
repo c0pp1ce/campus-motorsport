@@ -125,8 +125,8 @@ class CrudCompContainer {
               (update['eventCounter'] as int) - event.decrementCounterBy;
           if (newCounter <= 0) {
             /// Decrement the state of the component.
-            int stateIndex = ComponentStates.values.indexOf(
-                ComponentStates.values.firstWhere((element) =>
+            int stateIndex = ComponentState.values.indexOf(
+                ComponentState.values.firstWhere((element) =>
                     element.name ==
                     (update['component'] as Map<String, dynamic>)['state']
                         as String));
@@ -135,7 +135,7 @@ class CrudCompContainer {
               stateIndex = 0;
             }
             (update['component'] as Map<String, dynamic>)['state'] =
-                ComponentStates.values[stateIndex].name;
+                ComponentState.values[stateIndex].name;
 
             /// Get original component and Reset the counter.
             /// As long as its forbidden to change the counter there is no need
@@ -165,7 +165,7 @@ class CrudCompContainer {
               /// and everyone after will lead to the same state.
               while (newCounter <= 0) {
                 (update['component'] as Map<String, dynamic>)['state'] =
-                    ComponentStates.bad.name;
+                    ComponentState.bad.name;
                 newCounter = newCounter + baseComponent.baseEventCounter!;
               }
 
