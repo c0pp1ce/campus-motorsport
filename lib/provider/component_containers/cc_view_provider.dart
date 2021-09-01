@@ -115,7 +115,7 @@ class CCViewProvider extends CategoryFilterProvider
       return;
     }
     late final List<ComponentContainer> list;
-    if (currentlyOpen!.type == ComponentContainerTypes.vehicle) {
+    if (currentlyOpen!.type == ComponentContainerType.vehicle) {
       list = vehicles;
     } else {
       list = stocks;
@@ -128,7 +128,7 @@ class CCViewProvider extends CategoryFilterProvider
         orElse: () => ComponentContainer(
           id: '',
           name: '',
-          type: ComponentContainerTypes.vehicle,
+          type: ComponentContainerType.vehicle,
         ),
       );
       if (componentInList.id.isNotEmpty) {

@@ -388,10 +388,10 @@ class _CurrentStateState extends State<CurrentState> {
             } else {
               // TODO : Add remove function to avoid those expensive reloads.
               switch (container.type) {
-                case ComponentContainerTypes.stock:
+                case ComponentContainerType.stock:
                   context.read<StocksProvider>().reload(false);
                   break;
-                case ComponentContainerTypes.vehicle:
+                case ComponentContainerType.vehicle:
                   context.read<VehiclesProvider>().reload(false);
                   break;
               }

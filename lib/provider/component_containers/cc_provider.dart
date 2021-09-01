@@ -7,7 +7,7 @@ class CCProvider extends BaseProvider {
   CCProvider({this.type});
 
   final CrudCompContainer _crudCompContainer = CrudCompContainer();
-  ComponentContainerTypes? type;
+  ComponentContainerType? type;
   List<ComponentContainer>? _containers;
 
   List<ComponentContainer> get containers {
@@ -50,10 +50,10 @@ class CCProvider extends BaseProvider {
 
 /// Extra class to be able to differentiate between the providers.
 class VehiclesProvider extends CCProvider {
-  VehiclesProvider() : super(type: ComponentContainerTypes.vehicle);
+  VehiclesProvider() : super(type: ComponentContainerType.vehicle);
 }
 
 /// Extra class to be able to differentiate between the providers.
 class StocksProvider extends CCProvider {
-  StocksProvider() : super(type: ComponentContainerTypes.stock);
+  StocksProvider() : super(type: ComponentContainerType.stock);
 }

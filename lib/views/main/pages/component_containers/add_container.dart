@@ -30,7 +30,7 @@ class _AddContainerState extends State<AddContainer> {
   final GlobalKey<CMDropDownMenuState> _categoryKey = GlobalKey();
 
   String name = '';
-  ComponentContainerTypes type = ComponentContainerTypes.vehicle;
+  ComponentContainerType type = ComponentContainerType.vehicle;
   CMImage image = CMImage();
 
   @override
@@ -42,7 +42,7 @@ class _AddContainerState extends State<AddContainer> {
   void _reset() {
     setState(() {
       name = '';
-      type = ComponentContainerTypes.vehicle;
+      type = ComponentContainerType.vehicle;
       image = CMImage();
       _nameController.clear();
       _categoryKey.currentState?.currentValue = type.name;
@@ -143,11 +143,11 @@ class _AddContainerState extends State<AddContainer> {
             CMDropDownMenu(
               key: _categoryKey,
               values:
-                  ComponentContainerTypes.values.map((e) => e.name).toList(),
+                  ComponentContainerType.values.map((e) => e.name).toList(),
               initialValue: type.name,
               onSelect: (value) {
                 setState(() {
-                  for (final myType in ComponentContainerTypes.values) {
+                  for (final myType in ComponentContainerType.values) {
                     if (myType.name == value) {
                       type = myType;
                       break;
@@ -181,10 +181,10 @@ class _AddContainerState extends State<AddContainer> {
       });
       if (success) {
         switch (type) {
-          case ComponentContainerTypes.stock:
+          case ComponentContainerType.stock:
             context.read<StocksProvider>().reload(false);
             break;
-          case ComponentContainerTypes.vehicle:
+          case ComponentContainerType.vehicle:
             context.read<VehiclesProvider>().reload(false);
             break;
         }

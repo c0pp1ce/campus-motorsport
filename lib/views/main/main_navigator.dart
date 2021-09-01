@@ -327,7 +327,7 @@ class MainNavigatorState extends State<MainNavigator> {
         CCViewProvider.containerSpecificPages
             .contains(viewProvider.currentPage)) {
       switch (viewProvider.currentlyOpen!.type) {
-        case ComponentContainerTypes.stock:
+        case ComponentContainerType.stock:
           late final bool objectNotFound;
           final ComponentContainer o = stocksProvider.containers.firstWhere(
               (element) => element.id == viewProvider.currentlyOpen!.id,
@@ -335,7 +335,7 @@ class MainNavigatorState extends State<MainNavigator> {
             return ComponentContainer(
               id: '',
               name: '',
-              type: ComponentContainerTypes.vehicle,
+              type: ComponentContainerType.vehicle,
             );
           });
           if (o.id.isEmpty) {
@@ -359,7 +359,7 @@ class MainNavigatorState extends State<MainNavigator> {
           } else {
             break;
           }
-        case ComponentContainerTypes.vehicle:
+        case ComponentContainerType.vehicle:
           late final bool objectNotFound;
           final ComponentContainer o = vehicleProvider.containers.firstWhere(
               (element) => element.id == viewProvider.currentlyOpen!.id,
@@ -367,7 +367,7 @@ class MainNavigatorState extends State<MainNavigator> {
             return ComponentContainer(
               id: '',
               name: '',
-              type: ComponentContainerTypes.vehicle,
+              type: ComponentContainerType.vehicle,
             );
           });
           if (o.id.isEmpty) {

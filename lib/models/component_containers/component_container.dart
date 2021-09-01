@@ -3,17 +3,17 @@ import 'package:campus_motorsport/models/component_containers/event.dart';
 import 'package:campus_motorsport/models/component_containers/update.dart';
 import 'package:campus_motorsport/models/components/component.dart';
 
-enum ComponentContainerTypes {
+enum ComponentContainerType {
   stock,
   vehicle,
 }
 
-extension ComponentContainerTypeNames on ComponentContainerTypes {
+extension ComponentContainerTypeNames on ComponentContainerType {
   String get name {
     switch (this) {
-      case ComponentContainerTypes.stock:
+      case ComponentContainerType.stock:
         return 'Lager';
-      case ComponentContainerTypes.vehicle:
+      case ComponentContainerType.vehicle:
         return 'Fahrzeug';
     }
   }
@@ -50,7 +50,7 @@ class ComponentContainer {
   /// Document id.
   String id;
   String name;
-  ComponentContainerTypes type;
+  ComponentContainerType type;
   CMImage? image;
 
   List<Update> updates;
@@ -65,11 +65,11 @@ class ComponentContainer {
   static ComponentContainer fromJson(Map<String, dynamic> json, String id) {
     /// Get type.
     final String typeName = json['type'];
-    late ComponentContainerTypes type;
-    if (typeName == ComponentContainerTypes.vehicle.name) {
-      type = ComponentContainerTypes.vehicle;
+    late ComponentContainerType type;
+    if (typeName == ComponentContainerType.vehicle.name) {
+      type = ComponentContainerType.vehicle;
     } else {
-      type = ComponentContainerTypes.stock;
+      type = ComponentContainerType.stock;
     }
 
     final List<Update> updates = List.empty(growable: true);
