@@ -4,8 +4,8 @@ import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
 import 'package:flutter/material.dart';
 
 /// Select and/or display the category of a component.
-class ComponentCategory extends StatelessWidget {
-  const ComponentCategory({
+class ComponentCategoryWidget extends StatelessWidget {
+  const ComponentCategoryWidget({
     required this.onSaved,
     this.enabled = true,
     this.dropDownKey,
@@ -32,7 +32,7 @@ class ComponentCategory extends StatelessWidget {
           key: dropDownKey,
           label: 'Kategorie',
           enabled: enabled,
-          values: ComponentCategories.values.map((e) => e.name).toList(),
+          values: ComponentCategory.values.map((e) => e.name).toList(),
           onSelect: onSaved,
         ),
       ],

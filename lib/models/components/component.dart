@@ -25,7 +25,7 @@ extension ComponentStateNames on ComponentState {
 ///
 /// Order needed for compare function - in order to match the ordering done by
 /// firebase (components collection).
-enum ComponentCategories {
+enum ComponentCategory {
   aero,
   chassis,
   electrical,
@@ -34,20 +34,20 @@ enum ComponentCategories {
   other,
 }
 
-extension ComponentCategoryNames on ComponentCategories {
+extension ComponentCategoryNames on ComponentCategory {
   String get name {
     switch (this) {
-      case ComponentCategories.aero:
+      case ComponentCategory.aero:
         return 'Aerodynamik';
-      case ComponentCategories.chassis:
+      case ComponentCategory.chassis:
         return 'Chassis & Komponentenintegration';
-      case ComponentCategories.electrical:
+      case ComponentCategory.electrical:
         return 'Elektrotechnik';
-      case ComponentCategories.undercarriage:
+      case ComponentCategory.undercarriage:
         return 'Fahrwerk';
-      case ComponentCategories.engine:
+      case ComponentCategory.engine:
         return 'Motor & Antriebsstrang';
-      case ComponentCategories.other:
+      case ComponentCategory.other:
         return 'Sonstiges';
     }
   }
@@ -71,7 +71,7 @@ class BaseComponent {
 
   /// Ids of vehicles that use this component.
   final List<String>? usedBy;
-  ComponentCategories category;
+  ComponentCategory category;
   int? baseEventCounter;
 
   static BaseComponent fromJson(Map<String, dynamic> json) {
@@ -89,8 +89,8 @@ class BaseComponent {
 
     /// Get category
     final String categoryName = json['category'];
-    late ComponentCategories category;
-    for (final ComponentCategories myCategory in ComponentCategories.values) {
+    late ComponentCategory category;
+    for (final ComponentCategory myCategory in ComponentCategory.values) {
       if (myCategory.name == categoryName) {
         category = myCategory;
         break;
@@ -133,9 +133,9 @@ class BaseComponent {
 
   static int compareComponents(BaseComponent a, BaseComponent b) {
     if (a.category != b.category) {
-      return ComponentCategories.values
+      return ComponentCategory.values
           .indexOf(a.category)
-          .compareTo(ComponentCategories.values.indexOf(b.category));
+          .compareTo(ComponentCategory.values.indexOf(b.category));
     } else {
       return a.name.compareTo(b.name);
     }
@@ -149,7 +149,7 @@ class ExtendedComponent extends BaseComponent {
     required String name,
     required ComponentState state,
     required this.additionalData,
-    required ComponentCategories category,
+    required ComponentCategory category,
   }) : super(
           id: id,
           name: name,

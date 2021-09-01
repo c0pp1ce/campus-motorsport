@@ -5,7 +5,7 @@ import 'package:campus_motorsport/utilities/color_services.dart';
 import 'package:campus_motorsport/utilities/validators.dart';
 import 'package:campus_motorsport/utilities/size_config.dart';
 import 'package:campus_motorsport/widgets/general/buttons/cm_text_button.dart';
-import 'package:campus_motorsport/widgets/components/component_category.dart';
+import 'package:campus_motorsport/widgets/components/component_category_widget.dart';
 import 'package:campus_motorsport/widgets/components/component_date.dart';
 import 'package:campus_motorsport/widgets/components/component_image.dart';
 import 'package:campus_motorsport/widgets/components/component_number.dart';
@@ -94,7 +94,7 @@ class VehicleComponentState extends State<VehicleComponent> {
 
   /// For component creation.
   String? name;
-  ComponentCategories? category;
+  ComponentCategory? category;
   int? baseEventCounter;
 
   @override
@@ -179,12 +179,12 @@ class VehicleComponentState extends State<VehicleComponent> {
                 const SizedBox(
                   height: SizeConfig.basePadding * 2,
                 ),
-                ComponentCategory(
+                ComponentCategoryWidget(
                   initialValue: widget.component?.category.name,
                   enabled: widget.create,
                   onSaved: (value) {
-                    for (final ComponentCategories c
-                        in ComponentCategories.values) {
+                    for (final ComponentCategory c
+                        in ComponentCategory.values) {
                       if (c.name == value) {
                         setState(() {
                           category = c;

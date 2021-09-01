@@ -53,7 +53,7 @@ class CategoryFilterChips extends StatelessWidget {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
-      children: ComponentCategories.values.map((category) {
+      children: ComponentCategory.values.map((category) {
         final bool selected =
             filterProvider.allowedCategories.contains(category);
         return FilterChip(

@@ -10,16 +10,16 @@ abstract class CategoryFilterProvider extends BaseProvider {
   }
 
   /// Used to filter components list.
-  late List<ComponentCategories> _allowedCategories;
+  late List<ComponentCategory> _allowedCategories;
 
-  void allowCategory(ComponentCategories c) {
+  void allowCategory(ComponentCategory c) {
     if (!_allowedCategories.contains(c)) {
       _allowedCategories.add(c);
       notify();
     }
   }
 
-  void hideCategory(ComponentCategories c) {
+  void hideCategory(ComponentCategory c) {
     if (_allowedCategories.remove(c)) {
       notify();
     }
@@ -34,8 +34,8 @@ abstract class CategoryFilterProvider extends BaseProvider {
   }
 
   void _addAllCategories() {
-    ComponentCategories.values.forEach(_allowedCategories.add);
+    ComponentCategory.values.forEach(_allowedCategories.add);
   }
 
-  List<ComponentCategories> get allowedCategories => _allowedCategories;
+  List<ComponentCategory> get allowedCategories => _allowedCategories;
 }

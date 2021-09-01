@@ -21,7 +21,7 @@ class UnusedComponents extends StatefulWidget {
 }
 
 class _UnusedComponentsState extends State<UnusedComponents> {
-  late ComponentCategories previousCategory;
+  late ComponentCategory previousCategory;
   late List<String> unusedComponentIds;
   late List<BaseComponent> unusedComponents;
 
