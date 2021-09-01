@@ -26,10 +26,10 @@ class CurrentState extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static final Color notUpdated = Colors.grey;
-  static final Color badState = Colors.redAccent;
-  static final Color okState = Colors.yellowAccent;
-  static final Color newState = Colors.greenAccent;
+  static const Color notUpdated = Colors.grey;
+  static const Color badState = Colors.redAccent;
+  static const Color okState = Colors.yellowAccent;
+  static const Color newState = Colors.greenAccent;
 
   static double tileStateColorOpacity = 0.05;
 
