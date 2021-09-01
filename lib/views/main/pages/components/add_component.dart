@@ -133,7 +133,7 @@ class _AddComponentState extends State<AddComponent> {
       return false;
     }
 
-    BaseComponent baseComponent = BaseComponent(
+    BaseComponent baseComponent = BaseComponent.withoutId(
       name: _vehicleKey.currentState!.name!,
       state: ComponentState.newComponent,
       category: _vehicleKey.currentState!.category!,
@@ -141,7 +141,7 @@ class _AddComponentState extends State<AddComponent> {
     );
 
     if (_vehicleKey.currentState!.additionalData?.isNotEmpty ?? false) {
-      baseComponent = ExtendedComponent.fromBaseComponent(
+      baseComponent = ExtendedComponent.fromBaseComponentWithoutId(
         baseComponent: baseComponent,
         additionalData: _vehicleKey.currentState!.additionalData!,
       );

@@ -8,7 +8,8 @@ class CrudComponent {
 
   final FirebaseFirestore _firestore;
 
-  /// Creates a new entry in the components collection.
+  /// Creates a new entry in the components collection. Adds an id to the given
+  /// component.
   Future<bool> createComponent({
     required BaseComponent component,
   }) async {
@@ -36,9 +37,9 @@ class CrudComponent {
         return null;
       }
       if (componentData.data()!.containsKey('additionalData')) {
-        return ExtendedComponent.fromJson(componentData.data()!);
+        return ExtendedComponent.fromJson(componentData.data()!, docId);
       } else {
-        return BaseComponent.fromJson(componentData.data()!);
+        return BaseComponent.fromJson(componentData.data()!, docId);
       }
     } on Exception catch (e) {
       print(e.toString());
@@ -62,7 +63,7 @@ class CrudComponent {
         if (doc.data().containsKey('additionalData')) {
           resultList.add(ExtendedComponent.fromJson(doc.data(), doc.id));
         } else {
-          resultList.add(BaseComponent.fromJson(doc.data()));
+          resultList.add(BaseComponent.fromJson(doc.data(), doc.id));
         }
       }
 
@@ -89,6 +90,7 @@ class CrudComponent {
         if (data != null) {
           final BaseComponent _component = BaseComponent.fromJson(
             data as Map<String, dynamic>,
+            componentDoc.id,
           );
 
           /// Delete component from vehicles/storages.
@@ -98,7 +100,7 @@ class CrudComponent {
             for (final id in _component.usedBy!) {
               await crudCompContainer.deleteComponent(
                 docId: id,
-                componentId: _component.id!,
+                componentId: _component.id,
                 fromUpdates: true,
               );
             }

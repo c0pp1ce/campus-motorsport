@@ -172,11 +172,11 @@ class _UpdateComponentsState extends State<UpdateComponents> {
     for (final component in widget.selectedComponents) {
       if (component is ExtendedComponent) {
         copiedComponents.add(
-          ExtendedComponent.fromJson(await component.toJson()),
+          ExtendedComponent.fromJson(await component.toJson(), component.id),
         );
       } else {
         copiedComponents.add(
-          BaseComponent.fromJson(await component.toJson()),
+          BaseComponent.fromJson(await component.toJson(), component.id),
         );
       }
     }

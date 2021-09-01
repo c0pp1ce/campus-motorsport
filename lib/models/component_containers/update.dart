@@ -39,8 +39,8 @@ class Update {
     final Timestamp timestamp = json['date'];
     return Update(
       component: extendedComponent
-          ? ExtendedComponent.fromJson(json['component'])
-          : BaseComponent.fromJson(json['component']),
+          ? ExtendedComponent.fromJson(json['component'], json['id'])
+          : BaseComponent.fromJson(json['component'], json['id']),
       date: timestamp.toDate().toLocal(),
       by: json['by'],
       eventCounter: json['eventCounter'],
@@ -48,8 +48,14 @@ class Update {
   }
 
   Future<Map<String, dynamic>> toJson(String folder) async {
+    final bool extendedComponent = component is ExtendedComponent;
     return <String, dynamic>{
-      'component': await component.toJson(forUpdate: true, folder: folder),
+      'component': extendedComponent
+          ? await (component as ExtendedComponent).toJson(
+              forUpdate: true,
+              folder: folder,
+            )
+          : await component.toJson(forUpdate: true),
       'date': date.toUtc(),
       'by': by,
       if (eventCounter != null) 'eventCounter': eventCounter,

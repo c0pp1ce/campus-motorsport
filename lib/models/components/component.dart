@@ -56,7 +56,7 @@ extension ComponentCategoryNames on ComponentCategory {
 /// The basic component.
 class BaseComponent {
   BaseComponent({
-    this.id,
+    required this.id,
     this.baseEventCounter,
     required this.name,
     required this.state,
@@ -64,8 +64,18 @@ class BaseComponent {
     this.usedBy,
   });
 
+  /// This constructor is only used for creating a new component which therefore
+  /// cannot posses an ID. Dont use it for any other purpose.
+  BaseComponent.withoutId({
+    this.baseEventCounter,
+    required this.name,
+    required this.state,
+    required this.category,
+    this.usedBy,
+  }) : id = '';
+
   /// Equals docId in the components collection.
-  String? id;
+  String id;
   final String name;
   ComponentState state;
 
@@ -74,7 +84,7 @@ class BaseComponent {
   ComponentCategory category;
   int? baseEventCounter;
 
-  static BaseComponent fromJson(Map<String, dynamic> json) {
+  static BaseComponent fromJson(Map<String, dynamic> json, String docId) {
     final String stateName = json['state'];
 
     /// Get state.
@@ -103,7 +113,7 @@ class BaseComponent {
     }
 
     return BaseComponent(
-      id: json['id'],
+      id: docId,
       name: json['name'],
       state: state,
       usedBy: _usedBy,
@@ -118,11 +128,9 @@ class BaseComponent {
   /// is deleted.
   Future<Map<String, dynamic>> toJson({
     bool forUpdate = false,
-    String? folder,
   }) async {
-    assert(forUpdate && folder != null || !forUpdate);
     return {
-      'id': id,
+      if (id.isNotEmpty) 'id': id,
       'name': name,
       'state': state.name,
       if (!forUpdate) 'usedBy': usedBy ?? <String>[],
@@ -145,7 +153,7 @@ class BaseComponent {
 /// Blueprint for components that carry additional data fields;
 class ExtendedComponent extends BaseComponent {
   ExtendedComponent({
-    String? id,
+    required String id,
     required String name,
     required ComponentState state,
     required this.additionalData,
@@ -168,12 +176,23 @@ class ExtendedComponent extends BaseComponent {
           baseEventCounter: baseComponent.baseEventCounter,
         );
 
+  /// This constructor is only used for creating a new component which therefore
+  /// cannot posses an ID. Dont use it for any other purpose.
+  ExtendedComponent.fromBaseComponentWithoutId({
+    required BaseComponent baseComponent,
+    required this.additionalData,
+  }) : super.withoutId(
+    name: baseComponent.name,
+    state: baseComponent.state,
+    category: baseComponent.category,
+    baseEventCounter: baseComponent.baseEventCounter,
+  );
+
   /// The additional data fields;
   List<DataInput> additionalData;
 
-  static ExtendedComponent fromJson(Map<String, dynamic> json,
-      [String? docId]) {
-    final BaseComponent baseComponent = BaseComponent.fromJson(json);
+  static ExtendedComponent fromJson(Map<String, dynamic> json, String docId) {
+    final BaseComponent baseComponent = BaseComponent.fromJson(json, docId);
     final List<DataInput> additionalData = List.empty(growable: true);
 
     for (final Map<String, dynamic> dataInput in json['additionalData']) {
@@ -194,8 +213,7 @@ class ExtendedComponent extends BaseComponent {
     assert(forUpdate && folder != null || !forUpdate);
 
     /// Base info.
-    final Map<String, dynamic> json =
-        await super.toJson(forUpdate: forUpdate, folder: folder);
+    final Map<String, dynamic> json = await super.toJson(forUpdate: forUpdate);
     final List<Map<String, dynamic>> fields = List.empty(growable: true);
     for (final DataInput dataInput in additionalData) {
       fields.add(await dataInput.toJson(forUpdate ? '${folder!}/$id' : name));
