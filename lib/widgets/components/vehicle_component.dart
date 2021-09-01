@@ -9,7 +9,8 @@ import 'package:campus_motorsport/widgets/components/component_category_widget.d
 import 'package:campus_motorsport/widgets/components/component_date.dart';
 import 'package:campus_motorsport/widgets/components/component_image.dart';
 import 'package:campus_motorsport/widgets/components/component_number.dart';
-import 'package:campus_motorsport/widgets/components/component_state.dart' as ui;
+import 'package:campus_motorsport/widgets/components/component_state.dart'
+    as ui;
 import 'package:campus_motorsport/widgets/components/component_text.dart';
 import 'package:campus_motorsport/widgets/components/create_data_input.dart';
 import 'package:campus_motorsport/widgets/general/forms/cm_drop_down_menu.dart';
@@ -33,6 +34,7 @@ class VehicleComponent extends StatefulWidget {
     this.onEventCounterSave,
     this.highlightInputs = false,
     this.currentEventCounter,
+    this.currentEventCounterGiven = false,
     Key? key,
   })  : assert(
           (create && !fillWithData && !read) ||
@@ -53,6 +55,7 @@ class VehicleComponent extends StatefulWidget {
   final Update? previousData;
   // Workaround to also use this widget as details view for updates.
   final int? currentEventCounter;
+  final bool currentEventCounterGiven;
 
   /// Create a component.
   final bool create;
@@ -410,11 +413,11 @@ class VehicleComponentState extends State<VehicleComponent> {
 
         /// baseEventCounterController only in create mode != null.
         initialValue: baseEventCounterController == null
-            ? (widget.previousData?.eventCounter ??
-                    widget.currentEventCounter ??
-                    baseComponent?.baseEventCounter ??
-                    '')
-                .toString()
+            ? _previousDataFound
+                ? (widget.previousData?.eventCounter ?? '').toString()
+                : widget.currentEventCounterGiven
+                    ? (widget.currentEventCounter ?? '').toString()
+                    : (baseComponent?.baseEventCounter ?? '').toString()
             : null,
         onSaved: (value) {
           value ??= '';

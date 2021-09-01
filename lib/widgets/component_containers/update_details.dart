@@ -33,6 +33,7 @@ class UpdateDetails extends StatelessWidget {
             component: update.component,
             highlightInputs: true,
             currentEventCounter: update.eventCounter,
+            currentEventCounterGiven: true,
           ),
         ),
       ),
