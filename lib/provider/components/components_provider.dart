@@ -15,7 +15,9 @@ class ComponentsProvider extends BaseProvider {
   }
 
   Future<void> reload() async {
+    print(_components);
     _components = await _crudComponent.getComponents() ?? [];
+    print(_components);
     notify();
   }
 

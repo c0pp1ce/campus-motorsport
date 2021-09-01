@@ -148,6 +148,11 @@ class BaseComponent {
       return a.name.compareTo(b.name);
     }
   }
+
+  @override
+  String toString() {
+    return '$name : $id';
+  }
 }
 
 /// Blueprint for components that carry additional data fields;

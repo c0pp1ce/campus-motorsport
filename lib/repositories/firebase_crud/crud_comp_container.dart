@@ -335,7 +335,7 @@ class CrudCompContainer {
         await deleteComponentFromCurrentState(
           transaction: transaction,
           docId: containerDoc.id,
-          componentId: update.component.id!,
+          componentId: update.component.id,
           document: containerDoc,
           snapshot: containerSnapshot,
         );

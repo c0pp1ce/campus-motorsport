@@ -151,7 +151,7 @@ class _AddComponentState extends State<AddComponent> {
     final bool success =
         await crudComponent.createComponent(component: baseComponent);
     if (success) {
-      context.read<ComponentsProvider>().reload();
+      await context.read<ComponentsProvider>().reload();
     }
     return success;
   }

@@ -238,7 +238,7 @@ class _AddComponentsState extends State<AddComponents> {
     final List<String> selection = [];
     for (final component in selected) {
       assert(component.id != null);
-      selection.add(component.id!);
+      selection.add(component.id);
     }
     success = await CrudCompContainer().addComponents(
       docId: container.id!,

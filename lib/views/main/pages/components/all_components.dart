@@ -104,7 +104,7 @@ class _AllComponentsState extends State<AllComponents> {
 
         final Widget child = ExpansionComponent(
           key: ValueKey(
-            components[index].id ?? components[index].name,
+            components[index].id,
           ),
           component: components[index],
           isAdmin: isAdmin,

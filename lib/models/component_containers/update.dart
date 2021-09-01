@@ -39,8 +39,10 @@ class Update {
     final Timestamp timestamp = json['date'];
     return Update(
       component: extendedComponent
-          ? ExtendedComponent.fromJson(json['component'], json['id'])
-          : BaseComponent.fromJson(json['component'], json['id']),
+          ? ExtendedComponent.fromJson(
+              json['component'], (json['component'] as Map)['id'])
+          : BaseComponent.fromJson(
+              json['component'], (json['component'] as Map)['id']),
       date: timestamp.toDate().toLocal(),
       by: json['by'],
       eventCounter: json['eventCounter'],

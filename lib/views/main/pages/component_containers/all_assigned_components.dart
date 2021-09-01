@@ -160,7 +160,7 @@ class _AllAssignedComponentsState extends State<AllAssignedComponents> {
             /// Try to delete the component.
             final bool success = await CrudCompContainer().deleteComponent(
               docId: docId,
-              componentId: component.id!,
+              componentId: component.id,
               fromUpdates: true,
             );
             if (!success) {
