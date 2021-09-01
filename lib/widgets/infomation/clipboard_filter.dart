@@ -50,7 +50,7 @@ class ClipboardFiler extends StatelessWidget {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
-      children: CpTypes.values.map((category) {
+      children: CpType.values.map((category) {
         final bool selected =
             filterProvider.allowedCategories.contains(category);
         return FilterChip(

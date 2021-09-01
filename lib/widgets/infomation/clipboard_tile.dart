@@ -98,7 +98,7 @@ class ClipboardTile extends StatelessWidget {
                         loadingListener(true);
                         final bool success = await context
                             .read<ClipboardProvider>()
-                            .delete(clipboard.id!);
+                            .delete(clipboard.id);
                         loadingListener(false);
                         if (!success) {
                           _showErrorDialog(context);

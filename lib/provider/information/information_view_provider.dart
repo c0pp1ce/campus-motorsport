@@ -11,8 +11,8 @@ class InformationViewProvider extends BaseProvider {
     _addAllCategories();
   }
 
-  late List<CpTypes> _allowedCategories;
-  List<CpTypes> get allowedCategories => _allowedCategories;
+  late List<CpType> _allowedCategories;
+  List<CpType> get allowedCategories => _allowedCategories;
   final void Function() toggle;
   final bool offlineMode;
 
@@ -33,14 +33,14 @@ class InformationViewProvider extends BaseProvider {
     }
   }
 
-  void allowCategory(CpTypes c) {
+  void allowCategory(CpType c) {
     if (!_allowedCategories.contains(c)) {
       _allowedCategories.add(c);
       notify();
     }
   }
 
-  void hideCategory(CpTypes c) {
+  void hideCategory(CpType c) {
     if (_allowedCategories.remove(c)) {
       notify();
     }
@@ -55,7 +55,7 @@ class InformationViewProvider extends BaseProvider {
   }
 
   void _addAllCategories() {
-    CpTypes.values.forEach(_allowedCategories.add);
+    CpType.values.forEach(_allowedCategories.add);
   }
 }
 

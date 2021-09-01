@@ -53,7 +53,7 @@ class ClipboardViewState extends State<ClipboardView> {
   String? searchTerm;
   String? name;
   String? content;
-  CpTypes? type;
+  CpType? type;
   CMImage? image;
   DateTime? eventDate;
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -237,11 +237,11 @@ class ClipboardViewState extends State<ClipboardView> {
                 key: _dropDownKey,
                 initialValue: type?.name,
                 enabled: true,
-                values: CpTypes.values.map((e) => e.name).toList(),
+                values: CpType.values.map((e) => e.name).toList(),
                 onSelect: (value) {
                   setState(
                     () {
-                      for (final cType in CpTypes.values) {
+                      for (final cType in CpType.values) {
                         if (value == cType.name) {
                           type = cType;
                           return;
@@ -487,6 +487,7 @@ class ClipboardViewState extends State<ClipboardView> {
 
       if (widget.create) {
         final Clipboard cb = Clipboard(
+          id: '',
           name: name!,
           content: content!,
           type: type!,
@@ -538,11 +539,11 @@ class ClipboardViewState extends State<ClipboardView> {
 
         final success = widget.standAlone
             ? await widget.clipboardProvider!.update(
-                widget.clipboard!.id!,
+                widget.clipboard!.id,
                 data,
               )
             : await context.read<ClipboardProvider>().update(
-                  widget.clipboard!.id!,
+                  widget.clipboard!.id,
                   data,
                 );
         if (widget.loadingListener != null) {

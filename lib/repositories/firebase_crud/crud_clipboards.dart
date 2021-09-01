@@ -80,6 +80,9 @@ class CrudClipboards {
   }
 
   Future<bool> delete(String id) async {
+    if (id.isEmpty) {
+      return false;
+    }
     try {
       await _firestore.collection(collectionName).doc(id).delete();
       await CMImage.deleteAllImagesFromFolder('clipboards/$id');
