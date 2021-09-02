@@ -23,18 +23,18 @@ class CCViewProvider extends CategoryFilterProvider
         if (isAdmin) {
           // Admins can add vehicles.
           currentPage = ComponentContainerPage.addContainer;
-          allowContextDrawer = false;
+          _allowContextDrawer = false;
         } else {
           currentPage = ComponentContainerPage.noContainers;
-          allowContextDrawer = false;
+          _allowContextDrawer = false;
         }
       } else {
-        allowContextDrawer = true;
+        _allowContextDrawer = true;
         currentPage = ComponentContainerPage.currentState;
         currentlyOpen = vehicles[0];
       }
     } else {
-      allowContextDrawer = true;
+      _allowContextDrawer = true;
       currentPage = ComponentContainerPage.currentState;
       currentlyOpen = stocks[0];
     }
@@ -43,8 +43,15 @@ class CCViewProvider extends CategoryFilterProvider
   final void Function([bool]) toggle;
 
   late bool isAdmin;
-  late bool allowContextDrawer;
+  late bool _allowContextDrawer;
   late ComponentContainerPage currentPage;
+
+  bool get allowContextDrawer => _allowContextDrawer;
+
+  set allowContextDrawer(bool value) {
+    _allowContextDrawer = value;
+    notify();
+  }
 
   List<ComponentContainer> vehicles;
   List<ComponentContainer> stocks;
@@ -78,7 +85,7 @@ class CCViewProvider extends CategoryFilterProvider
     if (openContainer != null && openContainer.id != currentlyOpen?.id) {
       currentPage = ComponentContainerPage.currentState;
       currentlyOpen = openContainer;
-      allowContextDrawer = true;
+      _allowContextDrawer = true;
       resetAllowedCategories(false);
       resetAllowedStates(false);
       if (toggleDrawer) {
@@ -93,11 +100,11 @@ class CCViewProvider extends CategoryFilterProvider
       if (currentPage == ComponentContainerPage.events ||
           currentPage == ComponentContainerPage.noContainers ||
           currentPage == ComponentContainerPage.addContainer) {
-        allowContextDrawer = false;
+        _allowContextDrawer = false;
       } else {
         resetAllowedCategories(false);
         resetAllowedStates(false);
-        allowContextDrawer = true;
+        _allowContextDrawer = true;
       }
       if (toggleDrawer) {
         toggle(onlyToggleToOpen);

@@ -138,12 +138,16 @@ class StackedUIState extends State<StackedUI>
   }
 
   IndexedStack _buildIndexedStack(BuildContext context) {
+    final bool allowContextDrawer =
+        widget.contextDrawer != null && widget.allowSlideToContext;
+    if (!allowContextDrawer && _index == 1) {
+      _index = 0;
+    }
     return IndexedStack(
       index: _index,
       children: <Widget>[
         widget.navigationDrawer,
-        if (widget.contextDrawer != null && widget.allowSlideToContext)
-          widget.contextDrawer!,
+        if (allowContextDrawer) widget.contextDrawer!,
       ],
     );
   }
@@ -156,7 +160,7 @@ class StackedUIState extends State<StackedUI>
       if (maxSlide < 0) {
         maxSlide = -maxSlide;
         leftSideOpen = false;
-        if(_index != 0) {
+        if (_index != 0) {
           setState(() {
             _index = 0;
           });

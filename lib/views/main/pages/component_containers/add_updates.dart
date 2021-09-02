@@ -107,7 +107,7 @@ class _AddUpdatesState extends State<AddUpdates> {
                   currentContainer: currentContainer,
                   selectedComponents: selectedForUpdate,
                   loadingListener: _loadingListener,
-                  successListener: _successListener,
+                  successListener: (value) => _successListener(context, value),
                 ),
     );
   }
@@ -115,7 +115,7 @@ class _AddUpdatesState extends State<AddUpdates> {
   List<Widget> _buildActions(BuildContext context) {
     return [
       IconButton(
-        onPressed: loading ? null : _reset,
+        onPressed: loading ? null : () => _reset(context),
         icon: Icon(LineIcons.trash),
         splashRadius: SizeConfig.iconButtonSplashRadius,
         color: ColorServices.darken(
@@ -141,6 +141,7 @@ class _AddUpdatesState extends State<AddUpdates> {
                   setState(() {
                     selectionFinished = true;
                   });
+                  context.read<CCViewProvider>().allowContextDrawer = false;
                 },
     );
   }
@@ -151,9 +152,9 @@ class _AddUpdatesState extends State<AddUpdates> {
     });
   }
 
-  Future<void> _successListener(bool value) async {
+  Future<void> _successListener(BuildContext context, bool value) async {
     if (value) {
-      _reset(false);
+      _reset(context, false);
       setState(() {
         loading = true;
       });
@@ -168,11 +169,12 @@ class _AddUpdatesState extends State<AddUpdates> {
     }
   }
 
-  void _reset([bool shouldSetState = true]) {
+  void _reset(BuildContext context, [bool shouldSetState = true]) {
     selectedForUpdate.clear();
     selectionFinished = false;
     if (shouldSetState) {
       setState(() {});
     }
+    context.read<CCViewProvider>().allowContextDrawer = true;
   }
 }
