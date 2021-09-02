@@ -31,7 +31,7 @@ class ClipboardFiler extends StatelessWidget {
         ),
         _buildInfo(
           context,
-          'Filter die Komponenten basierend auf ihrer Kategorie.',
+          'Filter die Clipboards basierend auf ihrer Kategorie.',
           LineIcons.filter,
         ),
         const Divider(
