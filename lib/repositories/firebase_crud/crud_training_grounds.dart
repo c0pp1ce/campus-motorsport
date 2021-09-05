@@ -2,6 +2,7 @@ import 'package:campus_motorsport/models/cm_image.dart';
 import 'package:campus_motorsport/models/training_ground.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
 
 /// Methods to read [TrainingGround] from Firebase, update its image url and
 /// delete it.
@@ -20,6 +21,14 @@ class CrudTrainingGrounds {
         final Map<String, dynamic> data = doc.data();
         CMImage? image;
         if (data['image'] == null) {
+          image = CMImage.fromUrl(
+            await FirebaseStorage.instance
+                .ref(data['storagePath'])
+                .getDownloadURL(),
+          );
+          await _updateUrl(doc.id, image.url!);
+        } else if ((await http.get(Uri.parse(data['image']))).statusCode ==
+            403) {
           image = CMImage.fromUrl(
             await FirebaseStorage.instance
                 .ref(data['storagePath'])
