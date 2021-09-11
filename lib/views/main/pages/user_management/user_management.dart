@@ -16,9 +16,9 @@ class UserManagement extends StatelessWidget {
 
     switch (pageProvider.currentPage) {
       case UMPage.acceptUsers:
-        return AcceptUsers();
+        return const AcceptUsers();
       case UMPage.admins:
-        return Admins();
+        return const Admins();
     }
   }
 }

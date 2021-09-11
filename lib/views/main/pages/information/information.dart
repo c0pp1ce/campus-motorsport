@@ -93,7 +93,7 @@ class InformationContext extends StatelessWidget {
 
     switch (viewProvider.currentPage) {
       case InformationPage.clipboards:
-        return ClipBoardContext();
+        return const ClipBoardContext();
       default:
         return const SizedBox();
     }

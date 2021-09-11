@@ -102,7 +102,7 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.all(SizeConfig.basePadding * 2),
                     child: Column(
                       children: <Widget>[
-                        RepaintBoundary(
+                        const RepaintBoundary(
                           child: CMLogo(),
                         ),
                         const SizedBox(
@@ -182,7 +182,7 @@ class _LoginState extends State<Login> {
                             }
                           },
                         ),
-                        CMDivider(),
+                        const CMDivider(),
                         _buildGreyButton(
                           onPressed: () {
                             Navigator.pushNamed(

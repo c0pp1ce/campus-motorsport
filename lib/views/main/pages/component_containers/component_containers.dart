@@ -23,29 +23,31 @@ class ComponentContainersView extends StatelessWidget {
     final CCViewProvider ccViewProvider = context.watch<CCViewProvider>();
     switch (ccViewProvider.currentPage) {
       case ComponentContainerPage.currentState:
-        return CurrentState(
-          key: ValueKey('currentState${ccViewProvider.currentlyOpen?.id}'),
+        return const CurrentState(
+          // key: ValueKey('currentState${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.updates:
-        return AllUpdates(
-          key: ValueKey('allUpdate${ccViewProvider.currentlyOpen?.id}'),
+        return const AllUpdates(
+          // key: ValueKey('allUpdate${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.addUpdate:
-        return AddUpdates(
-          key: ValueKey('addUpdate${ccViewProvider.currentlyOpen?.id}'),
+        return const AddUpdates(
+          // key: ValueKey('addUpdate${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.events:
-        return Events();
+        return const Events(
+          // key: ValueKey('events${ccViewProvider.currentlyOpen?.id}'),
+        );
       case ComponentContainerPage.addComponent:
-        return AddComponents(
-          key: ValueKey('addComponents${ccViewProvider.currentlyOpen?.id}'),
+        return const AddComponents(
+          // key: ValueKey('addComponents${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.allComponents:
-        return AllAssignedComponents(
-          key: ValueKey('allComponents${ccViewProvider.currentlyOpen?.id}'),
+        return const AllAssignedComponents(
+          // key: ValueKey('allComponents${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.addContainer:
-        return AddContainer();
+        return const AddContainer();
       case ComponentContainerPage.noContainers:
         return const ExpandedAppBar(
           appbarTitle: Text('Fehler'),

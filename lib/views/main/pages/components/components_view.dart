@@ -19,9 +19,9 @@ class ComponentsView extends StatelessWidget {
 
     switch (viewProvider.currentPage) {
       case ComponentsPage.allComponents:
-        return AllComponents();
+        return const AllComponents();
       case ComponentsPage.addComponent:
-        return AddComponent();
+        return const AddComponent();
     }
   }
 }

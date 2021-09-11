@@ -23,11 +23,11 @@ class Registration extends StatelessWidget {
           width: SizeConfig.screenWidth,
           height: SizeConfig.screenHeight,
           alignment: Alignment.center,
-          child: SafeArea(
+          child: const SafeArea(
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.all(
+                padding: EdgeInsets.all(
                   SizeConfig.basePadding * 2,
                 ),
                 child: FormFields(),
