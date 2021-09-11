@@ -1,1 +1,1 @@
-This folder contains the data models.
+Data models only.

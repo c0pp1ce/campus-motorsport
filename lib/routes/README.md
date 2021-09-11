@@ -1,1 +1,2 @@
-This folder contains the route names and the router, which maps the route names to the views.
+Route names & router for the main views (login, registration, main_navigator).  
+Sub-Views use unnamed routes.
