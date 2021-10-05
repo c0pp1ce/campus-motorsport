@@ -101,7 +101,7 @@ class OfflineInformationProvider extends BaseProvider {
             true,
           )) {
         await _crudTeamStructureLocal.setMostRecent(firebaseTs);
-        _teamStructure = firebaseTs;
+        _teamStructure = await _crudTeamStructureLocal.getMostRecent();
       }
     }
     notify();

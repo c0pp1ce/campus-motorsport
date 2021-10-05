@@ -31,17 +31,18 @@ class CrudTeamStructure {
             teamStructure.toJson(),
           );
       final storage = FirebaseStorage.instance;
-      final task = await storage.ref(TeamStructure.storagePath).putFile(
+      final uploadTask = storage.ref(TeamStructure.storagePath).putFile(
             File(teamStructure.localFilePath!),
           );
+      final taskSnapshot = await uploadTask.whenComplete(() => null);
 
       /// Check success
-      if (task.state != TaskState.success) {
+      if (taskSnapshot.state != TaskState.success) {
         return false;
       }
 
       /// Retrieve and save url
-      final String url = await task.ref.getDownloadURL();
+      final String url = await taskSnapshot.ref.getDownloadURL();
       await _firestore.collection('team-structure').doc(id).update(
         {
           'url': url,

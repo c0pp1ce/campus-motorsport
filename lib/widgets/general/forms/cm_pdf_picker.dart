@@ -32,10 +32,24 @@ class CMPdfPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final containerDecoration = BoxDecoration(
+      borderRadius: roundedBottom
+          ? BorderRadius.circular(
+              SizeConfig.baseBorderRadius,
+            )
+          : const BorderRadius.vertical(
+              top: Radius.circular(
+                SizeConfig.baseBorderRadius,
+              ),
+            ),
+      color: Theme.of(context).colorScheme.surface,
+    );
+
     if (loading) {
       return LoadingItem(
         child: Container(
           height: 180,
+          decoration: containerDecoration,
         ),
       );
     }
@@ -60,35 +74,19 @@ class CMPdfPicker extends StatelessWidget {
                   },
                   child: Container(
                     height: 180,
-                    decoration: BoxDecoration(
-                      borderRadius: roundedBottom
-                          ? BorderRadius.circular(
-                              SizeConfig.baseBorderRadius,
-                            )
-                          : const BorderRadius.vertical(
-                              top: Radius.circular(
-                                SizeConfig.baseBorderRadius,
-                              ),
+                    decoration: containerDecoration,
+                    child: Center(
+                      child: Text(
+                        filePath != null ? 'DATEI ÖFFNEN' : 'NICHTS GEFUNDEN',
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                              fontSize: 24,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.6),
                             ),
-                      color: Theme.of(context).colorScheme.surface,
+                      ),
                     ),
-                    child: filePath != null
-                        ? Center(
-                            child: Text(
-                              'DATEI ÖFFNEN',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText2
-                                  ?.copyWith(
-                                    fontSize: 24,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.6),
-                                  ),
-                            ),
-                          )
-                        : null,
                   ),
                 ),
               ),

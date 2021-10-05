@@ -97,7 +97,7 @@ class CMImage {
       /// Upload the image
       final TaskSnapshot taskSnapshot = await reference.putFile(
         File(path!),
-      );
+      ).whenComplete(() => null);
 
       /// Check success
       if (taskSnapshot.state != TaskState.success) {
