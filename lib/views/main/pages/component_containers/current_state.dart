@@ -273,21 +273,22 @@ class _CurrentStateState extends State<CurrentState> {
       data['name'] = name;
     }
 
-    /// Check if image got deleted.
     if (imageChanged) {
-      if (viewProvider.currentlyOpen!.image?.url != null &&
-          image.imageProvider == null) {
+      /// Delete old image if there is one.
+      if (viewProvider.currentlyOpen!.image?.url != null) {
         await viewProvider.currentlyOpen!.image!.deleteFromFirebase();
-        imageChanged = false;
+      }
+
+      /// Upload new image if there is one
+      if (image.imageProvider != null) {
+        await image
+            .uploadImageToFirebaseStorage(viewProvider.currentlyOpen!.id);
+        assert(image.url != null, 'Upload failed');
+        data['image'] = image.url;
+      } else {
+        /// Else keep image empty.
         data['image'] = '';
       }
-    }
-
-    /// New image got selected
-    if (imageChanged) {
-      await image.uploadImageToFirebaseStorage(viewProvider.currentlyOpen!.id);
-      assert(image.url != null, 'Upload failed');
-      data['image'] = image.url;
     }
 
     final bool success = await CrudCompContainer().updateContainer(
