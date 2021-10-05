@@ -23,8 +23,8 @@ class ComponentContainersView extends StatelessWidget {
     final CCViewProvider ccViewProvider = context.watch<CCViewProvider>();
     switch (ccViewProvider.currentPage) {
       case ComponentContainerPage.currentState:
-        return const CurrentState(
-          // key: ValueKey('currentState${ccViewProvider.currentlyOpen?.id}'),
+        return CurrentState(
+          key: ValueKey('currentState${ccViewProvider.currentlyOpen?.id}'),
         );
       case ComponentContainerPage.updates:
         return const AllUpdates(
