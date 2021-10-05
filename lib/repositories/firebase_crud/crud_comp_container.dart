@@ -361,7 +361,7 @@ class CrudCompContainer {
       return true;
     }
     try {
-      _firestore.runTransaction((transaction) async {
+      await _firestore.runTransaction((transaction) async {
         /// Update component container.
         transaction.update(
           _firestore.collection('component-containers').doc(docId),
