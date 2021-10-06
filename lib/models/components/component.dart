@@ -179,6 +179,7 @@ class ExtendedComponent extends BaseComponent {
           state: baseComponent.state,
           category: baseComponent.category,
           baseEventCounter: baseComponent.baseEventCounter,
+          usedBy: baseComponent.usedBy,
         );
 
   /// This constructor is only used for creating a new component which therefore
@@ -187,11 +188,12 @@ class ExtendedComponent extends BaseComponent {
     required BaseComponent baseComponent,
     required this.additionalData,
   }) : super.withoutId(
-    name: baseComponent.name,
-    state: baseComponent.state,
-    category: baseComponent.category,
-    baseEventCounter: baseComponent.baseEventCounter,
-  );
+          name: baseComponent.name,
+          state: baseComponent.state,
+          category: baseComponent.category,
+          baseEventCounter: baseComponent.baseEventCounter,
+        usedBy: baseComponent.usedBy,
+        );
 
   /// The additional data fields;
   List<DataInput> additionalData;

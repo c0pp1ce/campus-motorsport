@@ -541,7 +541,28 @@ class CrudCompContainer {
 
   Future<bool> deleteContainer(String docId) async {
     try {
-      await _firestore.collection('component-containers').doc(docId).delete();
+      await _firestore.runTransaction((transaction) async {
+        /// Get all components which are used by this container.
+        final components = await _firestore
+            .collection('components')
+            .where('usedBy', arrayContains: docId)
+            .get();
+
+        /// Get the container ref.
+        final DocumentReference containerDoc =
+            _firestore.collection('component-containers').doc(docId);
+
+        /// Delete the container.
+        transaction.delete(containerDoc);
+
+        /// Remove container from the components usedBy lists.
+        for (final component in components.docs) {
+          transaction.update(component.reference, {
+            'usedBy': FieldValue.arrayRemove([docId]),
+          });
+        }
+      });
+      /// Delete the images related to this container.
       if (!await CMImage.deleteAllImagesFromFolder(docId)) {
         print('Images not deleted');
       }

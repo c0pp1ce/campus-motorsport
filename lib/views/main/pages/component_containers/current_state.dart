@@ -375,12 +375,6 @@ class _CurrentStateState extends State<CurrentState> {
             final bool success = await CrudCompContainer().deleteContainer(
               container.id,
             );
-            if (success) {
-              // TODO : Probably error check as well.
-              if (container.image?.url != null) {
-                await container.image!.deleteFromFirebase();
-              }
-            }
             setState(() {
               loading = false;
             });
