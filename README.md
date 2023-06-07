@@ -4,15 +4,15 @@ App zum Tracking des Zustandes und der Wartungen der Fahrzeuge.
 
 ## Screenshots
 
-Unvollständige Sammlung an Screenshots aus der App.
+Unvollständige Sammlung von Screenshots aus der App.
 
 ### Benutzerverwaltung
 
-<img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/master/images/um_both.png?token=GHSAT0AAAAAACBIWEH4O6QH34ZFHMJ4MXBMZEAMCJQ" width="580">
+<img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/63a348ace98ad1d013dfe232dd712b3d7246f268/images/um_both.png?token=GHSAT0AAAAAACBIWEH4AZXGXJRR7PDUDYAQZEAMLQA" width="580">
 
 ### Fahrzeug-Komponenten
 
-<img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/master/images/all-components.png?token=GHSAT0AAAAAACBIWEH5E3MSWVM57CN2LXGMZEAMEZA" width="880">
+<img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/master/images/all-components.png?token=GHSAT0AAAAAACBIWEH4O4T5TW2VT6BMZ2AGZEAMM5A" width="880">
 
 ### Fahrzeuge
 
