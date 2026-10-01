@@ -16,9 +16,10 @@ Unvollständige Sammlung von Screenshots aus der App.
 
 ### Fahrzeuge
 
-<img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/refs/heads/master/images/current-state.png" width="580">
-
-<img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/refs/heads/master/images/comp-containers-navigation.png" width="280">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/refs/heads/master/images/comp-containers-navigation.png" width="280">
+  <img src="https://raw.githubusercontent.com/c0pp1ce/campus-motorsport/refs/heads/master/images/current-state.png" width="580">
+</p>
 
 ### Info und Events
 
